@@ -33,4 +33,17 @@ class Event extends Model
     {
         return $this->hasMany(Attendee::class);
     }
+
+    // check for available_spots
+    public function attendees(): HasMany
+{
+    return $this->hasMany(Attendee::class);
+}
+
+// Accessor for available_spots
+public function getAvailableSpotsAttribute()
+{
+    // to the DB
+    return $this->max_attendees - $this->attendees()->count();
+}
 }
