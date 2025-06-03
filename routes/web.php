@@ -21,4 +21,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
+// route to: all events
+Route::get('/events', function () {
+    return view('all_events');
+})->name('all_events');
+
 require __DIR__.'/auth.php';
