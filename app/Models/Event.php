@@ -18,7 +18,12 @@ class Event extends Model
         'description',
         'start_time',
         'end_time',
-        'user_id'
+        'user_id',
+        'type_id',
+        'location',
+        'price',
+        'max_attendees',
+        'image',
     ];
 
     protected $casts = [
