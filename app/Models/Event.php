@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use PhpParser\Node\Expr\FuncCall;
 
 class Event extends Model
 {
@@ -27,5 +29,10 @@ class Event extends Model
     public function attendee(): HasMany
     {
         return $this->hasMany(Attendee::class);
+    }
+
+    public function type(): HasOne
+    {
+        return $this->hasOne(Type::class);
     }
 }
