@@ -12,7 +12,7 @@
                         @click="open = true; selectedEvent = {{ $event->toJson() }}"
                     >
                         <div class="font-bold">{{ $event->name }}</div>
-                        <div class="text-gray-600 text-sm">
+                        <div class="text-red-300 text-sm font-bold">
                             Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
                         </div>
                         <div>{{ $event->description }}</div>
@@ -37,7 +37,7 @@
                 <template x-if="selectedEvent">
                     <div>
                         <h3 class="text-xl font-bold mb-2" x-text="selectedEvent.name"></h3>
-                        <div class="text-gray-600 mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
+                        <div class="text-red-300 text-bold mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
                         <div class="mb-4" x-text="selectedEvent.description"></div>
                         <div class="mb-4" x-text="'Location: ' + (selectedEvent.location ?? 'TBA')"></div>
                         <button 
