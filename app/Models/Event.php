@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use PhpParser\Node\Expr\FuncCall;
 
 class Event extends Model
 {
@@ -16,7 +18,12 @@ class Event extends Model
         'description',
         'start_time',
         'end_time',
-        'user_id'
+        'user_id',
+        'type_id',
+        'location',
+        'price',
+        'max_attendees',
+        'image',
     ];
 
     protected $casts = [
@@ -32,6 +39,11 @@ class Event extends Model
     public function attendee(): HasMany
     {
         return $this->hasMany(Attendee::class);
+    }
+
+    public function type(): HasOne
+    {
+        return $this->hasOne(Type::class);
     }
 
     // check for available_spots

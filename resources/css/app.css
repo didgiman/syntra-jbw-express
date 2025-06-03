@@ -68,6 +68,16 @@ select:focus[data-flux-control] {
     @apply bg-violet-600 hover:bg-violet-500 border border-white;
 }
 
+.form-input {
+    @apply mb-3;
+}
+.form-input input, .form-input select, .form-input textarea {
+    @apply p-2 w-full border rounded-md bg-gray-700 text-white;
+}
+.form-input input[type=checkbox] {
+    @apply w-auto;
+}
+
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
