@@ -10,7 +10,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    // grab the earliest upcoming events from the DB
+    $upcomingEvents = Event::where('start_time', '>=', now())
+        ->orderBy('start_time')
+        ->take(6)
+        ->get();
+    return view('welcome', compact('upcomingEvents'));
 })->name('home');
 
 Route::get('/events', function() {
@@ -26,6 +31,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/events/create', function() {
         return view('user.create-event');
     })->name('user.events.create');
+
+    Route::get('/user/events/{event}/edit', function() {
+        return view('user.edit-event');
+    })->name('user.events.edit');
 
     // Route::get('/user/events/create', CreateEvent::class)->name('user.events.create');
 });

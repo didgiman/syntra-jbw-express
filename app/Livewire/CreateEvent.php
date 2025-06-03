@@ -40,7 +40,7 @@ class CreateEvent extends Component
 
         Event::create($this->all());
 
-        $this->redirect(route('dashboard'), navigate: true);
+        $this->redirect(route('user.events'), navigate: true);
     }
 
     public function mount()
