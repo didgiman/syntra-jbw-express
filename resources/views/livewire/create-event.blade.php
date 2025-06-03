@@ -95,13 +95,32 @@
         </div>
         <div class="form-input">
             <label for="description">Photo/poster:</label>
-            <input type="file" wire:model="poster">
-            @error('poster')
-                <div class="validationError">{{ $message }}</div>
-            @enderror
-            @if ($poster)
-                <img class="w-full" src="{{ $poster->temporaryUrl() }}">
-            @endif
+            <div
+                x-data="{ isDragging: false }"
+                x-on:dragover.prevent="isDragging = true"
+                x-on:dragleave.prevent="isDragging = false"
+                x-on:drop.prevent="
+                    isDragging = false;
+                    $refs.fileInput.files = $event.dataTransfer.files;
+                    $refs.fileInput.dispatchEvent(new Event('change'))
+                "
+                x-on:click="$refs.fileInput.click()"
+                class="border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition"
+                :class="isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300'"
+            >
+                <input type="file" wire:model="poster" x-ref="fileInput" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
+                <p class="text-gray-500">Drag and drop a file here or click to select one</p>
+                
+                @error('poster')
+                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                @else
+                    @if ($poster)
+                        <div class="flex justify-center mt-2">
+                            <img class="w-1/3" src="{{ $poster->temporaryUrl() }}">
+                        </div>
+                    @endif
+                @enderror
+            </div>
         </div>
         <div class="mb-3 md:flex md:flex-row-reverse md:gap-4 justify-between mt-8">
             <button
