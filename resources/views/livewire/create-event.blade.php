@@ -93,6 +93,16 @@
                 <div class="text-red-600 text-sm">{{ $message }}</div>
             @enderror
         </div>
+        <div class="form-input">
+            <label for="description">Photo/poster:</label>
+            <input type="file" wire:model="poster">
+            @error('poster')
+                <div class="validationError">{{ $message }}</div>
+            @enderror
+            @if ($poster)
+                <img class="w-full" src="{{ $poster->temporaryUrl() }}">
+            @endif
+        </div>
         <div class="mb-3 md:flex md:flex-row-reverse md:gap-4 justify-between mt-8">
             <button
                 type="submit"
