@@ -6,9 +6,10 @@
     <title>{{ $title ?? 'EventR' }}</title>
     @vite('resources/css/app.css')
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
     <header>
         <nav>
+            <a href="{{ route('home') }}">Home</a>
             <a href="{{ route('all_events') }}">All events</a>
             @if (Route::has('login'))
                 @auth
@@ -23,7 +24,7 @@
         </nav>
     </header>
 
-    <main>
+    <main class="flex-1">
         @yield('content')
     </main>
 
