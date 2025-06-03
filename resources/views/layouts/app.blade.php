@@ -9,7 +9,7 @@
 <body class="min-h-screen flex flex-col">
     <header>
         <nav>
-            <a href="{{ route('home') }}">Home</a>
+            <a href="{{ route('welcome') }}">Home</a>
             <a href="{{ route('all_events') }}">All events</a>
             @if (Route::has('login'))
                 @auth
