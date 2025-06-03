@@ -1,17 +1,46 @@
 <?php
 
+use App\Livewire\CreateEvent;
+use App\Livewire\Dashboard;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Models\Event;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/events', function() {
+    return view('events');
+})->name('events');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/events', function() {
+        $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->get();
+        return view('user.events', ['events' => $events]);
+    })->name('user.events');
+
+    Route::get('/user/events/create', function() {
+        return view('user.create-event');
+    })->name('user.events.create');
+
+    // Route::get('/user/events/create', CreateEvent::class)->name('user.events.create');
+});
+
+// Route::get('/dashboard/events/create', function() {
+//     return view('create-event');
+// })->name('dashboard.events.create');
+
+
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
