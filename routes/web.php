@@ -32,7 +32,7 @@ use App\Models\Event;
 Route::get('/', function () {
     $upcomingEvents = Event::where('start_time', '>=', now())
         ->orderBy('start_time')
-        ->take(3)
+        ->take(6)
         ->get();
     return view('welcome', compact('upcomingEvents'));
 })->name('welcome');
