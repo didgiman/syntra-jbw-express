@@ -3,12 +3,14 @@
 namespace App\Livewire;
 
 use App\Models\Event;
+use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class CreateEvent extends Component
 {
+    public $eventTypes;
 
     public $user_id;
 
@@ -23,16 +25,25 @@ class CreateEvent extends Component
     #[Validate('required|date|after:start_time')]
     public $end_time = '';
 
-    // #[Validate('required|datetime')]
-    // public $location = '';
+    #[Validate('required')]
+    public $type_id = '';
 
-    // #[Validate('required|number')]
-    // public $price = '';
+    #[Validate('required|min:3')]
+    public $location = '';
 
-    // #[Validate('required|int')]
-    // public $max_attendees = '';
+    #[Validate('required|numeric')]
+    public $price = '';
+
+    #[Validate('int')]
+    public $max_attendees = '';
 
     // public $poster = '';
+
+    public function mount()
+    {
+        $this->user_id = Auth::user()->id;
+        $this->eventTypes = Type::orderby('description')->get();
+    }
 
     public function save()
     {
@@ -43,11 +54,6 @@ class CreateEvent extends Component
         $this->redirect(route('user.events'), navigate: true);
     }
 
-    public function mount()
-    {
-        $this->user_id = Auth::user()->id;
-    }
-
     public function render()
     {
         return view('livewire.create-event');
@@ -56,6 +62,7 @@ class CreateEvent extends Component
     public function messages()
     {
         return [
+            'type_id.required' => 'Please select the type of event you want to create',
             'start_time.after' => 'The start time of the event must be in the future',
             'end_time.after' => 'The end time of the event must be after the start time',
         ];

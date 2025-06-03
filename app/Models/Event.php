@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use PhpParser\Node\Expr\FuncCall;
 
 class Event extends Model
 {
@@ -18,7 +16,12 @@ class Event extends Model
         'description',
         'start_time',
         'end_time',
-        'user_id'
+        'user_id',
+        'type_id',
+        'location',
+        'price',
+        'max_attendees',
+        'image',
     ];
 
     protected $casts = [
@@ -31,13 +34,13 @@ class Event extends Model
         return $this->belongsTo(User::class);
     }
     
-    public function attendee(): HasMany
+    public function attendees(): HasMany
     {
         return $this->hasMany(Attendee::class);
     }
 
-    public function type(): HasOne
+    public function type(): BelongsTo
     {
-        return $this->hasOne(Type::class);
+        return $this->belongsTo(Type::class);
     }
 }
