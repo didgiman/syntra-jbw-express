@@ -26,10 +26,14 @@ Route::get('/events', function () {
     return view('all_events');
 })->name('all_events');
 
+// grab the earliest upcoming events from the DB
 use App\Models\Event;
 
 Route::get('/', function () {
-    $upcomingEvents = Event::orderBy('start_time')->take(3)->get();
+    $upcomingEvents = Event::where('start_time', '>=', now())
+        ->orderBy('start_time')
+        ->take(3)
+        ->get();
     return view('welcome', compact('upcomingEvents'));
 })->name('welcome');
 
