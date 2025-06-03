@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignIdFor(Type::class);
             $table->text('location');
             $table->integer('max_attendees')->nullable();
+            $table->float('price')->default(0);
             $table->string('image')->default('no-event-poster.webp');
             $table->timestamps();
         });
