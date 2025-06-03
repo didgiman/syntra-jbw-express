@@ -21,6 +21,9 @@ class EventFactory extends Factory
             'description' => fake()->text,
             'start_time' => fake()->dateTimeBetween('now', '+1 month'),
             'end_time' => fake()->dateTimeBetween('+1 month', '+2 months'),
+            'location' => fake()->city(),
+            'max_attendees' => fake()->optional()->numberBetween(1, 4) ? fake()->numberBetween(1, 20) * 50 : null,
+            'price' => fake()->randomFloat(2, 0, 100)
         ];
     }
 }

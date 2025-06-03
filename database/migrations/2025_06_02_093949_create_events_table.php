@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Type;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,6 +20,11 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->dateTime('start_time');
             $table->dateTime('end_time');
+            $table->foreignIdFor(Type::class);
+            $table->text('location');
+            $table->integer('max_attendees')->nullable();
+            $table->decimal('price', 10, 2)->default(0.00);
+            $table->string('image')->default('no-event-poster.webp');
             $table->timestamps();
         });
     }
