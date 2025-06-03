@@ -6,27 +6,30 @@
         <section class="mb-8">
             <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
             <ul>
-                @forelse($upcomingEvents as $event)
-                    <li 
-                        class="mb-2 p-4 border rounded shadow cursor-pointer hover:bg-black"
-                        @click="open = true; selectedEvent = {{ $event->toJson() }}"
-                    >
-                        <div class="font-bold">{{ $event->name }}</div>
-                        <div class="text-red-300 text-sm font-bold">
-                            Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
-                        </div>
-                        <div>{{ $event->description }}</div>
-                                <div class="mt-2">
-            @if($event->available_spots > 0)
-                <span class="text-green-600 font-semibold">{{ $event->available_spots }} spots left</span>
-            @else
+            {{-- event list --}}
+@forelse($upcomingEvents as $event)
+    <li 
+        class="mb-2 p-4 border rounded shadow cursor-pointer hover:bg-black text-white"
+        @click="open = true; selectedEvent = {{ $event->toJson() }}"
+    >
+        <div class="font-bold">{{ $event->name }}</div>
+        <div class="text-red-300 text-sm font-bold">
+            Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
+        </div>
+        <div>{{ $event->description }}</div>
+        <div class="mt-2">
+            @if(is_null($event->available_spots))
                 <span class="text-red-600 font-semibold">SOLD OUT</span>
+            @elseif($event->available_spots == 0)
+                <span class="text-green-600 font-semibold">Unlimited spots</span>
+            @else
+                <span class="text-green-600 font-semibold">{{ $event->available_spots }} spots left</span>
             @endif
         </div>
-                    </li>
-                @empty
-                    <li>No upcoming events.</li>
-                @endforelse
+    </li>
+@empty
+    <li>No upcoming events.</li>
+@endforelse
             </ul>
         </section>
 
@@ -43,36 +46,42 @@
         >&times;</button>
         <template x-if="selectedEvent">
             <div>
-                <!-- SOLD OUT badge in modal -->
-                <template x-if="selectedEvent.available_spots === 0">
+                <!-- SOLD OUT badge in modal (top left) -->
+                <template x-if="selectedEvent.available_spots == null || selectedEvent.available_spots == 'null'">
                     <span class="absolute top-2 left-2 bg-red-600 text-white px-3 py-1 rounded font-bold text-xs">SOLD OUT</span>
                 </template>
+
                 <h3 class="text-xl font-bold mb-2" x-text="selectedEvent.name"></h3>
                 <div class="text-red-300 text-bold mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
                 <div class="mb-4" x-text="selectedEvent.description"></div>
                 <div class="mb-4" x-text="'Location: ' + (selectedEvent.location ?? 'TBA')"></div>
+
                 <div class="mb-4">
+                    <template x-if="selectedEvent.available_spots == null || selectedEvent.available_spots == 'null'">
+                        <span class="text-red-400 font-semibold">SOLD OUT</span>
+                    </template>
+                    <template x-if="selectedEvent.available_spots == 0 || selectedEvent.available_spots == '0'">
+                        <span class="text-green-400 font-semibold">Unlimited spots</span>
+                    </template>
                     <template x-if="selectedEvent.available_spots > 0">
                         <span class="text-green-400 font-semibold" x-text="selectedEvent.available_spots + ' spots left'"></span>
                     </template>
-                    <template x-if="selectedEvent.available_spots === 0">
-                        <span class="text-red-400 font-semibold">SOLD OUT</span>
-                    </template>
                 </div>
-                <template x-if="selectedEvent.available_spots > 0">
-                    <button 
-                        class="w-full mt-6 bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"
-                        @click="alert('You are attending ' + selectedEvent.name); open = false;"
-                    >
-                        Attend
-                    </button>
-                </template>
-                <template x-if="selectedEvent.available_spots === 0">
+
+                <template x-if="selectedEvent.available_spots == null || selectedEvent.available_spots == 'null'">
                     <button 
                         class="w-full mt-6 bg-gray-400 text-white px-6 py-2 rounded shadow cursor-not-allowed"
                         disabled
                     >
                         SOLD OUT
+                    </button>
+                </template>
+                <template x-if="selectedEvent.available_spots == 0 || selectedEvent.available_spots == '0' || selectedEvent.available_spots > 0">
+                    <button 
+                        class="w-full mt-6 bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"
+                        @click="alert('You are attending ' + selectedEvent.name); open = false;"
+                    >
+                        Attend
                     </button>
                 </template>
             </div>
