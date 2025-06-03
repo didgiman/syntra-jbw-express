@@ -21,6 +21,8 @@ return new class extends Migration
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->foreignIdFor(Type::class);
+            $table->text('location');
+            $table->integer('max_attendees')->nullable();
             $table->string('image')->default('no-event-poster.webp');
             $table->timestamps();
         });
