@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Storage;
         class="mb-2 p-4 border rounded shadow cursor-pointer hover:bg-black text-white"
         @click="open = true; selectedEvent = {
         ...{{ $event->toJson() }},
+        type: {{ $event->type->toJson() }},  {{-- Pass the entire type object --}}
         remaining_spots: {{ is_null($event->max_attendees) ? 0 : ($event->max_attendees - $event->attendees->count()) }}
     }"
     >
@@ -55,7 +56,10 @@ use Illuminate\Support\Facades\Storage;
                 >
             @endif
             <div class="flex-1">
-                <div class="font-bold">{{ $event->name }}</div>
+                <div class="flex justify-between items-start">
+                    <div class="font-bold">{{ $event->name }}</div>
+                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">{{ $event->type->name }}</span>
+                </div>
                 <div class="text-red-300 text-sm font-bold">
                     Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
                 </div>
@@ -117,7 +121,6 @@ use Illuminate\Support\Facades\Storage;
                 </template>
 
                 <h3 class="text-xl font-bold mb-2" x-text="selectedEvent.name"></h3>
-                <div class="text-red-300 text-bold mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
                 
  <!-- image template -->
         <template x-if="selectedEvent.image">
