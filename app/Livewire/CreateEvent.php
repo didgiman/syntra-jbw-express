@@ -7,9 +7,12 @@ use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class CreateEvent extends Component
 {
+    use WithFileUploads;
+
     public $eventTypes;
 
     public $user_id;
@@ -37,7 +40,10 @@ class CreateEvent extends Component
     #[Validate('int')]
     public $max_attendees = '';
 
-    // public $poster = '';
+    #[Validate('image|mimes:jpg,jpeg,png,gif|max:1024')]
+    public $poster;
+
+    public $image;
 
     public function mount()
     {
@@ -48,6 +54,14 @@ class CreateEvent extends Component
     public function save()
     {
         $this->validate();
+
+        if ($this->poster) {
+            $this->image = $this->poster->storePublicly('posters', ['disk' => 'public']);
+        }
+
+        if ($this->max_attendees === '') {
+            $this->max_attendees = null;
+        }
 
         Event::create($this->all());
 

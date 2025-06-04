@@ -26,6 +26,7 @@
                                     {{-- <a href="{{ route('dashboard') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}">Your Dashboard</a> --}}
                                     <a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'bg-gray-700' : '' }}">All Events</a>
                                     <a href="{{ route('user.events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events') ? 'bg-gray-700' : '' }}">Your Events</a>
+                                    <a href="{{ route('user') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user') ? 'bg-gray-700' : '' }}">Attending Events</a>
                                 </div>
 
                             </div>
@@ -41,9 +42,11 @@
                     <form method="POST" action="{{ url('/logout') }}">
                         @csrf
                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg">
-                            Loguit
+                            Logout
                         </button>
                     </form>
+                    @else
+                        <a href="{{ route('login') }}">Login</a>
                     @endauth
                 </div>
             </div>

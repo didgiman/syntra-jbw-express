@@ -24,6 +24,14 @@ Route::get('/events', function() {
 })->name('events');
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/user', function() {
+        $events = Event::whereHas('attendees', function($query) {
+            $query->where('user_id', Auth::id());
+        })->orderBy('start_time', 'DESC')->get();
+        return view('user.attendees', ['events' => $events]);
+    })->name('user');
+
     Route::get('/user/events', function() {
         $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->get();
         return view('user.events', ['events' => $events]);
