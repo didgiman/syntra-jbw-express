@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Type extends Model
 {
-    public function event(): BelongsTo
+    public function events(): HasMany
     {
-        return $this->belongsTo(Event::class);
+        return $this->hasMany(Event::class);
     }
 }
