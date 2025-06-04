@@ -2,6 +2,7 @@
 
 use App\Livewire\CreateEvent;
 use App\Livewire\Dashboard;
+use App\Livewire\EditEvent;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -41,8 +42,8 @@ Route::middleware(['auth'])->group(function () {
         return view('user.create-event');
     })->name('user.events.create');
 
-    Route::get('/user/events/{event}/edit', function() {
-        return view('user.edit-event');
+    Route::get('/user/events/{event}/edit', function(Event $event) {
+        return view('user.edit-event', compact('event'));
     })->name('user.events.edit');
 
     // Route::get('/user/events/create', CreateEvent::class)->name('user.events.create');

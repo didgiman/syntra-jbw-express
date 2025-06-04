@@ -8,8 +8,15 @@
             <a href="{{ route('user.events.create') }}" class="btn btn-primary block w-full md:w-1/3">Create Event</a>
         </div>
         <div class="space-y-6">
+
+            @if (session('message'))
+                <div class="text-green-500 font-bold text-xl text-center">
+                    {{ session('message') }}
+                </div>
+            @endif
+
              @foreach ($events as $event)
-                <div class="mb-2 border-b-2 border-gray-800 py-4 flex justify-between items-center">
+                <div class="mb-2 border-b-2 border-gray-800 py-4 flex justify-between items-center {{ session('highlight-event') === $event->id ? 'bg-green-900 p-4 rounded-lg' : '' }}">
                     <div>
                         <h2 class="text-xl font-bold">{{ $event->name }}</h2>
                         <p>{{ $event->start_time }}</p>

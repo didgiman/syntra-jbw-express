@@ -2,16 +2,18 @@
 
 namespace App\Livewire;
 
+use Livewire\Component;
 use App\Models\Event;
 use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class CreateEvent extends Component
+class EditEvent extends Component
 {
     use WithFileUploads;
+
+    public ?Event $event;
 
     public $eventTypes;
 
@@ -37,7 +39,6 @@ class CreateEvent extends Component
     #[Validate('required|numeric')]
     public $price = '';
 
-    #[Validate('int')]
     public $max_attendees = '';
 
     #[Validate('nullable|image|mimes:jpg,jpeg,png,gif|max:1024')]
@@ -45,10 +46,26 @@ class CreateEvent extends Component
 
     public $image;
 
-    public function mount()
+    public function mount(Event $event)
     {
+
         $this->user_id = Auth::user()->id;
         $this->eventTypes = Type::orderby('description')->get();
+
+        $this->name = $event->name;
+        $this->description = $event->description;
+
+        // Format it for the datetime-local input
+        $this->start_time = \Carbon\Carbon::parse($event->start_time)->format('Y-m-d\TH:i');
+        $this->end_time = \Carbon\Carbon::parse($event->end_time)->format('Y-m-d\TH:i');
+
+        $this->type_id = $event->type_id;
+        $this->location = $event->location;
+        $this->price = $event->price;
+        $this->max_attendees = is_null($event->max_attendees) ? '' : $event->max_attendees;
+        $this->image = $event->image;
+
+        $this->event = $event;
     }
 
     public function save()
@@ -63,18 +80,14 @@ class CreateEvent extends Component
             $this->max_attendees = null;
         }
 
-        // exclude all NULL values
-        $event = Event::create(array_filter($this->all(), fn ($value) => !is_null($value)));
+        $this->event->update($this->only([
+            'name', 'description', 'start_time', 'end_time', 'type_id', 'location', 'price', 'max_attendees', 'image'
+        ]));
 
-        session()->flash('message', 'Event "' . $this->name . '" created successfully!');
-        session()->flash('highlight-event', $event->id);
+        session()->flash('message', 'Event "' . $this->name . '" updated successfully!');
+        session()->flash('highlight-event', $this->event->id);
 
         $this->redirect(route('user.events'), navigate: true);
-    }
-
-    public function render()
-    {
-        return view('livewire.create-event');
     }
 
     public function messages()
@@ -84,5 +97,12 @@ class CreateEvent extends Component
             'start_time.after' => 'The start time of the event must be in the future',
             'end_time.after' => 'The end time of the event must be after the start time',
         ];
+    }
+
+    public function render()
+    {
+        return view('livewire.edit-event');
+            // ->layout('components.layouts.auth');
+            // ->layout('welcome');
     }
 }
