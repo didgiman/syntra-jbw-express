@@ -59,6 +59,10 @@ class CreateEvent extends Component
             $this->image = $this->poster->storePublicly('posters', ['disk' => 'public']);
         }
 
+        if ($this->max_attendees === '') {
+            $this->max_attendees = null;
+        }
+
         Event::create($this->all());
 
         $this->redirect(route('user.events'), navigate: true);
