@@ -52,7 +52,9 @@ class EventResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->numeric()
                     ->default(0)
-                    ->hint('For free event, leave price = 0'),
+                    ->minValue(0)
+                    ->hint('Insert 0 if the event is free')
+                    ->required(),
                 Forms\Components\FileUpload::make('image')
                     ->image()
             ]);
