@@ -4,14 +4,14 @@
             <label class="block" for="event-type">Event type</label>
             <select 
                 id="event-type"
-                wire:model="type_id"
+                wire:model="form.type_id"
             >
                 <option value="">- Select event type -</option>
-                @foreach ($eventTypes as $eventType)
+                @foreach ($form->eventTypes as $eventType)
                     <option value="{{ $eventType->id }}">{{ $eventType->description }}</option>
                 @endforeach
             </select>
-            @error('type_id')
+            @error('form.type_id')
                 <div class="text-red-600 text-sm">{{ $message }}</div>
             @enderror
         </div>
@@ -20,9 +20,9 @@
             <input
                 type="text"
                 id="event-name"
-                wire:model="name"
+                wire:model="form.name"
             >
-            @error('name')
+            @error('form.name')
                 <div class="text-red-600 text-sm">{{ $message }}</div>
             @enderror
         </div>
@@ -30,9 +30,9 @@
             <label class="block" for="event-description">Event description</label>
             <textarea
                 id="event-description"
-                wire:model="description"
+                wire:model="form.description"
             ></textarea>
-            @error('description')
+            @error('form.description')
                 <div class="text-red-600 text-sm">{{ $message }}</div>
             @enderror
         </div>
@@ -41,57 +41,61 @@
             <input
                 type="text"
                 id="event-location"
-                wire:model="location"
+                wire:model="form.location"
             >
-            @error('location')
+            @error('form.location')
                 <div class="text-red-600 text-sm">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-input">
-            <label class="block" for="event-start-time">Event start time:</label>
-            <input
-                type="datetime-local"
-                id="event-start-time"
-                wire:model="start_time"
-            >
-            @error('start_time')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
-            @enderror
+        <div class="md:flex md:gap-4">
+            <div class="form-input md:w-full">
+                <label class="block" for="event-start-time">Event start time:</label>
+                <input
+                    type="datetime-local"
+                    id="event-start-time"
+                    wire:model="form.start_time"
+                >
+                @error('form.start_time')
+                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-input md:w-full">
+                <label class="block" for="event-start-time">Event end time</label>
+                <input
+                    type="datetime-local"
+                    id="event-end-time"
+                    wire:model="form.end_time"
+                >
+                @error('form.end_time')
+                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
-        <div class="form-input">
-            <label class="block" for="event-start-time">Event end time</label>
-            <input
-                type="datetime-local"
-                id="event-end-time"
-                wire:model="end_time"
-            >
-            @error('end_time')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="form-input">
-            <label class="block" for="event-max-attendees">Maximum attendees (<span class="text-sm">Leave blank for no limit</span>)</label>
-            <input
-                type="number"
-                min="0"
-                id="event-max-attendees"
-                wire:model="max_attendees"
-            >
-            @error('max_attendees')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="form-input">
-            <label class="block" for="event-price">Ticket price (<span class="text-sm">Insert 0 when event is free to attend</span>)</label>
-            <input
-                type="text"
-                min="0"
-                id="event-price"
-                wire:model="price"
-            >
-            @error('price')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
-            @enderror
+        <div class="md:flex md:gap-4">
+            <div class="form-input md:w-full">
+                <label class="block" for="event-max-attendees">Maximum attendees (<span class="text-sm">Leave blank for no limit</span>)</label>
+                <input
+                    type="number"
+                    min="0"
+                    id="event-max-attendees"
+                    wire:model="form.max_attendees"
+                >
+                @error('form.max_attendees')
+                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-input md:w-full">
+                <label class="block" for="event-price">Ticket price (<span class="text-sm">Insert 0 when event is free to attend</span>)</label>
+                <input
+                    type="text"
+                    min="0"
+                    id="event-price"
+                    wire:model="form.price"
+                >
+                @error('form.price')
+                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
         <div class="form-input">
             <label for="description">Photo/poster:</label>
@@ -108,21 +112,21 @@
                 class="border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition"
                 :class="isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300'"
             >
-                <input type="file" wire:model="poster" x-ref="fileInput" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
+                <input type="file" wire:model="form.poster" x-ref="fileInput" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
                 <p class="text-gray-500">Drag and drop a file here or click to select one</p>
                 
-                @error('poster')
+                @error('form.poster')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
                 @else
-                    @if ($poster)
+                    @if ($form->poster)
                         <div class="flex flex-col justify-center items-center mt-2">
                             <div class="text-sm text-gray-500">New image:</div>
-                            <img class="w-1/3" src="{{ $poster->temporaryUrl() }}">
+                            <img class="w-1/3" src="{{ $form->poster->temporaryUrl() }}">
                         </div>
-                    @elseif ($image)
+                    @elseif ($form->image)
                         <div class="flex flex-col justify-center items-center mt-2">
                             <div class="text-sm text-gray-500">Current image:</div>
-                            <img class="w-1/3" src="{{ $image }}">
+                            <img class="w-1/3" src="{{ $form->image }}">
                         </div>
                     @endif
                 @enderror
