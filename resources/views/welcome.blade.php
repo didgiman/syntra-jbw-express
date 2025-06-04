@@ -2,7 +2,26 @@
 @section('title', 'EventR Home')
 
 @section('content')
-    <div x-data="{ open: false, selectedEvent: null }" class="container mx-auto py-12 px-4">
+    <div x-data="{ 
+        open: false, 
+        selectedEvent: null,
+        calculateTimeLeft(startTime) {
+            const now = new Date().getTime();
+            const eventTime = new Date(startTime).getTime();
+            const difference = eventTime - now;
+            
+            if (difference < 0) {
+                return 'Event has started';
+            }
+            
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            
+            return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+    }" class="container mx-auto py-12 px-4">
         <section class="mb-8">
             <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
             <ul>
@@ -19,6 +38,12 @@
         <div class="text-red-300 text-sm font-bold">
             Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
         </div>
+
+{{-- Countdown till event --}}
+                    <div class="text-yellow-300 text-sm mt-1"
+                         x-data
+                         x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft('{{ $event->start_time }}'), 1000)">
+                    </div>
         <div class="mt-2">
             @if(is_null($event->max_attendees))
                 <span class="text-green-600 font-semibold">Unlimited spots</span>
@@ -60,27 +85,29 @@
 
                 <h3 class="text-xl font-bold mb-2" x-text="selectedEvent.name"></h3>
                 <div class="text-red-300 text-bold mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
+                
+                <!-- Countdown in modal -->
+                <div class="text-yellow-300 text-sm mb-2"
+                     x-init="setInterval(() => $el.textContent = 'Countdown: ' + calculateTimeLeft(selectedEvent.start_time), 1000)">
+                </div>
+                
                 <div class="mb-4" x-text="selectedEvent.description"></div>
                 <div class="mb-4" x-text="'Location: ' + (selectedEvent.location ?? 'TBA')"></div>
 
                 <div class="mb-4">
-                    <!-- Show SOLD OUT when remaining_spots is null -->
+                    <!-- Availability status -->
                     <template x-if="selectedEvent.remaining_spots === null">
                         <span class="text-red-400 font-semibold">SOLD OUT</span>
                     </template>
-                    
-                    <!-- Show Unlimited spots when max_attendees is null -->
                     <template x-if="selectedEvent.max_attendees === null">
                         <span class="text-green-400 font-semibold">Unlimited spots</span>
                     </template>
-                    
-                    <!-- Show remaining spots count when available -->
                     <template x-if="selectedEvent.remaining_spots > 0">
                         <span class="text-green-400 font-semibold" x-text="selectedEvent.remaining_spots + ' spots left'"></span>
                     </template>
                 </div>
 
-                <!-- Button logic follows the same pattern -->
+                <!-- Buttons -->
                 <template x-if="selectedEvent.remaining_spots === null">
                     <button 
                         class="w-full mt-6 bg-gray-400 text-white px-6 py-2 rounded shadow cursor-not-allowed"
