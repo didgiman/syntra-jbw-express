@@ -17,14 +17,20 @@
 
              @foreach ($events as $event)
                 <div class="mb-2 border-b-2 border-gray-800 py-4 flex justify-between items-center {{ session('highlight-event') === $event->id ? 'bg-green-900 p-4 rounded-lg' : '' }}">
-                    <div>
-                        <h2 class="text-xl font-bold">{{ $event->name }}</h2>
-                        <p>{{ $event->start_time }}</p>
+                    <div class="flex gap-4">
+                        <div class="w-20 flex justify-center">
+                            <img src="{{ $event->image }}" class="">
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">{{ $event->name }}</h2>
+                            <p><span class="text-sm font-semibold text-violet-400">{{ $event->type->description }}</span> {{ $event->start_time }}</p>
+                        </div>
                     </div>
                     <div>
                         <a
                             href="/user/events/{{ $event->id }}/edit"
                             wire:navigate
+                            class="underline"
                         >Edit</a>
                     </div>
                 </div>
