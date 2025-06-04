@@ -2,6 +2,7 @@
 
 use App\Livewire\CreateEvent;
 use App\Livewire\Dashboard;
+use App\Livewire\EditEvent;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -14,6 +15,7 @@ Route::get('/', function () {
     $upcomingEvents = Event::where('start_time', '>=', now())
         ->orderBy('start_time')
         ->take(6)
+        ->with('attendees')
         ->get();
     return view('welcome', compact('upcomingEvents'));
 })->name('home');
@@ -23,6 +25,14 @@ Route::get('/events', function() {
 })->name('events');
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/user', function() {
+        $events = Event::whereHas('attendees', function($query) {
+            $query->where('user_id', Auth::id());
+        })->orderBy('start_time', 'DESC')->get();
+        return view('user.attendees', ['events' => $events]);
+    })->name('user');
+
     Route::get('/user/events', function() {
         $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->get();
         return view('user.events', ['events' => $events]);
@@ -32,8 +42,8 @@ Route::middleware(['auth'])->group(function () {
         return view('user.create-event');
     })->name('user.events.create');
 
-    Route::get('/user/events/{event}/edit', function() {
-        return view('user.edit-event');
+    Route::get('/user/events/{event}/edit', function(Event $event) {
+        return view('user.edit-event', compact('event'));
     })->name('user.events.edit');
 
     // Route::get('/user/events/create', CreateEvent::class)->name('user.events.create');
