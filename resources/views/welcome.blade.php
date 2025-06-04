@@ -69,13 +69,23 @@
 <div 
     x-show="open" 
     style="display: none;" 
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    class="fixed inset-0 flex items-center justify-center"
+    {{-- closing the modal window with esc --}}
+    @keydown.escape.window="open = false"
 >
-    <div class="bg-black rounded-lg shadow-lg max-w-md w-full p-6 relative text-white">
+    <!-- Backdrop with click handler-->
+    <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" 
+    @click="open = false"></div>
+    
+    <!-- Modal Content -->
+    <div class="bg-black rounded-lg shadow-lg max-w-2xl w-full p-6 relative text-white z-10">
         <button 
-            class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            class="absolute top-2 right-2 text-gray-400 hover:text-white text-lg flex items-center gap-2"
             @click="open = false"
-        >&times;</button>
+        >
+            <span class="text-sm font-medium">Close</span>
+            <span class="text-2xl">&times;</span>
+        </button>
         <template x-if="selectedEvent">
             <div>
                 <!-- SOLD OUT badge in modal (top left) -->
