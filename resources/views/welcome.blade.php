@@ -34,29 +34,41 @@
         remaining_spots: {{ is_null($event->max_attendees) ? 0 : ($event->max_attendees - $event->attendees->count()) }}
     }"
     >
-        <div class="font-bold">{{ $event->name }}</div>
-        <div class="text-red-300 text-sm font-bold">
-            Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
-        </div>
+    {{-- displaying the event image --}}
+        <div class="flex gap-4 items-start">
+            @if($event->image)
+                <img 
+                    src="{{ asset('storage/' . $event->image) }}" 
+                    alt="{{ $event->name }} poster" 
+                    class="w-32 h-32 object-cover rounded-lg"
+                >
+            @endif
+            <div class="flex-1">
+                <div class="font-bold">{{ $event->name }}</div>
+                <div class="text-red-300 text-sm font-bold">
+                    Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
+                </div>
 
 {{-- Countdown till event --}}
                     <div class="text-yellow-300 text-sm mt-1"
                          x-data
                          x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft('{{ $event->start_time }}'), 1000)">
                     </div>
-        <div class="mt-2">
-            @if(is_null($event->max_attendees))
-                <span class="text-green-600 font-semibold">Unlimited spots</span>
-            @else
-                @php
-                    $remainingSpots = $event->max_attendees - $event->attendees->count();
-                @endphp
-                @if($remainingSpots <= 0)
-                    <span class="text-red-600 font-semibold">SOLD OUT</span>
-                @else
-                    <span class="text-green-600 font-semibold">{{ $remainingSpots }} spots left</span>
-                @endif
-            @endif
+                <div class="mt-2">
+                    @if(is_null($event->max_attendees))
+                        <span class="text-green-600 font-semibold">Unlimited spots</span>
+                    @else
+                        @php
+                            $remainingSpots = $event->max_attendees - $event->attendees->count();
+                        @endphp
+                        @if($remainingSpots <= 0)
+                            <span class="text-red-600 font-semibold">SOLD OUT</span>
+                        @else
+                            <span class="text-green-600 font-semibold">{{ $remainingSpots }} spots left</span>
+                        @endif
+                    @endif
+                </div>
+            </div>
         </div>
     </li>
 @empty
@@ -96,6 +108,17 @@
                 <h3 class="text-xl font-bold mb-2" x-text="selectedEvent.name"></h3>
                 <div class="text-red-300 text-bold mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
                 
+ <!-- image template -->
+        <template x-if="selectedEvent.image">
+            <img 
+                :src="'/storage/' + selectedEvent.image" 
+                :alt="selectedEvent.name + ' poster'"
+                class="w-full max-h-[400px] object-contain rounded-lg mb-4"
+            >
+        </template>
+
+        <div class="text-red-300 text-bold mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
+
                 <!-- Countdown in modal -->
                 <div class="text-yellow-300 text-sm mb-2"
                      x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft(selectedEvent.start_time), 1000)">
