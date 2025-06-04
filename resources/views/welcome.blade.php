@@ -1,6 +1,11 @@
 @extends('partials.header')
 @section('title', 'EventR Home')
 
+{{-- testing for image display on events --}}
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
     <div x-data="{ 
         open: false, 
@@ -37,10 +42,16 @@
     {{-- displaying the event image --}}
         <div class="flex gap-4 items-start">
             @if($event->image)
+                {{-- <!-- Debug info -->
+                <div class="text-xs text-gray-500">
+                    Debug: {{ $event->image_url }}
+                    Exists: {{ Storage::disk('public')->exists('posters/' . $event->image) ? 'Yes' : 'No' }}
+                </div> --}}
                 <img 
-                    src="{{ asset('storage/' . $event->image) }}" 
+                    src="{{ $event->image_url }}" 
                     alt="{{ $event->name }} poster" 
                     class="w-32 h-32 object-cover rounded-lg"
+                    onerror="console.error('Failed to load image:', this.src)"
                 >
             @endif
             <div class="flex-1">
@@ -111,7 +122,7 @@
  <!-- image template -->
         <template x-if="selectedEvent.image">
             <img 
-                :src="'/storage/' + selectedEvent.image" 
+                :src="'{{ Storage::url('') }}' + selectedEvent.image" 
                 :alt="selectedEvent.name + ' poster'"
                 class="w-full max-h-[400px] object-contain rounded-lg mb-4"
             >
