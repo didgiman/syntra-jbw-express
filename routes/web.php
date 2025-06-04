@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('user');
 
     Route::get('/user/events', function() {
-        $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->get();
+        $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->with('type')->get();
         return view('user.events', ['events' => $events]);
     })->name('user.events');
 
