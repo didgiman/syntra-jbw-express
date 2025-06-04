@@ -47,22 +47,23 @@ class Event extends Model
         return $this->belongsTo(Type::class);
     }
 
+    // Accessor for available_spots
     public function getAvailableSpotsAttribute()
     {
         // If max_attendees is null, return 0 (unlimited spots)
         if (is_null($this->max_attendees)) {
             return 0;
         }
-
+ 
         // Calculate remaining spots
         $taken = $this->attendees()->count();
         $remaining = $this->max_attendees - $taken;
-
+ 
         // If no spots left, return null (sold out)
         if ($remaining <= 0 && $this->max_attendees !== 0) {
             return null;
         }
-
+ 
         // If max_attendees is 0 or there are spots left, return the count
         return $this->max_attendees === 0 ? 0 : $remaining;
     }
