@@ -88,7 +88,7 @@
                 
                 <!-- Countdown in modal -->
                 <div class="text-yellow-300 text-sm mb-2"
-                     x-init="setInterval(() => $el.textContent = 'Countdown: ' + calculateTimeLeft(selectedEvent.start_time), 1000)">
+                     x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft(selectedEvent.start_time), 1000)">
                 </div>
                 
                 <div class="mb-4" x-text="selectedEvent.description"></div>
