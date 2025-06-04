@@ -139,7 +139,20 @@
                 </div>
                 
                 <div class="mb-4" x-text="selectedEvent.description"></div>
-                <div class="mb-4" x-text="'Location: ' + (selectedEvent.location ?? 'TBA')"></div>
+                {{-- <div class="mb-4" x-text="'Location: ' + (selectedEvent.location ?? 'TBA')"></div> --}}
+
+                {{-- Try out for google maps --}}
+<div class="mb-4">
+    <a 
+        x-show="selectedEvent.location"
+        :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(selectedEvent.location)"
+        class="text-blue-400 hover:text-blue-300 hover:underline"
+        target="_blank"
+        rel="noopener noreferrer"
+        x-text="'Location: ' + selectedEvent.location"
+    ></a>
+    <span x-show="!selectedEvent.location" class="text-gray-400">Location: TBA</span>
+</div>
 
                 <div class="mb-4">
                     <!-- Availability status -->
