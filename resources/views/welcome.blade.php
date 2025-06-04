@@ -1,7 +1,7 @@
 @extends('partials.header')
 @section('title', 'EventR Home')
 
-{{-- testing for image display on events --}}
+{{-- for image display on events --}}
 @php
 use Illuminate\Support\Facades\Storage;
 @endphp
@@ -50,7 +50,7 @@ use Illuminate\Support\Facades\Storage;
             {{-- Event Image --}}
             @if($event->image)
                 <img 
-                    src="{{ $event->image_url }}" 
+                    src="{{ $event->image }}" 
                     alt="{{ $event->name }} poster" 
                     class="w-32 h-32 object-cover rounded-lg"
                     onerror="console.error('Failed to load image:', this.src)"
@@ -127,14 +127,14 @@ use Illuminate\Support\Facades\Storage;
 
                 <h3 class="text-xl font-bold mb-2" x-text="selectedEvent.name"></h3>
                 
- <!-- image template -->
-        <template x-if="selectedEvent.image">
-            <img 
-                :src="'{{ Storage::url('') }}' + selectedEvent.image" 
-                :alt="selectedEvent.name + ' poster'"
-                class="w-full max-h-[400px] object-contain rounded-lg mb-4"
-            >
-        </template>
+<!-- image template -->
+<template x-if="selectedEvent.image">
+    <img 
+        :src="selectedEvent.image"
+        :alt="selectedEvent.name + ' poster'"
+        class="w-full max-h-[400px] object-contain rounded-lg mb-4"
+    >
+</template>
 
         <div class="text-red-300 text-bold mb-2" x-text="'Starts: ' + new Date(selectedEvent.start_time).toLocaleString()"></div>
 
