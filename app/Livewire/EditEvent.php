@@ -4,31 +4,34 @@ namespace App\Livewire;
 
 use App\Livewire\Forms\EventForm;
 use Livewire\Component;
+use App\Models\Event;
 use Livewire\WithFileUploads;
 
-class CreateEvent extends Component
+class EditEvent extends Component
 {
     use WithFileUploads;
 
     public EventForm $form;
 
+    public function mount(Event $event)
+    {
+        $this->form->setEvent($event);
+    }
+
     public function save()
     {
-        $event = $this->form->store();
+        $event = $this->form->update();
 
-        session()->flash('message', 'Event "' . $event->name . '" created successfully!');
+        session()->flash('message', 'Event "' . $event->name . '" updated successfully!');
         session()->flash('highlight-event', $event->id);
 
         $this->redirect(route('user.events'), navigate: true);
     }
 
-    public function mount()
-    {
-        $this->form->mount();
-    }
-
     public function render()
     {
         return view('livewire.event-form');
+            // ->layout('components.layouts.auth');
+            // ->layout('welcome');
     }
 }
