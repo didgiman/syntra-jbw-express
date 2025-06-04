@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     // grab the earliest upcoming events from the DB
-    $upcomingEvents = Event::where('start_time', '>=', now())
+    $upcomingEvents = Event::with(['attendees', 'type'])  // Added 'type' here
+        ->where('start_time', '>=', now())
         ->orderBy('start_time')
         ->take(6)
-        ->with('attendees')
         ->get();
     return view('welcome', compact('upcomingEvents'));
 })->name('home');

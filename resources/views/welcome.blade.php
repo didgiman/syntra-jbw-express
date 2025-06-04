@@ -33,21 +33,22 @@ use Illuminate\Support\Facades\Storage;
             {{-- event list --}}
 @forelse($upcomingEvents as $event)
     <li 
-        class="mb-2 p-4 border rounded shadow cursor-pointer hover:bg-black text-white"
+        class="mb-2 p-4 border rounded shadow cursor-pointer hover:bg-black text-white relative"
         @click="open = true; selectedEvent = {
-        ...{{ $event->toJson() }},
-        type: {{ $event->type->toJson() }},  {{-- Pass the entire type object --}}
-        remaining_spots: {{ is_null($event->max_attendees) ? 0 : ($event->max_attendees - $event->attendees->count()) }}
-    }"
+            ...{{ $event->toJson() }},
+            type: {{ $event->type->toJson() }},
+            type_name: '{{ $event->type ? strtoupper($event->type->description) : 'NO TYPE' }}',
+            remaining_spots: {{ is_null($event->max_attendees) ? 0 : ($event->max_attendees - $event->attendees->count()) }}
+        }"
     >
-    {{-- displaying the event image --}}
+        {{-- Type text in top right --}}
+        <span class="absolute top-2 right-2 text-sm font-bold text-white">
+            {{ $event->type ? strtoupper($event->type->description) : 'NO TYPE' }}
+        </span>
+
         <div class="flex gap-4 items-start">
+            {{-- Event Image --}}
             @if($event->image)
-                {{-- <!-- Debug info -->
-                <div class="text-xs text-gray-500">
-                    Debug: {{ $event->image_url }}
-                    Exists: {{ Storage::disk('public')->exists('posters/' . $event->image) ? 'Yes' : 'No' }}
-                </div> --}}
                 <img 
                     src="{{ $event->image_url }}" 
                     alt="{{ $event->name }} poster" 
@@ -55,20 +56,24 @@ use Illuminate\Support\Facades\Storage;
                     onerror="console.error('Failed to load image:', this.src)"
                 >
             @endif
+
+            {{-- Event Details --}}
             <div class="flex-1">
-                <div class="flex justify-between items-start">
-                    <div class="font-bold">{{ $event->name }}</div>
-                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">{{ $event->type->name }}</span>
-                </div>
-                <div class="text-red-300 text-sm font-bold">
+                {{-- Event Name --}}
+                <div class="font-bold text-lg mb-2">{{ $event->name }}</div>
+                
+                {{-- Start Time --}}
+                <div class="text-red-300 text-sm font-bold mb-2">
                     Starts: {{ \Carbon\Carbon::parse($event->start_time)->format('M d, Y H:i') }}
                 </div>
 
-{{-- Countdown till event --}}
-                    <div class="text-yellow-300 text-sm mt-1"
-                         x-data
-                         x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft('{{ $event->start_time }}'), 1000)">
-                    </div>
+                {{-- Countdown --}}
+                <div class="text-yellow-300 text-sm mb-2"
+                     x-data
+                     x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft('{{ $event->start_time }}'), 1000)">
+                </div>
+
+                {{-- Available Spots --}}
                 <div class="mt-2">
                     @if(is_null($event->max_attendees))
                         <span class="text-green-600 font-semibold">Unlimited spots</span>
@@ -87,7 +92,7 @@ use Illuminate\Support\Facades\Storage;
         </div>
     </li>
 @empty
-    <li>No upcoming events.</li>
+    <li class="text-gray-500 text-center py-4">No upcoming events.</li>
 @endforelse
             </ul>
         </section>
