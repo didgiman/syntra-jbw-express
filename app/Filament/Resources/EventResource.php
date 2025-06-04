@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers;
 use App\Models\Event;
+use App\Models\Type;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -71,10 +73,19 @@ class EventResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type.description')
-                    ->searchable(),         
+                    ->searchable()
+                    ->label('Type'),         
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('Past events only')->query(
+                    function (Builder $query): Builder {
+                        return $query->where('start_time', '<=', Carbon::now());
+                    }
+                ),
+                Tables\Filters\SelectFilter::make('type_id')
+                    ->options(Type::all()->pluck('description', 'id'))
+                    ->multiple()
+                    ->label('Type')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
