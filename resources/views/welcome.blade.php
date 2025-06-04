@@ -1,11 +1,6 @@
 @extends('partials.header')
 @section('title', 'EventR Home')
 
-{{-- for image display on events --}}
-@php
-use Illuminate\Support\Facades\Storage;
-@endphp
-
 @section('content')
     <div x-data="{ 
         open: false, 
@@ -180,5 +175,5 @@ use Illuminate\Support\Facades\Storage;
         </template>
     </div>
 </div>
-    <script src="//unpkg.com/alpinejs" defer></script>
+
 @endsection
