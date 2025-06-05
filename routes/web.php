@@ -32,12 +32,12 @@ Route::middleware(['auth'])->group(function () {
         $events = Event::whereHas('attendees', function($query) {
             $query->where('user_id', Auth::id());
         })->orderBy('start_time', 'DESC')->get();
-        return view('user.attendees', ['events' => $events]);
+        return view('user.attending', ['events' => $events]);
     })->name('user.events.attending');
 
     Route::get('/user/events/hosting', function() {
         $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->with('type')->get();
-        return view('user.events', ['events' => $events]);
+        return view('user.hosting', ['events' => $events]);
     })->name('user.events.hosting');
 
     Route::get('/user/events/hosting/create', function() {

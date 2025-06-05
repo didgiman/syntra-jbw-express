@@ -12,7 +12,7 @@
                 @endforeach
             </select>
             @error('form.type_id')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-input">
@@ -23,7 +23,7 @@
                 wire:model="form.name"
             >
             @error('form.name')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-input">
@@ -33,7 +33,7 @@
                 wire:model="form.description"
             ></textarea>
             @error('form.description')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-input">
@@ -44,7 +44,7 @@
                 wire:model="form.location"
             >
             @error('form.location')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="md:flex md:gap-4">
@@ -57,7 +57,7 @@
                     min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.start_time')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-input md:w-full">
@@ -69,7 +69,7 @@
                     min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.end_time')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
         </div>
@@ -83,7 +83,7 @@
                     wire:model="form.max_attendees"
                 >
                 @error('form.max_attendees')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-input md:w-full">
@@ -95,7 +95,7 @@
                     wire:model="form.price"
                 >
                 @error('form.price')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
         </div>
@@ -118,7 +118,7 @@
                 <p class="text-gray-500">Drag and drop a file here or click to select one</p>
                 
                 @error('form.poster')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @else
                     @if ($form->poster)
                         <div class="flex flex-col justify-center items-center mt-2">

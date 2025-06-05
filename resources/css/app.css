@@ -113,6 +113,10 @@ select:focus[data-flux-control] {
     @apply w-auto;
 }
 
+.validationError {
+    @apply text-red-600 text-sm;
+}
+
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
