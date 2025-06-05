@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UpcomingEventScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,27 @@ use Illuminate\Support\Facades\Storage;
 class Event extends Model
 {
     use HasFactory;
+
+    protected static function booted()
+    {
+        // By default, the model will only return Events that are not passed
+        static::addGlobalScope(new UpcomingEventScope);
+    }
+    public function scopePast($query)
+    {
+        return $query->withoutGlobalScope(UpcomingEventScope::class)
+                    ->where('end_time', '<', now());
+
+        // Use like this:
+        // $pastEvents = Event::past()->get();
+    }
+    public function scopeAllEvents($query)
+    {
+        return $query->withoutGlobalScope(UpcomingEventScope::class);
+
+        // Use like this:
+        // $pastEvents = Event::allEvents()->get();
+    }
 
     protected $fillable = [
         'name',

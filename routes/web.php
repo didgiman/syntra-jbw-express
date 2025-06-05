@@ -35,10 +35,22 @@ Route::middleware(['auth'])->group(function () {
         return view('user.attending', ['events' => $events]);
     })->name('user.events.attending');
 
+    Route::get('/user/events/attending/past', function() {
+        $events = Event::past()->whereHas('attendees', function($query) {
+            $query->where('user_id', Auth::id());
+        })->orderBy('start_time', 'DESC')->get();
+        return view('user.attending', ['events' => $events]);
+    })->name('user.events.attending.past');
+
     Route::get('/user/events/hosting', function() {
         $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->with('type')->get();
         return view('user.hosting', ['events' => $events]);
     })->name('user.events.hosting');
+
+    Route::get('/user/events/hosting/past', function() {
+        $events = Event::past()->where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->with('type')->get();
+        return view('user.hosting', ['events' => $events]);
+    })->name('user.events.hosting.past');
 
     Route::get('/user/events/hosting/create', function() {
         return view('user.create-event');
