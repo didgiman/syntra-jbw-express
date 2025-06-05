@@ -12,45 +12,22 @@ class UserEventController extends Controller
 
     public function hosting()
     {
-        $events = Event::where('user_id', Auth::id())
-            ->with('type')
-            ->orderByDesc('start_time')
-            ->get();
-
-        return view('user.hosting', ['events' => $events]);
+        return view('user.hosting', ['view' => 'hosting']);
     }
 
     public function hostingPast()
     {
-        $events = Event::where('user_id', Auth::id())
-            ->past()
-            ->with('type')
-            ->orderByDesc('start_time')
-            ->get();
-
-        return view('user.hosting', ['events' => $events]);
+        return view('user.hosting', ['view' => 'hosting.past']);
     }
 
     public function attending()
     {
-        $events = Event::whereHas('attendees', function($query) {
-            $query->where('user_id', Auth::id());
-        })
-        ->orderBy('start_time', 'DESC')->get();
-        
-        return view('user.attending', ['events' => $events]);
+        return view('user.attending', ['view' => 'attending']);
     }
 
     public function attendingPast()
     {
-        $events = Event::past()
-            ->whereHas('attendees', function($query) {
-                $query->where('user_id', Auth::id());
-            })
-            ->orderBy('start_time', 'DESC')
-            ->get();
-        
-        return view('user.attending', ['events' => $events]);
+        return view('user.attending', ['view' => 'attending.past']);
     }
 
     public function edit(Event $event)
