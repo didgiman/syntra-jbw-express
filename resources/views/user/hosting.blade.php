@@ -32,7 +32,7 @@
                 <div class="mb-2 border-b-2 border-gray-800 py-4 flex justify-between items-center {{ session('highlight-event') === $event->id ? 'bg-green-900 p-4 rounded-lg' : '' }}">
                     <div class="flex gap-4">
                         <div class="w-20 flex justify-center">
-                            <img src="{{ $event->image }}" class="">
+                            <img src="{{ $event->image }}" class="w-20 h-20 object-cover rounded-lg">
                         </div>
                         <div>
                             <h2 class="text-xl font-bold">{{ $event->name }}</h2>
