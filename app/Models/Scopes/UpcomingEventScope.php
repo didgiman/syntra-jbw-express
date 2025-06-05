@@ -14,6 +14,6 @@ class UpcomingEventScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $builder->where('end_time', '>=', Carbon::today());
+        $builder->where('end_time', '>=', Carbon::now());
     }
 }
