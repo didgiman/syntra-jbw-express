@@ -43,7 +43,7 @@
                         </button>
                     </form>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-login">Login</a>
+                        <a href="{{ route('login') }}" class="btn btn-login hidden md:block">Login</a>
                     @endauth
 
                     <button id="hamburger" class="text-white text-xl md:hidden flex items-center mr-6" aria-label="Navigatie menu">
