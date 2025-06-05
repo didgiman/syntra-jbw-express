@@ -38,12 +38,12 @@
                     @auth
                     <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
                         @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg">
+                        <button type="submit" class="btn btn-logout">
                             Logout
                         </button>
                     </form>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login') }}" class="btn btn-login">Login</a>
                     @endauth
 
                     <button id="hamburger" class="text-white text-xl md:hidden flex items-center mr-6" aria-label="Navigatie menu">
@@ -62,13 +62,13 @@
                         <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.attending') ? 'text-violet-400' : '' }}">Events I'm Attending</a>
                         <form method="POST" action="{{ route('logout') }}" class="flex justify-center">
                             @csrf
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg">
+                            <button type="submit" class="btn btn-logout">
                                 Logout
                             </button>
                         </form>
                     @else
                         <div class="flex justify-center">
-                            <a href="{{ route('login') }}">Login</a>
+                            <a href="{{ route('login') }}" class="btn btn-login">Login</a>
                         </div>
                     @endauth
                 </div>

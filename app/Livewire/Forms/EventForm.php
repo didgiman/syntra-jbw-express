@@ -114,7 +114,7 @@ class EventForm extends Form
         return $this->event;
     }
 
-    public function messages()
+    protected function messages()
     {
         return [
             'type_id.required' => 'Please select the type of event you want to create',

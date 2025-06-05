@@ -45,6 +45,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('user.events.hosting.create');
 
     Route::get('/user/events/hosting/{event}/edit', function(Event $event) {
+        // Only allow a user to manage their own events
+        if ($event->user_id !== Auth::id()) {
+            abort(404);
+        }
         return view('user.edit-event', compact('event'));
     })->name('user.events.hosting.edit');
 

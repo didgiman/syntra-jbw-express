@@ -4,7 +4,7 @@
             <label class="block" for="event-type">Event type</label>
             <select 
                 id="event-type"
-                wire:model="form.type_id"
+                wire:model.live="form.type_id"
             >
                 <option value="">- Select event type -</option>
                 @foreach ($form->eventTypes as $eventType)
@@ -20,7 +20,7 @@
             <input
                 type="text"
                 id="event-name"
-                wire:model="form.name"
+                wire:model.blur="form.name"
             >
             @error('form.name')
                 <div class="validationError">{{ $message }}</div>
@@ -41,7 +41,7 @@
             <input
                 type="text"
                 id="event-location"
-                wire:model="form.location"
+                wire:model.blur="form.location"
             >
             @error('form.location')
                 <div class="validationError">{{ $message }}</div>
@@ -53,7 +53,7 @@
                 <input
                     type="datetime-local"
                     id="event-start-time"
-                    wire:model="form.start_time"
+                    wire:model.blur="form.start_time"
                     min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.start_time')
@@ -65,7 +65,7 @@
                 <input
                     type="datetime-local"
                     id="event-end-time"
-                    wire:model="form.end_time"
+                    wire:model.blur="form.end_time"
                     min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.end_time')
@@ -80,7 +80,7 @@
                     type="number"
                     min="0"
                     id="event-max-attendees"
-                    wire:model="form.max_attendees"
+                    wire:model.blur="form.max_attendees"
                 >
                 @error('form.max_attendees')
                     <div class="validationError">{{ $message }}</div>
@@ -92,7 +92,7 @@
                     type="text"
                     min="0"
                     id="event-price"
-                    wire:model="form.price"
+                    wire:model.blur="form.price"
                 >
                 @error('form.price')
                     <div class="validationError">{{ $message }}</div>
