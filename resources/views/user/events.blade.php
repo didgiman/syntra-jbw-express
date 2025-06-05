@@ -1,11 +1,11 @@
 @extends('partials.header')
-@section('title', 'Your Events;')
+@section('title', 'Events I\'m hosting')
 
 @section('content')
     <div class="container mx-auto py-12 px-4">
-        <h1 class="text-3xl font-bold mb-8 text-center">Your events</h1>
+        <h1 class="text-3xl font-bold mb-8 text-center">Events I'm hosting</h1>
         <div class="mb-6 flex justify-center">
-            <a href="{{ route('user.events.create') }}" class="btn btn-primary block w-full md:w-1/3">Create Event</a>
+            <a href="{{ route('user.events.hosting.create') }}" class="btn btn-primary block w-full md:w-1/3">Create Event</a>
         </div>
         <div class="space-y-6">
 
@@ -28,7 +28,7 @@
                     </div>
                     <div>
                         <a
-                            href="/user/events/{{ $event->id }}/edit"
+                            href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
                             wire:navigate
                             class="underline"
                         >Edit</a>

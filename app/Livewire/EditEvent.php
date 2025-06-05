@@ -25,7 +25,7 @@ class EditEvent extends Component
         session()->flash('message', 'Event "' . $event->name . '" updated successfully!');
         session()->flash('highlight-event', $event->id);
 
-        $this->redirect(route('user.events'), navigate: true);
+        $this->redirect(route('user.events.hosting'), navigate: true);
     }
 
     public function render()

@@ -26,25 +26,27 @@ Route::get('/events', function() {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/user', function() {
+    Route::redirect('/user', '/user/events/hosting')->name('user');
+
+    Route::get('/user/events/attending', function() {
         $events = Event::whereHas('attendees', function($query) {
             $query->where('user_id', Auth::id());
         })->orderBy('start_time', 'DESC')->get();
         return view('user.attendees', ['events' => $events]);
-    })->name('user');
+    })->name('user.events.attending');
 
-    Route::get('/user/events', function() {
+    Route::get('/user/events/hosting', function() {
         $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->with('type')->get();
         return view('user.events', ['events' => $events]);
-    })->name('user.events');
+    })->name('user.events.hosting');
 
-    Route::get('/user/events/create', function() {
+    Route::get('/user/events/hosting/create', function() {
         return view('user.create-event');
-    })->name('user.events.create');
+    })->name('user.events.hosting.create');
 
-    Route::get('/user/events/{event}/edit', function(Event $event) {
+    Route::get('/user/events/hosting/{event}/edit', function(Event $event) {
         return view('user.edit-event', compact('event'));
-    })->name('user.events.edit');
+    })->name('user.events.hosting.edit');
 
     // Route::get('/user/events/create', CreateEvent::class)->name('user.events.create');
 });

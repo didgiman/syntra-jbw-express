@@ -27,14 +27,16 @@
                                 <div class="flex space-x-4">
                                     {{-- <a href="{{ route('dashboard') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('dashboard') ? 'bg-gray-700' : '' }}">Your Dashboard</a> --}}
                                     <a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'bg-gray-700' : '' }}">All Events</a>
-                                    <a href="{{ route('user.events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events') ? 'bg-gray-700' : '' }}">Your Events</a>
-                                    <a href="{{ route('user') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user') ? 'bg-gray-700' : '' }}">Attending Events</a>
+                                    @auth
+                                        <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.hosting') ? 'bg-gray-700' : '' }}">Events I'm Hosting</a>
+                                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.attending') ? 'bg-gray-700' : '' }}">Events I'm Attending</a>
+                                    @endauth
                                 </div>
                             </div>
                         </div>
                     </div>
                     @auth
-                    <form method="POST" action="{{ url('/logout') }}" class="hidden md:block">
+                    <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
                         @csrf
                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg">
                             Logout
@@ -54,16 +56,16 @@
             <div class="md:hidden text-white space-y-2 overflow-hidden opacity-0 max-h-0" id="mobile-menu">
                 <div class="flex flex-col space-y-4 pb-4">
                     <a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'text-violet-400' : '' }}">All Events</a>
-                    <a href="{{ route('user.events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events') ? 'text-violet-400' : '' }}">Your Events</a>
-                    <a href="{{ route('user') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user') ? 'text-violet-400' : '' }}">Attending Events</a>
                     
                     @auth
-                    <form method="POST" action="{{ url('/logout') }}" class="flex justify-center">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg">
-                            Logout
-                        </button>
-                    </form>
+                        <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.hosting') ? 'text-violet-400' : '' }}">Events I'm Hosting</a>
+                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.attending') ? 'text-violet-400' : '' }}">Events I'm Attending</a>
+                        <form method="POST" action="{{ route('logout') }}" class="flex justify-center">
+                            @csrf
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg">
+                                Logout
+                            </button>
+                        </form>
                     @else
                         <div class="flex justify-center">
                             <a href="{{ route('login') }}">Login</a>

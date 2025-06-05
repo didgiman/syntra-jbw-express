@@ -3,10 +3,11 @@
 
 @section('content')
     <div class="container mx-auto py-12 px-4">
-        <h1 class="text-3xl font-bold mb-8 text-center">Your attending events</h1>
+        <h1 class="text-3xl font-bold mb-8 text-center">Events I'm attending</h1>
         <div class="space-y-6">
             @if ($events->isEmpty())
-                <p class="text-center">No attending events</p>
+                <p class="text-center">You are not attending any events</p>
+                <p class="text-center"><a href="{{ route('events') }}" class="text-violet-500 hover:underline">Find an event to attend</a></p>
             @endif
              @foreach ($events as $event)
                 <div class="mb-2 border-b-2 border-gray-800 py-4 flex justify-between items-center">

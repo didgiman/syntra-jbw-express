@@ -90,6 +90,8 @@ class EventForm extends Form
         // exclude all NULL values
         $event = Event::create(array_filter($this->all(), fn ($value) => !is_null($value)));
 
+        // $event->attendees()->create(['user_id' => $this->user_id]); // this is how you link a user to an event (create attendee)
+
         return $event;
     }
 

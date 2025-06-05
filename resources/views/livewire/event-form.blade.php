@@ -138,7 +138,7 @@
                 class="btn btn-primary block w-full md:w-1/3"
             >Save Event</button>
 
-            <a href="{{ route('user.events') }}"
+            <a href="{{ route('user.events.hosting') }}"
                 class="btn block w-full mt-4 md:mt-0 md:w-1/3"
             >Cancel</a>
         </div>
