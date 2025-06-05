@@ -32,6 +32,6 @@ class ConfirmPassword extends Component
 
         session(['auth.password_confirmed_at' => time()]);
 
-        $this->redirectIntended(default: route('user', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('user.summary', absolute: false), navigate: true);
     }
 }

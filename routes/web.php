@@ -27,7 +27,8 @@ Route::get('/events', function() {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::redirect('/user', '/user/events/hosting')->name('user');
+    Route::get('/user', [UserEventController::class, 'summary'])
+        ->name('user.summary');
 
     Route::get('/user/events/attending', [UserEventController::class, 'attending'])
         ->name('user.events.attending');

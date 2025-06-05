@@ -15,9 +15,12 @@ class Event extends Model
 
     protected static function booted()
     {
-        // By default, the model will only return Events that are not passed
+        // By default, the model will only return Events for which the end_time is not in the past
         static::addGlobalScope(new UpcomingEventScope);
     }
+
+    // Various scopes defined
+    // See UserEventController for real examples on how to use
     public function scopePast($query)
     {
         return $query->withoutGlobalScope(UpcomingEventScope::class)
@@ -28,10 +31,27 @@ class Event extends Model
     }
     public function scopeAllEvents($query)
     {
+        // Includes past and upcoming events
+
         return $query->withoutGlobalScope(UpcomingEventScope::class);
 
         // Use like this:
         // $pastEvents = Event::allEvents()->get();
+    }
+    public function scopeCreatedBy($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+
+        // use like this:
+        // $hosting = Event::createdBy($userId)
+    }
+
+    public function scopeAttendedBy($query, $userId)
+    {
+        return $query->whereHas('attendees', fn($q) => $q->where('user_id', $userId));
+
+        // use like this:
+        // $attending = Event::attendedBy($userId)
     }
 
     protected $fillable = [
@@ -52,7 +72,7 @@ class Event extends Model
         'end_time' => 'datetime',
     ];
 
-    protected $appends = ['available_spots'];  // Keep only this one, remove the duplicate
+    protected $appends = ['available_spots'];
 
     protected $rules = [
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
