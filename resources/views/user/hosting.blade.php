@@ -1,5 +1,5 @@
 @extends('partials.header')
-@section('title', 'Events I\'m hosting')
+@section('title', 'EventR .:. Events I\'m hosting')
 
 @section('content')
     <div class="container mx-auto py-12 px-4">
@@ -21,7 +21,7 @@
             {{-- Other routes --}}
         @endswitch
             
-        <div class="space-y-6">
+        <div class="space-y-2">
             @if (session('message'))
                 <div class="text-green-500 font-bold text-xl text-center">
                     {{ session('message') }}
@@ -29,7 +29,7 @@
             @endif
 
              @foreach ($events as $event)
-                <div class="relative mb-2 border-b-2 border-gray-800 py-4 flex justify-between items-center {{ session('highlight-event') === $event->id ? 'bg-green-900 p-4 rounded-lg' : '' }}">
+                <div class="relative border-b-2 border-gray-800 py-4 flex justify-between items-center {{ session('highlight-event') === $event->id ? 'bg-green-900 p-4 rounded-lg' : '' }}">
                     
                     @include('partials.user.event-list-item', ['event' => $event])
 

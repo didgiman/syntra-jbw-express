@@ -1,5 +1,5 @@
 @extends('partials.header')
-@section('title', 'Your Events;')
+@section('title', 'EventR .:. Events I\'m Attending')
 
 @section('content')
     <div class="container mx-auto py-12 px-4">
@@ -17,13 +17,13 @@
             {{-- Other routes --}}
         @endswitch
         
-        <div class="space-y-6">
+        <div class="space-y-2">
             @if ($events->isEmpty())
                 <p class="text-center">You are not attending any events</p>
                 <p class="text-center"><a href="{{ route('events') }}" class="text-violet-500 hover:underline">Find an event to attend</a></p>
             @endif
              @foreach ($events as $event)
-                <div class="relative mb-2 border-b-2 border-gray-800 py-4 flex justify-between items-center">
+                <div class="relative border-b-2 border-gray-800 py-4 flex justify-between items-center">
                     
                     @include('partials.user.event-list-item', ['event' => $event])
 
