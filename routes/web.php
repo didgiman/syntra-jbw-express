@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserEventController;
 use App\Livewire\CreateEvent;
 use App\Livewire\Dashboard;
 use App\Livewire\EditEvent;
@@ -28,43 +29,24 @@ Route::middleware(['auth'])->group(function () {
 
     Route::redirect('/user', '/user/events/hosting')->name('user');
 
-    Route::get('/user/events/attending', function() {
-        $events = Event::whereHas('attendees', function($query) {
-            $query->where('user_id', Auth::id());
-        })->orderBy('start_time', 'DESC')->get();
-        return view('user.attending', ['events' => $events]);
-    })->name('user.events.attending');
+    Route::get('/user/events/attending', [UserEventController::class, 'attending'])
+        ->name('user.events.attending');
 
-    Route::get('/user/events/attending/past', function() {
-        $events = Event::past()->whereHas('attendees', function($query) {
-            $query->where('user_id', Auth::id());
-        })->orderBy('start_time', 'DESC')->get();
-        return view('user.attending', ['events' => $events]);
-    })->name('user.events.attending.past');
+    Route::get('/user/events/attending/past', [UserEventController::class, 'attendingPast'])
+        ->name('user.events.attending.past');
 
-    Route::get('/user/events/hosting', function() {
-        $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->with('type')->get();
-        return view('user.hosting', ['events' => $events]);
-    })->name('user.events.hosting');
+    Route::get('/user/events/hosting', [UserEventController::class, 'hosting'])
+        ->name('user.events.hosting');
 
-    Route::get('/user/events/hosting/past', function() {
-        $events = Event::past()->where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->with('type')->get();
-        return view('user.hosting', ['events' => $events]);
-    })->name('user.events.hosting.past');
+    Route::get('/user/events/hosting/past', [UserEventController::class, 'hostingPast'])
+        ->name('user.events.hosting.past');
 
     Route::get('/user/events/hosting/create', function() {
         return view('user.create-event');
     })->name('user.events.hosting.create');
 
-    Route::get('/user/events/hosting/{event}/edit', function(Event $event) {
-        // Only allow a user to manage their own events
-        if ($event->user_id !== Auth::id()) {
-            abort(404);
-        }
-        return view('user.edit-event', compact('event'));
-    })->name('user.events.hosting.edit');
-
-    // Route::get('/user/events/create', CreateEvent::class)->name('user.events.create');
+    Route::get('/user/events/hosting/{event}/edit', [UserEventController::class, 'edit'])
+        ->name('user.events.hosting.edit');
 });
 
 // Route::get('/dashboard/events/create', function() {
