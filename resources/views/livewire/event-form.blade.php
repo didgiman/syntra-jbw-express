@@ -54,6 +54,7 @@
                     type="datetime-local"
                     id="event-start-time"
                     wire:model="form.start_time"
+                    min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.start_time')
                     <div class="text-red-600 text-sm">{{ $message }}</div>
@@ -65,6 +66,7 @@
                     type="datetime-local"
                     id="event-end-time"
                     wire:model="form.end_time"
+                    min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.end_time')
                     <div class="text-red-600 text-sm">{{ $message }}</div>

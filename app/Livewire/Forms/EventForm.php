@@ -21,7 +21,7 @@ class EventForm extends Form
 
     public $user_id;
 
-    #[Validate('required')]
+    #[Validate('required|min:3|max:255')]
     public $name = '';
 
     public $description = '';
