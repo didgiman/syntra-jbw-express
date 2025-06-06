@@ -29,8 +29,8 @@
                                     <a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'bg-gray-700' : '' }}">All Events</a>
                                     @auth
                                         <a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.summary') ? 'bg-gray-700' : '' }}">My Summary</a>
-                                        <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.hosting') ? 'bg-gray-700' : '' }}">Events I'm Hosting</a>
-                                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.attending') ? 'bg-gray-700' : '' }}">Events I'm Attending</a>
+                                        <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'bg-gray-700' : '' }}">Events I'm Hosting</a>
+                                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'bg-gray-700' : '' }}">Events I'm Attending</a>
                                     @endauth
                                 </div>
                             </div>
@@ -60,8 +60,8 @@
                     
                     @auth
                         <a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.summary') ? 'text-violet-400' : '' }}">My Summary</a>
-                        <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.hosting') ? 'text-violet-400' : '' }}">Events I'm Hosting</a>
-                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.events.attending') ? 'text-violet-400' : '' }}">Events I'm Attending</a>
+                        <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'text-violet-400' : '' }}">Events I'm Hosting</a>
+                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'text-violet-400' : '' }}">Events I'm Attending</a>
                         <form method="POST" action="{{ route('logout') }}" class="flex justify-center">
                             @csrf
                             <button type="submit" class="btn btn-logout">
