@@ -57,11 +57,9 @@
                 </div>
             @elseif ($view === 'attending')
                 <div>
-                    <a
-                        href="/user/events/{{ $event->id }}/unattend"
-                        class="btn"
-                        click="return confirm('are you sure?')"
-                    >Unattend</a>
+                    <button class="text-red-500 hover:text-red-700 cursor-pointer underline"
+                        wire:click="unattend({{ $event->id }})"
+                        wire:confirm="Are you sure?">Unattend</button>
                 </div>
             @endif
         </div>

@@ -29,6 +29,12 @@ class ListUserEvents extends Component
         $this->message = 'Event deleted successfully.';
     }
 
+    public function unattend(Event $event)
+    {
+        $event->attendees()->where('user_id', Auth::id())->delete();
+        $this->message = 'You are no longer attending this event.';
+    }
+
     public function render()
     {
 
