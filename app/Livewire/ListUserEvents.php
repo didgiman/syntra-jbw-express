@@ -29,6 +29,18 @@ class ListUserEvents extends Component
         $this->message = 'Event deleted successfully.';
     }
 
+    public function attend(Event $event)
+    {
+        // Check if user is already attending this event
+        if ($event->attendees()->where('user_id', Auth::id())->exists()) {
+            $this->message = '<span class="text-red-500">You are already attending this event.</span>';
+            return;
+        }
+
+        $event->attendees()->create(['user_id' => Auth::id()]);
+        $this->message = 'You are attending this event.';
+    }
+
     public function unattend(Event $event)
     {
         $event->attendees()->where('user_id', Auth::id())->delete();

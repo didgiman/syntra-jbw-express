@@ -2,7 +2,7 @@
 
     @if ($message)
         <div class="text-green-500 font-bold text-xl text-center mb-4">
-            {{ $message }}
+            {!! $message !!}
         </div>
     @endif
 
@@ -48,7 +48,7 @@
             </div>
 
             @if ($view === 'hosting')
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 items-end">
                     <a
                         href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
                         wire:navigate
@@ -58,6 +58,11 @@
                     <button class="text-red-500 hover:text-red-700 cursor-pointer underline"
                         wire:click="delete({{ $event->id }})"
                         wire:confirm="Are you sure?">Delete</button>
+
+                    {{-- TO DO: this button should be removed --}}
+                    <button class="text-violet-500 hover:text-violet-700 cursor-pointer underline"
+                        wire:click="attend({{ $event->id }})"
+                    >(Attend - TBR)</button>
                 </div>
             @elseif ($view === 'attending')
                 <div>

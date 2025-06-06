@@ -7,6 +7,7 @@ use App\Livewire\EditEvent;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Mail\AttendeeCreatedMail;
 use App\Mail\EventUpdatedMail;
 use App\Models\Attendee;
 use App\Models\Event;
@@ -72,11 +73,21 @@ Route::view('dashboard', 'dashboard')
 //     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 // });
 
-Route::get('mails/event-updated-email', function() {
-    $event = Event::find(13);
-    $attendee = Attendee::with('user')->find(21);
+Route::prefix('/testing')->group(function() {
+    Route::prefix('/mails')->group(function() {
+        Route::get('event-updated-email', function() {
+            $event = Event::find(13);
+            $attendee = Attendee::with('user')->find(21);
 
-    return (new EventUpdatedMail($event, $attendee))->render();
+            return (new EventUpdatedMail($event, $attendee))->render();
+        });
+
+        Route::get('attendee-created-email', function() {
+            $attendee = Attendee::with(['user', 'event'])->find(21);
+
+            return (new AttendeeCreatedMail($attendee))->render();
+        });
+    });
 });
 
 require __DIR__.'/auth.php';
