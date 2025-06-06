@@ -1,7 +1,7 @@
 <div class="space-y-2">
 
     @if ($message)
-        <div class="text-green-500 font-bold text-xl text-center">
+        <div class="text-green-500 font-bold text-xl text-center mb-4">
             {{ $message }}
         </div>
     @endif
@@ -39,6 +39,10 @@
                     <div>
                         <h2 class="text-xl font-bold">{{ $event->name }}</h2>
                         <p>{{ $event->start_time->format('l, F jS Y H:i') }}</p>
+                        @if ($event->relationLoaded('attendees'))
+                            {{-- Only display the number of attendess if the attendees have been eager loaded --}}
+                            <p class="text-sm mt-2"><b>{{ $event->attendees->count() }}</b> people attending</p>
+                        @endif
                     </div>
                 </div>
             </div>

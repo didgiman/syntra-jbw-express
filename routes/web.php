@@ -7,6 +7,8 @@ use App\Livewire\EditEvent;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Mail\EventUpdatedMail;
+use App\Models\Attendee;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -69,5 +71,12 @@ Route::view('dashboard', 'dashboard')
 //     Route::get('settings/password', Password::class)->name('settings.password');
 //     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 // });
+
+Route::get('mails/event-updated-email', function() {
+    $event = Event::find(13);
+    $attendee = Attendee::with('user')->find(21);
+
+    return (new EventUpdatedMail($event, $attendee))->render();
+});
 
 require __DIR__.'/auth.php';

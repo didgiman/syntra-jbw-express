@@ -22,7 +22,7 @@
         @endswitch
         
         @if (session('message'))
-            <div class="text-green-500 font-bold text-xl text-center">
+            <div class="text-green-500 font-bold text-xl text-center mb-4">
                 {{ session('message') }}
             </div>
         @endif
