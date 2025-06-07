@@ -69,8 +69,16 @@
                     <button class="text-red-500 hover:text-red-700 cursor-pointer underline"
                         wire:click="unattend({{ $event->id }})"
                         wire:confirm="Are you sure?">Unattend</button>
+
+                    <button class="text-violet-500 hover:text-violet-600 cursor-pointer underline"
+                        wire:click="downloadTicket({{ $event->id }})"
+                        >Download Ticket</button>
                 </div>
             @endif
         </div>
     @endforeach
+
+    <div class="mt-3">
+        {{ $events->links(data: ['scrollTo' => false]) }}
+    </div>
 </div>

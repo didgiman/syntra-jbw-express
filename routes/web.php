@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserEventController;
 use App\Livewire\CreateEvent;
 use App\Livewire\Dashboard;
@@ -28,7 +29,7 @@ Route::get('/events', function() {
     return view('events');
 })->name('events');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/user', [UserEventController::class, 'summary'])
         ->name('user.summary');
@@ -51,7 +52,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/user/events/hosting/{event}/edit', [UserEventController::class, 'edit'])
         ->name('user.events.hosting.edit');
+
+    Route::get('/tickets/{attendee}/download', [TicketController::class, 'downloadTicket'])
+        ->name('tickets.download');
 });
+
+Route::get('tickets/{ticket}/scan', [TicketController::class, 'scan'])
+    ->name('ticket.scan');
 
 // Route::get('/dashboard/events/create', function() {
 //     return view('create-event');
