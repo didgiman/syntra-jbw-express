@@ -18,12 +18,27 @@ class TicketController extends Controller
     public function downloadTicket(Attendee $attendee)
     {
 
-        $ticketId = $this->encrypt_id($attendee->id);
+        // Get or create token for attendee (required for ticket validation)
+        if (!$attendee->token) {
 
-        // $url = 'http://localhost:8000/scan.php?id=' . urlencode($ticketId);
+            $attendee->update([
+                'token' => bin2hex(random_bytes(16))
+            ]);
+            
+            // Refresh the model to get the updated token
+            $attendee->refresh();
+        }
+        
+        $token = $attendee->token;
 
-        $url = url(route('ticket.scan', urlencode($ticketId)));
+        if ($attendee->status === 'checked-in') {
+            return abort(403, 'This ticket has already been used');
+        }
 
+        // Build the URL for the QR code
+        $url = route('ticket.scan', $token);
+
+        // Generate the QR code
         $qrCode = new QrCode(
             data: $url,
             encoding: new Encoding('UTF-8'),
@@ -37,20 +52,40 @@ class TicketController extends Controller
 
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
-        $qrBase64 = base64_encode($result->getString());
+        $qrBase64 = 'data:image/png;base64,' . base64_encode($result->getString());
+
+        // Generate the PDF
+
+        // Read the image file and encode it to base64
+        $relativePath = str_replace('/storage', '', $attendee->event->image);
+        $fullPath = storage_path('app/public' . $relativePath);
+        $imageData = base64_encode(file_get_contents($fullPath));
+
+        // Format the base64 string for use in HTML
+        $base64Image = 'data:image/png;base64,' . $imageData;
 
         $pdf = Pdf::loadView('tickets.pdf', [
-            'eventName' => 'Hello',
-            'ticketId' => $ticketId,
-            'qrBase64' => $qrBase64
+            'event' => $attendee->event,
+            'attendee' => $attendee,
+            'ticketId' => $token,
+            'qrBase64' => $qrBase64,
+            'posterBase64' => $base64Image
         ]);
 
-        return $pdf->download("ticket-{$ticketId}.pdf");
+        return $pdf->download("ticket-{$token}.pdf");
     }
 
-    private function encrypt_id($id) {
-        $key = "QRTickets2025Salt"; // Made key 16 bytes
-        $iv = str_repeat("0", 16);  // Create 16-byte IV
-        return base64_encode(openssl_encrypt($id, 'AES-256-CBC', $key, 0, $iv));
+    public function scan(string $token) {
+        $attendee = Attendee::where('token', $token)->firstOrFail();
+
+        if ($attendee->status === 'checked-in') {
+            return abort(403, 'This ticket has already been used');
+        }
+
+        $attendee->update([
+            'status' => 'checked-in'
+        ]);
+
+        return true;
     }
 }

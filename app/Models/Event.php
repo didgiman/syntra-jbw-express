@@ -52,7 +52,14 @@ class Event extends Model
 
     public function scopeAttendedBy($query, $userId)
     {
-        return $query->whereHas('attendees', fn($q) => $q->where('user_id', $userId));
+
+        // This query scope will retrieve all events that the given user attends
+        // and includes the attendee id in the result set
+
+        return $query
+            ->join('attendees', 'events.id', '=', 'attendees.event_id')
+            ->where('attendees.user_id', $userId)
+            ->select('events.*', 'attendees.id as attendee_id');
 
         // use like this:
         // $attending = Event::attendedBy($userId)

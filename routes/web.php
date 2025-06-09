@@ -57,8 +57,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('tickets.download');
 });
 
-Route::get('tickets/{ticket}/scan', [TicketController::class, 'scan'])
+Route::get('tickets/{token}/scan', [TicketController::class, 'scan'])
     ->name('ticket.scan');
+
 
 // Route::get('/dashboard/events/create', function() {
 //     return view('create-event');

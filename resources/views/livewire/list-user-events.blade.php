@@ -65,13 +65,13 @@
                     >(Attend - TBR)</button>
                 </div>
             @elseif ($view === 'attending')
-                <div>
+                <div class="flex flex-col gap-2 items-end">
                     <button class="text-red-500 hover:text-red-700 cursor-pointer underline"
                         wire:click="unattend({{ $event->id }})"
                         wire:confirm="Are you sure?">Unattend</button>
 
-                    <button class="text-violet-500 hover:text-violet-600 cursor-pointer underline"
-                        wire:click="downloadTicket({{ $event->id }})"
+                    <button class="text-violet-500 hover:text-violet-600 cursor-pointer underline text-right"
+                        wire:click.prevent="downloadTicket({{ $event->attendee_id }})"
                         >Download Ticket</button>
                 </div>
             @endif
@@ -82,3 +82,11 @@
         {{ $events->links(data: ['scrollTo' => false]) }}
     </div>
 </div>
+
+@script
+<script>
+    $wire.on('download-ticket', (url) => {
+        window.location.href = url.url;
+    });
+</script>
+@endscript

@@ -13,7 +13,7 @@ class Attendee extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'event_id'];
+    protected $fillable = ['user_id', 'event_id', 'token', 'status'];
     
     public function user(): BelongsTo
     {
