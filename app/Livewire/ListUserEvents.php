@@ -6,10 +6,11 @@ use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\WithPagination;
 
 class ListUserEvents extends Component
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, WithPagination;
 
     public $view = '';
 
@@ -53,10 +54,10 @@ class ListUserEvents extends Component
         $userId = Auth::id();
 
         $events = match ($this->view) {
-            'hosting' => Event::createdBy($userId)->with(['type', 'attendees'])->orderBy('start_time')->get(),
-            'hosting.past' => Event::createdBy($userId)->past()->with(['type', 'attendees'])->latest('start_time')->get(),
-            'attending' => Event::attendedBy($userId)->with('type')->orderBy('start_time')->get(),
-            'attending.past' => Event::attendedBy($userId)->past()->with('type')->latest('start_time')->get(),
+            'hosting' => Event::createdBy($userId)->with(['type', 'attendees'])->orderBy('start_time')->paginate(10),
+            'hosting.past' => Event::createdBy($userId)->past()->with(['type', 'attendees'])->latest('start_time')->paginate(10),
+            'attending' => Event::attendedBy($userId)->with('type')->orderBy('start_time')->paginate(10),
+            'attending.past' => Event::attendedBy($userId)->past()->with('type')->latest('start_time')->paginate(10),
             default => collect(),
         };
 
