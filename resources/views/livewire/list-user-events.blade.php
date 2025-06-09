@@ -73,4 +73,8 @@
             @endif
         </div>
     @endforeach
+
+    <div class="mt-3">
+        {{ $events->links(data: ['scrollTo' => false]) }}
+    </div>
 </div>
