@@ -31,10 +31,6 @@ class TicketController extends Controller
         
         $token = $attendee->token;
 
-        if ($attendee->status === 'checked-in') {
-            return abort(403, 'This ticket has already been used');
-        }
-
         // Build the URL for the QR code
         $url = route('ticket.scan', $token);
 

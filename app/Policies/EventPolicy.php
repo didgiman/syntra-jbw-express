@@ -13,7 +13,7 @@ class EventPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class EventPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasVerifiedEmail();
     }
 
     /**
@@ -37,6 +37,9 @@ class EventPolicy
      */
     public function update(User $user, Event $event): bool
     {
+        if (str_ends_with($user->email, '@eventr.be') && $user->hasVerifiedEmail()) {
+            return true;
+        }
         return $event->user_id === $user->id;
     }
 
@@ -45,6 +48,9 @@ class EventPolicy
      */
     public function delete(User $user, Event $event): bool
     {
+        if (str_ends_with($user->email, '@eventr.be') && $user->hasVerifiedEmail()) {
+            return true;
+        }
         return $event->user_id === $user->id;
     }
 
