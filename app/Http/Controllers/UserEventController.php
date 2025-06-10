@@ -70,4 +70,8 @@ class UserEventController extends Controller
     public function allEvents(){
         return view('events');
     }
+
+    public function carrouselEvents(){
+        return view('events');
+    }
 }
