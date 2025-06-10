@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserEventController;
+use App\Http\Controllers\EventController;
 use App\Livewire\CreateEvent;
 use App\Livewire\Dashboard;
 use App\Livewire\EditEvent;
@@ -14,6 +15,7 @@ use App\Models\Attendee;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     // grab the earliest upcoming events from the DB
@@ -37,7 +39,7 @@ Route::get('/', function () {
 //     return view('events', compact('allEvents'));
 // })->name('events');
 
-Route::get('/events', [UserEventController::class, 'allEvents'])
+Route::get('/events', [EventController::class, 'allEvents'])
         ->name('events');
 
 Route::middleware(['auth', 'verified'])->group(function () {
