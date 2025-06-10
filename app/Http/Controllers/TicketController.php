@@ -66,7 +66,7 @@ class TicketController extends Controller
                 $base64Image = 'data:image/png;base64,' . $imageData;
             } catch (\Exception $e) {
                 // Log the error and set a default value
-                \Log::error('Failed to read image file: ' . $e->getMessage());
+                Log::error('Failed to read image file: ' . $e->getMessage());
                 $base64Image = '';
             }
         }
