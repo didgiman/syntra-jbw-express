@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
@@ -53,13 +54,23 @@ class TicketController extends Controller
         // Generate the PDF
 
         // Read the image file and encode it to base64
-        $relativePath = str_replace('/storage', '', $attendee->event->image);
-        $fullPath = storage_path('app/public' . $relativePath);
-        $imageData = base64_encode(file_get_contents($fullPath));
+        $image = $attendee->event->image;
+        $base64Image = '';
+        if ($image !== '/no-event-poster.webp') {
+            $relativePath = str_replace('/storage', '', $image);
+            $fullPath = storage_path('app/public' . $relativePath);
 
-        // Format the base64 string for use in HTML
-        $base64Image = 'data:image/png;base64,' . $imageData;
-
+            // Format the base64 string for use in HTML
+            try {
+                $imageData = base64_encode(file_get_contents($fullPath));
+                $base64Image = 'data:image/png;base64,' . $imageData;
+            } catch (\Exception $e) {
+                // Log the error and set a default value
+                \Log::error('Failed to read image file: ' . $e->getMessage());
+                $base64Image = '';
+            }
+        }
+        
         $pdf = Pdf::loadView('tickets.pdf', [
             'event' => $attendee->event,
             'attendee' => $attendee,
