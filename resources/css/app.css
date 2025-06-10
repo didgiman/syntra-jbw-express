@@ -109,6 +109,9 @@ select:focus[data-flux-control] {
 .btn-login {
     @apply text-green-600 hover:text-green-100 bg-transparent hover:bg-green-800 font-semibold border border-green-600 py-2;
 }
+.btn-sm {
+    @apply text-sm px-4 py-2;
+}
 
 .form-input {
     @apply mb-3;
