@@ -25,9 +25,7 @@ Route::get('/', function () {
     return view('welcome', compact('upcomingEvents'));
 })->name('home');
 
-Route::get('/events', function() {
-    return view('events');
-})->name('events');
+Route::get('/events', [UserEventController::class, 'allEvents'])->name('events');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
