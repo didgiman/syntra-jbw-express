@@ -21,7 +21,7 @@ class EventForm extends Form
 
     public $user_id;
 
-    #[Validate('required')]
+    #[Validate('required|min:3|max:255')]
     public $name = '';
 
     public $description = '';
@@ -90,6 +90,8 @@ class EventForm extends Form
         // exclude all NULL values
         $event = Event::create(array_filter($this->all(), fn ($value) => !is_null($value)));
 
+        // $event->attendees()->create(['user_id' => $this->user_id]); // this is how you link a user to an event (create attendee)
+
         return $event;
     }
 
@@ -112,7 +114,7 @@ class EventForm extends Form
         return $this->event;
     }
 
-    public function messages()
+    protected function messages()
     {
         return [
             'type_id.required' => 'Please select the type of event you want to create',

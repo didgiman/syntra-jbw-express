@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -9,7 +9,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -37,7 +39,6 @@
 }
 
 @layer base {
-
     *,
     ::after,
     ::before,
@@ -47,12 +48,44 @@
     }
 }
 
+@layer utilities {
+    @keyframes slide-down {
+        from {
+            opacity: 0;
+            max-height: 0;
+        }
+        to {
+            opacity: 1;
+            max-height: 500px; /* Arbitrary large value */
+        }
+    }
+
+    @keyframes slide-up {
+        from {
+            opacity: 1;
+            max-height: 500px;
+        }
+        to {
+            opacity: 0;
+            max-height: 0;
+        }
+    }
+
+    .animate-slide-down {
+        animation: slide-down 0.3s ease-out forwards;
+    }
+
+    .animate-slide-up {
+        animation: slide-up 0.2s ease-in forwards;
+    }
+}
+
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],
@@ -62,20 +95,48 @@ select:focus[data-flux-control] {
 }
 
 .btn {
-    @apply bg-gray-800 text-white hover:bg-gray-700 py-2 px-6 rounded-md border border-gray-400 text-center;
+    @apply bg-gray-800 text-white font-semibold hover:bg-gray-700 py-3 px-6 rounded-md border border-gray-400 text-center shadow cursor-pointer;
 }
 .btn-primary {
     @apply bg-violet-600 hover:bg-violet-500 border border-white;
+}
+.btn-danger {
+    @apply bg-red-600 hover:bg-red-500 text-white;
+}
+.btn-logout {
+    @apply text-red-600 hover:text-red-100 bg-transparent hover:bg-red-800 font-semibold border border-red-600 py-2;
+}
+.btn-login {
+    @apply text-green-600 hover:text-green-100 bg-transparent hover:bg-green-800 font-semibold border border-green-600 py-2;
 }
 
 .form-input {
     @apply mb-3;
 }
-.form-input input, .form-input select, .form-input textarea {
+.form-input input,
+.form-input select,
+.form-input textarea {
     @apply p-2 w-full border rounded-md bg-gray-700 text-white;
 }
-.form-input input[type=checkbox] {
+.form-input input[type="checkbox"] {
     @apply w-auto;
+}
+
+.validationError {
+    @apply text-red-600 text-sm;
+}
+
+.user-summary .overview .item {
+    @apply border border-gray-400 p-8 text-center rounded-lg;
+}
+.user-summary .overview .item h2 {
+    @apply text-2xl font-medium;
+}
+.user-summary .overview .item h2 span {
+    @apply text-6xl font-extrabold block mb-4;
+}
+.user-summary .overview .item p {
+    @apply mt-10;
 }
 
 /* \[:where(&)\]:size-4 {

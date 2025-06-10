@@ -4,7 +4,7 @@
             <label class="block" for="event-type">Event type</label>
             <select 
                 id="event-type"
-                wire:model="form.type_id"
+                wire:model.live="form.type_id"
             >
                 <option value="">- Select event type -</option>
                 @foreach ($form->eventTypes as $eventType)
@@ -12,7 +12,7 @@
                 @endforeach
             </select>
             @error('form.type_id')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-input">
@@ -20,10 +20,10 @@
             <input
                 type="text"
                 id="event-name"
-                wire:model="form.name"
+                wire:model.blur="form.name"
             >
             @error('form.name')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-input">
@@ -33,7 +33,7 @@
                 wire:model="form.description"
             ></textarea>
             @error('form.description')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-input">
@@ -41,10 +41,10 @@
             <input
                 type="text"
                 id="event-location"
-                wire:model="form.location"
+                wire:model.blur="form.location"
             >
             @error('form.location')
-                <div class="text-red-600 text-sm">{{ $message }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="md:flex md:gap-4">
@@ -53,10 +53,11 @@
                 <input
                     type="datetime-local"
                     id="event-start-time"
-                    wire:model="form.start_time"
+                    wire:model.blur="form.start_time"
+                    min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.start_time')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-input md:w-full">
@@ -64,10 +65,11 @@
                 <input
                     type="datetime-local"
                     id="event-end-time"
-                    wire:model="form.end_time"
+                    wire:model.blur="form.end_time"
+                    min="{{ now()->format('Y-m-d\TH:i') }}"
                 >
                 @error('form.end_time')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
         </div>
@@ -78,10 +80,10 @@
                     type="number"
                     min="0"
                     id="event-max-attendees"
-                    wire:model="form.max_attendees"
+                    wire:model.blur="form.max_attendees"
                 >
                 @error('form.max_attendees')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-input md:w-full">
@@ -90,10 +92,10 @@
                     type="text"
                     min="0"
                     id="event-price"
-                    wire:model="form.price"
+                    wire:model.blur="form.price"
                 >
                 @error('form.price')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @enderror
             </div>
         </div>
@@ -116,7 +118,7 @@
                 <p class="text-gray-500">Drag and drop a file here or click to select one</p>
                 
                 @error('form.poster')
-                    <div class="text-red-600 text-sm">{{ $message }}</div>
+                    <div class="validationError">{{ $message }}</div>
                 @else
                     @if ($form->poster)
                         <div class="flex flex-col justify-center items-center mt-2">
@@ -138,7 +140,7 @@
                 class="btn btn-primary block w-full md:w-1/3"
             >Save Event</button>
 
-            <a href="{{ route('user.events') }}"
+            <a href="{{ route('user.events.hosting') }}"
                 class="btn block w-full mt-4 md:mt-0 md:w-1/3"
             >Cancel</a>
         </div>
