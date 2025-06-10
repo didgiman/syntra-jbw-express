@@ -80,7 +80,7 @@ class TestingSeeder extends Seeder
                 'location' => fake()->city(),
                 'type_id' => $types->random()->id,
                 'max_attendees' => 5,
-                'price' => 49.99,
+                'price' => fake()->randomFloat(2, 1, 100),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
@@ -93,7 +93,7 @@ class TestingSeeder extends Seeder
                 'location' => fake()->city(),
                 'type_id' => $types->random()->id,
                 'max_attendees' => 5,
-                'price' => 99.99,
+                'price' => fake()->randomFloat(2, 1, 100),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],

@@ -17,7 +17,7 @@ class EventSeeder extends Seeder
         $users = User::all();
         $types = Type::all();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $user = $users->random();
             $type = $types->random();
 
