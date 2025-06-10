@@ -29,6 +29,15 @@ Route::get('/events', function() {
     return view('events');
 })->name('events');
 
+// to display all events on the events.blade.php page
+Route::get('/events', function() {
+    $allEvents = Event::with(['attendees', 'type'])
+        ->orderBy('start_time')
+        ->paginate(5);
+    
+    return view('events', compact('allEvents'));
+})->name('events');
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/user', [UserEventController::class, 'summary'])
