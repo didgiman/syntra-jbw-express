@@ -20,7 +20,7 @@
             <br>
             <p>Ticket ID: {{ $ticketId }}</p>
         </div>
-        @if ($posterBase64 !== '')
+        @if (!empty($posterBase64))
             <div>
                 <img src="{{ $posterBase64 }}" height="300">
             </div>

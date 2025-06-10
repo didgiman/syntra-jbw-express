@@ -29,7 +29,7 @@ class EditEvent extends Component
 
         $count = Event::createdBy($this->form->user_id)->where('start_time', '<=', $event->start_time)->count();
 
-        $page = (int) ceil($count / $perPage);
+        $page = max(1, (int) ceil($count / $perPage));
 
         return redirect()->route('user.events.hosting', ['page' => $page]);
     }

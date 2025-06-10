@@ -73,11 +73,11 @@ class EventForm extends Form
                 'min:3',
                 'max:255'
             ],
-            'start_time' => [
+            'start_time' => array_filter([
                 'required',
                 'date',
-                $this->isUpdating() ? '' : 'after:now'
-            ],
+                $this->executionmode === 'create' ? 'after:now' : null
+            ]),
             'end_time' => [
                 'required',
                 'date',
@@ -101,12 +101,6 @@ class EventForm extends Form
                 'max:1024'
             ]
         ];
-    }
-
-    private function isUpdating()
-    {
-        // return isset($this->event->id) && !empty($this->event->id);
-        return $this->executionmode === 'update';
     }
 
     public function setEvent(Event $event)
