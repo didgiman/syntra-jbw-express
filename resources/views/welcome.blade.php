@@ -29,10 +29,6 @@
                         }"
                     >
                         {{-- Event Type Badge --}}
-                        {{-- top right --}}
-                        <span class="absolute top-2 right-2 text-sm font-bold text-violet-500">
-                        {{ $event->type ? strtoupper($event->type->description) : 'NO TYPE' }}
-                        </span>
                         {{-- above image --}}
                         <span class="text-xs bg-violet-500 text-white py-1 px-2 rounded absolute -top-2 shadow uppercase -left-2 md:-left-4">
                         {{ $event->type ? $event->type->description : 'NO TYPE' }}
