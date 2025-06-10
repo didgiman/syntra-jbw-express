@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AttendeeSeeder extends Seeder
