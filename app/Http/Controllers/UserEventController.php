@@ -66,4 +66,8 @@ class UserEventController extends Controller
 
         return view('user.summary', compact('hosting', 'hostingPast', 'attending', 'attendingPast'));
     }
+
+    public function allEvents(){
+        return view('events');
+    }
 }
