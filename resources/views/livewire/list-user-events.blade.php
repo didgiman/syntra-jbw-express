@@ -48,29 +48,29 @@
             </div>
 
             @if ($view === 'hosting')
-                <div class="flex flex-col gap-2 items-end">
+                <div class="flex flex-col md:flex-row gap-2 items-end">
                     <a
                         href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
                         wire:navigate
-                        class="underline"
+                        class="btn btn-sm"
                     >Edit</a>
 
-                    <button class="text-red-500 hover:text-red-700 cursor-pointer underline"
+                    <button class="btn btn-danger btn-sm"
                         wire:click="delete({{ $event->id }})"
                         wire:confirm="Are you sure?">Delete</button>
 
                     {{-- TO DO: this button should be removed --}}
-                    <button class="text-violet-500 hover:text-violet-700 cursor-pointer underline"
+                    <button class="btn btn-primary btn-sm"
                         wire:click="attend({{ $event->id }})"
-                    >(Attend - TBR)</button>
+                    >Attend (TBR)</button>
                 </div>
             @elseif ($view === 'attending')
-                <div class="flex flex-col gap-2 items-end">
-                    <button class="text-red-500 hover:text-red-700 cursor-pointer underline"
+                <div class="flex flex-col md:flex-row gap-2 items-end">
+                    <button class="btn btn-danger btn-sm"
                         wire:click="unattend({{ $event->id }})"
                         wire:confirm="Are you sure?">Unattend</button>
 
-                    <button class="text-violet-500 hover:text-violet-600 cursor-pointer underline text-right"
+                    <button class="btn btn-primary btn-sm"
                         wire:click.prevent="downloadTicket({{ $event->attendee_id }})"
                         >Download Ticket</button>
                 </div>

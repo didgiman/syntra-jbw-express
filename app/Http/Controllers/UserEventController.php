@@ -30,11 +30,6 @@ class UserEventController extends Controller
         return view('user.attending', ['view' => 'attending.past']);
     }
 
-    public function allEvents()
-    {
-        return view('events');
-    }
-
     public function edit(Event $event)
     {
         // Authorize user
