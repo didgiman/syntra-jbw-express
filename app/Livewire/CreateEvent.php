@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\EventForm;
+use App\Models\Event;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -19,7 +20,13 @@ class CreateEvent extends Component
         session()->flash('message', 'Event "' . $event->name . '" created successfully!');
         session()->flash('highlight-event', $event->id);
 
-        $this->redirect(route('user.events.hosting'), navigate: true);
+        $perPage = 10; // or whatever your pagination size is
+
+        $count = Event::createdBy($this->form->user_id)->where('start_time', '<=', $event->start_time)->count();
+
+        $page = (int) ceil($count / $perPage);
+
+        return redirect()->route('user.events.hosting', ['page' => $page]);
     }
 
     public function mount()

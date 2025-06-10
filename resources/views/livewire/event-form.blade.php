@@ -54,7 +54,9 @@
                     type="datetime-local"
                     id="event-start-time"
                     wire:model.blur="form.start_time"
-                    min="{{ now()->format('Y-m-d\TH:i') }}"
+                    @if ($form->executionmode === 'create')
+                        min="{{ now()->format('Y-m-d\TH:i') }}"
+                    @endif
                 >
                 @error('form.start_time')
                     <div class="validationError">{{ $message }}</div>

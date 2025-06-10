@@ -25,7 +25,13 @@ class EditEvent extends Component
         session()->flash('message', 'Event "' . $event->name . '" updated successfully!');
         session()->flash('highlight-event', $event->id);
 
-        $this->redirect(route('user.events.hosting'), navigate: true);
+        $perPage = 10;
+
+        $count = Event::createdBy($this->form->user_id)->where('start_time', '<=', $event->start_time)->count();
+
+        $page = (int) ceil($count / $perPage);
+
+        return redirect()->route('user.events.hosting', ['page' => $page]);
     }
 
     public function render()

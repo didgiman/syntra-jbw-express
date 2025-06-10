@@ -21,33 +21,35 @@ class EventForm extends Form
 
     public $user_id;
 
-    #[Validate('required|min:3|max:255')]
-    public $name = '';
-
-    public $description = '';
-
-    #[Validate('required|date|after:now')]
-    public $start_time = '';
-
-    #[Validate('required|date|after:start_time')]
-    public $end_time = '';
-
-    #[Validate('required')]
+    #[Validate]
     public $type_id = '';
 
-    #[Validate('required|min:3')]
+    #[Validate]
+    public $name = '';
+    
+    public $description = '';
+    
+    #[Validate]
+    public $start_time = '';
+
+    #[Validate]
+    public $end_time = '';
+
+    #[Validate]
     public $location = '';
 
-    #[Validate('required|numeric')]
+    #[Validate]
     public $price = '';
 
-    #[Validate('int')]
+    #[Validate]
     public $max_attendees = '';
 
-    #[Validate('nullable|image|mimes:jpg,jpeg,png,gif|max:1024')]
+    #[Validate]
     public $poster;
 
     public $image;
+
+    public $executionmode = 'create'; // either create or update
 
     public function mount()
     {
@@ -55,9 +57,63 @@ class EventForm extends Form
         $this->eventTypes = Type::orderby('description')->get();
     }
 
+    public function updated($name, $value) 
+    {
+        $this->validateOnly($name);
+    }
+
+    protected function rules()
+    {
+        return [
+            'type_id' => [
+                'required'
+            ],
+            'name' => [
+                'required',
+                'min:3',
+                'max:255'
+            ],
+            'start_time' => [
+                'required',
+                'date',
+                $this->isUpdating() ? '' : 'after:now'
+            ],
+            'end_time' => [
+                'required',
+                'date',
+                'after:start_time'
+            ],
+            'location' => [
+                'required',
+                'min:3'
+            ],
+            'price' => [
+                'required',
+                'numeric'
+            ],
+            'max_attendees' => [
+                'int'
+            ],
+            'poster' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,gif',
+                'max:1024'
+            ]
+        ];
+    }
+
+    private function isUpdating()
+    {
+        // return isset($this->event->id) && !empty($this->event->id);
+        return $this->executionmode === 'update';
+    }
+
     public function setEvent(Event $event)
     {
         $this->mount();
+
+        $this->executionmode = 'update';
 
         $this->name = $event->name;
         $this->description = $event->description;
