@@ -6,7 +6,7 @@ use App\Models\Event;
 use Livewire\Component;
 
 
-class EventList extends Component
+class ListEvents extends Component
 {
     public $view = 'all';
 
@@ -16,6 +16,6 @@ class EventList extends Component
         $events = Event::orderBy('start_time')->with(['type', 'attendees'])->paginate(10);
         // ->paginate(10)
 
-        return view('livewire.event-list', ['events' => $events]);
+        return view('livewire.list-events', ['events' => $events]);
     }
 }
