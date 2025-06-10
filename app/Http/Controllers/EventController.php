@@ -14,7 +14,6 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
-        // TO DO: this should return the detail view for a single event
-        return view('events');
+        return view('event-details', ['event' => $event]);
     }
 }
