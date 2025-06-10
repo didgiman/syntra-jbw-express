@@ -2,15 +2,68 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UpcomingEventScope;
+use App\Observers\EventObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy([EventObserver::class])]
 class Event extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected static function booted()
+    {
+        // By default, the model will only return Events for which the end_time is not in the past
+        static::addGlobalScope(new UpcomingEventScope);
+    }
+
+    // Various scopes defined
+    // See UserEventController for real examples on how to use
+    public function scopePast($query)
+    {
+        return $query->withoutGlobalScope(UpcomingEventScope::class)
+                    ->where('end_time', '<', now());
+
+        // Use like this:
+        // $pastEvents = Event::past()->get();
+    }
+    public function scopeAllEvents($query)
+    {
+        // Includes past and upcoming events
+
+        return $query->withoutGlobalScope(UpcomingEventScope::class);
+
+        // Use like this:
+        // $pastEvents = Event::allEvents()->get();
+    }
+    public function scopeCreatedBy($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+
+        // use like this:
+        // $hosting = Event::createdBy($userId)
+    }
+
+    public function scopeAttendedBy($query, $userId)
+    {
+
+        // This query scope will retrieve all events that the given user attends
+        // and includes the attendee id in the result set
+
+        return $query
+            ->join('attendees', 'events.id', '=', 'attendees.event_id')
+            ->where('attendees.user_id', $userId)
+            ->select('events.*', 'attendees.id as attendee_id');
+
+        // use like this:
+        // $attending = Event::attendedBy($userId)
+    }
 
     protected $fillable = [
         'name',
@@ -30,7 +83,7 @@ class Event extends Model
         'end_time' => 'datetime',
     ];
 
-    protected $appends = ['available_spots', 'image_url'];  // Keep only this one, remove the duplicate
+    protected $appends = ['available_spots'];
 
     protected $rules = [
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
@@ -71,29 +124,5 @@ class Event extends Model
 
         // If max_attendees is 0 or there are spots left, return the count
         return $this->max_attendees === 0 ? 0 : $remaining;
-    }
-
-    // for images 
-    public function getImageUrlAttribute()
-    {
-        if ($this->image) {
-            // Remove any duplicate 'posters/' from the path
-            $imagePath = str_replace('posters/posters/', 'posters/', $this->image);
-            
-            // Ensure the path starts with 'posters/'
-            if (!str_starts_with($imagePath, 'posters/')) {
-                $imagePath = 'posters/' . $imagePath;
-            }
-
-            // Log for debugging
-            \Log::info("Image path check for event {$this->id}:", [
-                'original_image' => $this->image,
-                'cleaned_path' => $imagePath,
-                'exists' => Storage::disk('public')->exists($imagePath)
-            ]);
-
-            return Storage::url($imagePath);
-        }
-        return null;
     }
 }

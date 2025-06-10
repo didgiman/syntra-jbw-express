@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserEventController;
 use App\Livewire\CreateEvent;
 use App\Livewire\Dashboard;
 use App\Livewire\EditEvent;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Mail\AttendeeCreatedMail;
+use App\Mail\EventUpdatedMail;
+use App\Models\Attendee;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -24,30 +29,37 @@ Route::get('/events', function() {
     return view('events');
 })->name('events');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/user', function() {
-        $events = Event::whereHas('attendees', function($query) {
-            $query->where('user_id', Auth::id());
-        })->orderBy('start_time', 'DESC')->get();
-        return view('user.attendees', ['events' => $events]);
-    })->name('user');
+    Route::get('/user', [UserEventController::class, 'summary'])
+        ->name('user.summary');
 
-    Route::get('/user/events', function() {
-        $events = Event::where('user_id', Auth::user()->id)->orderby('start_time', 'DESC')->get();
-        return view('user.events', ['events' => $events]);
-    })->name('user.events');
+    Route::get('/user/events/attending', [UserEventController::class, 'attending'])
+        ->name('user.events.attending');
 
-    Route::get('/user/events/create', function() {
+    Route::get('/user/events/attending/past', [UserEventController::class, 'attendingPast'])
+        ->name('user.events.attending.past');
+
+    Route::get('/user/events/hosting', [UserEventController::class, 'hosting'])
+        ->name('user.events.hosting');
+
+    Route::get('/user/events/hosting/past', [UserEventController::class, 'hostingPast'])
+        ->name('user.events.hosting.past');
+
+    Route::get('/user/events/hosting/create', function() {
         return view('user.create-event');
-    })->name('user.events.create');
+    })->name('user.events.hosting.create');
 
-    Route::get('/user/events/{event}/edit', function(Event $event) {
-        return view('user.edit-event', compact('event'));
-    })->name('user.events.edit');
+    Route::get('/user/events/hosting/{event}/edit', [UserEventController::class, 'edit'])
+        ->name('user.events.hosting.edit');
 
-    // Route::get('/user/events/create', CreateEvent::class)->name('user.events.create');
+    Route::get('/tickets/{attendee}/download', [TicketController::class, 'downloadTicket'])
+        ->name('tickets.download');
 });
+
+Route::get('tickets/{token}/scan', [TicketController::class, 'scan'])
+    ->name('ticket.scan');
+
 
 // Route::get('/dashboard/events/create', function() {
 //     return view('create-event');
@@ -68,5 +80,22 @@ Route::view('dashboard', 'dashboard')
 //     Route::get('settings/password', Password::class)->name('settings.password');
 //     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 // });
+
+Route::prefix('/testing')->group(function() {
+    Route::prefix('/mails')->group(function() {
+        Route::get('event-updated-email', function() {
+            $event = Event::find(13);
+            $attendee = Attendee::with('user')->find(21);
+
+            return (new EventUpdatedMail($event, $attendee))->render();
+        });
+
+        Route::get('attendee-created-email', function() {
+            $attendee = Attendee::with(['user', 'event'])->find(21);
+
+            return (new AttendeeCreatedMail($attendee))->render();
+        });
+    });
+});
 
 require __DIR__.'/auth.php';
