@@ -1,6 +1,6 @@
 @if ($paginator->hasPages())
     <nav>
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
             {{-- Custom pagination info --}}
             <p class="text-sm text-purple-700 leading-5">
                 Page {{ $paginator->currentPage() }} of {{ $paginator->lastPage() }}
@@ -18,6 +18,30 @@
                         Previous
                     </a>
                 @endif
+
+                {{-- Pagination Numbers --}}
+                @foreach ($elements as $element)
+                    {{-- "Three Dots" Separator --}}
+                    @if (is_string($element))
+                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                            {{ $element }}
+                        </span>
+                    @endif
+
+                    {{-- Array Of Links --}}
+                    @if (is_array($element))
+                        @foreach ($element as $page => $url)
+                            <a href="{{ $url }}"
+                                class="relative inline-flex items-center px-4 py-2 text-sm font-medium border border-gray-300 
+                                    {{ $page === $paginator->currentPage() 
+                                        ? 'z-10 bg-purple-50 border-purple-500 text-purple-600' 
+                                        : 'bg-white text-gray-500 hover:bg-gray-50' }}"
+                            >
+                                {{ $page }}
+                            </a>
+                        @endforeach
+                    @endif
+                @endforeach
 
                 {{-- Next Page Link --}}
                 @if ($paginator->hasMorePages())
