@@ -12,13 +12,24 @@
     @endif
     <div class="space-y-6">
         <img src="{{ $event->image }}" class="w-full md:float-right md:w-1/2">
-        <p><b>Starts:</b> {{ $event->start_time->format('l, F jS Y H:i') }}
-        {{-- Live Countdown --}}
-        <div class="text-yellow-300 text-sm mb-2"
-                x-data
-                x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft('{{ $event->start_time }}'), 1000)">
+        <p><b>Starts:</b> <span class="text-green-500">{{ $event->start_time->format('l, F jS Y H:i') }}</span></p>
+        <p><b>Ends:</b> <span class="text-red-500">{{ $event->end_time->format('l, F jS Y H:i') }}</span></p>
+
+        {{-- Status Indicators with Countdown --}}
+        <div class="mt-2">
+            @if($event->end_time && now() > $event->end_time)
+                <span class="text-red-500 font-semibold">Event has ended</span>
+            @elseif(now() > $event->start_time)
+                <span class="text-yellow-500 font-semibold">Event in progress</span>
+            @else
+                {{-- Live Countdown only shows for upcoming events --}}
+                <div class="text-yellow-300 text-sm"
+                    x-data
+                    x-init="setInterval(() => $el.textContent = 'Event starts in: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                </div>
+            @endif
         </div>
-        <p><b>Ends:</b> {{ $event->end_time->format('l, F jS Y H:i') }}
+
         <p>{{ $event->description }}</p>
         <div>
             @if ($event->user_id === Auth::id())
