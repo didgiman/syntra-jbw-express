@@ -26,8 +26,12 @@ Route::get('/', function () {
     return view('welcome', compact('upcomingEvents'));
 })->name('home');
 
-Route::get('/events', [EventController::class, 'index'])->name('events');
-Route::get('/events/{event}', [EventController::class, 'show'])->name('events.single');
+Route::get('/events', function() {
+    return view('events');
+})->name('events');
+Route::get('/events/{event}', function(Event $event) {
+    return view('event-details', ['event' => $event]);
+})->name('events.single');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
