@@ -137,10 +137,21 @@ class EventForm extends Form
             $this->max_attendees = null;
         }
 
-        // exclude all NULL values
-        $event = Event::create(array_filter($this->all(), fn ($value) => !is_null($value)));
+        $eventData = [
+            'name' => $this->name,
+            'description' => $this->description,
+            'start_time' => $this->start_time,
+            'end_time' => $this->end_time,
+            'user_id' => $this->user_id,
+            'type_id' => $this->type_id,
+            'location' => $this->location,
+            'price' => $this->price,
+            'max_attendees' => $this->max_attendees,
+            'image' => $this->image,
+        ];
 
-        // $event->attendees()->create(['user_id' => $this->user_id]); // this is how you link a user to an event (create attendee)
+        // exclude all NULL values
+        $event = Event::create(array_filter($eventData, fn ($value) => !is_null($value)));
 
         return $event;
     }
