@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserEventController;
 use App\Livewire\CreateEvent;
@@ -16,10 +15,10 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
     // grab the earliest upcoming events from the DB
     $upcomingEvents = Event::with(['attendees', 'type'])  // Added 'type' here
-        ->where('start_time', '>=', now())
         ->orderBy('start_time')
         ->take(6)
         ->get();
