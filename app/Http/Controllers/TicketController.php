@@ -85,12 +85,12 @@ class TicketController extends Controller
     public function scan(string $token) {
         $attendee = Attendee::where('token', $token)->firstOrFail();
 
-        if ($attendee->status === 'checked-in') {
+        if ($attendee->checked_in === 1) {
             return abort(403, 'This ticket has already been used');
         }
 
         $attendee->update([
-            'status' => 'checked-in'
+            'checked_in' => 1
         ]);
 
         return true;

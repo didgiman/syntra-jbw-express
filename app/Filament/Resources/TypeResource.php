@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TypeResource\Pages;
-use App\Filament\Resources\TypeResource\RelationManagers;
 use App\Models\Type;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TypeResource extends Resource
 {
@@ -25,6 +22,7 @@ class TypeResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('description')
                     ->required(),
+                Forms\Components\ColorPicker::make('color'),
             ]);
     }
 
@@ -36,6 +34,7 @@ class TypeResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable(),
+                Tables\Columns\ColorColumn::make('color')
             ])
             ->filters([
                 //
