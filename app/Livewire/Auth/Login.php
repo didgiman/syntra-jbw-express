@@ -43,7 +43,18 @@ class Login extends Component
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('user.summary', absolute: false), navigate: false);
+
+        // $this->redirectIntended(default: route('user.summary', absolute: false), navigate: false);
+
+        if (session()->has('redirect_to_event')) {
+            $eventId = session('redirect_to_event');
+            session()->forget('redirect_to_event');
+
+            $this->redirect(route('events.single', $eventId));
+            return; // important to prevent further code from running
+        }
+
+        $this->redirectIntended(route('user.summary'));
     }
 
     /**

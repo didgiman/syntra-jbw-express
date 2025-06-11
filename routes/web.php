@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserEventController;
 use App\Http\Controllers\EventController;
@@ -26,21 +27,12 @@ Route::get('/', function () {
     return view('welcome', compact('upcomingEvents'));
 })->name('home');
 
-// Route::get('/events', function() {
-//     return view('events');
-// })->name('events');
-
-// // to display all events on the events.blade.php page
-// Route::get('/events', function() {
-//     $allEvents = Event::with(['attendees', 'type'])
-//         ->orderBy('start_time')
-//         ->paginate(5);
-
-//     return view('events', compact('allEvents'));
-// })->name('events');
-
-Route::get('/events', [EventController::class, 'allEvents'])
-        ->name('events');
+Route::get('/events', function() {
+    return view('events');
+})->name('events');
+Route::get('/events/{event}', function(Event $event) {
+    return view('event-details', ['event' => $event]);
+})->name('events.single');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 

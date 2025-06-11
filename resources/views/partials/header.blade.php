@@ -64,7 +64,7 @@
                 @if (Str::contains(Route::currentRouteName(), 'user'))
                     <div class="bg-gray-700 shadow-lg mb-6 hidden md:block">
                         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <ul class="flex space-x-4">
+                            <ul class="flex">
                                 <li><a href="{{ route('user.events.hosting') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'bg-gray-800' : '' }}">Hosting</a></li>
                                 <li><a href="{{ route('user.events.attending') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'bg-gray-800' : '' }}">Attending</a></li>
                             </ul>
