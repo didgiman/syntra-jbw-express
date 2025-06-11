@@ -38,13 +38,13 @@
                 {{-- Status/Countdown --}}
                 <div class="mt-4 p-3 bg-gray-700 rounded">
                     @if($event->end_time && now() > $event->end_time)
-                        <span class="text-red-500 font-semibold">Status: Event has ended</span>
+                        <span class="text-red-500 font-semibold">Event has ended</span>
                     @elseif(now() > $event->start_time)
-                        <span class="text-yellow-500 font-semibold">Status: Event in progress</span>
+                        <span class="text-yellow-500 font-semibold">Event in progress</span>
                     @else
                         <div class="text-yellow-300 font-semibold"
                              x-data
-                             x-init="setInterval(() => $el.textContent = 'Countdown: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                             x-init="setInterval(() => $el.textContent = 'Time until event starts: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
                         </div>
                     @endif
                 </div>
