@@ -21,12 +21,14 @@
             {{-- Time Section --}}
             <div class="bg-gray-800 p-6 rounded-lg">
                 <div class="space-y-2">
-                    <p><b class="text-gray-400">Starts:</b> 
+                    <p>
+                        <b class="text-gray-400">Starts:</b> 
                         <span class="text-green-500 block text-lg">
                             {{ $event->start_time->format('l, F jS Y H:i') }}
                         </span>
                     </p>
-                    <p><b class="text-gray-400">Ends:</b> 
+                    <p>
+                        <b class="text-gray-400">Ends:</b> 
                         <span class="text-red-500 block text-lg">
                             {{ $event->end_time->format('l, F jS Y H:i') }}
                         </span>
@@ -41,8 +43,8 @@
                         <span class="text-yellow-500 font-semibold">Status: Event in progress</span>
                     @else
                         <div class="text-yellow-300 font-semibold"
-                            x-data
-                            x-init="setInterval(() => $el.textContent = 'Countdown: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                             x-data
+                             x-init="setInterval(() => $el.textContent = 'Countdown: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
                         </div>
                     @endif
                 </div>
@@ -53,9 +55,9 @@
                 <h2 class="text-lg font-semibold mb-3">Location</h2>
                 @if($event->location)
                     <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($event->location) }}"
-                        class="text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-2"
-                        target="_blank"
-                        rel="noopener noreferrer">
+                       class="text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-2"
+                       target="_blank"
+                       rel="noopener noreferrer">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
                         </svg>
@@ -76,7 +78,7 @@
             <div class="bg-gray-800 p-6 rounded-lg">
                 @if ($event->user_id === Auth::id())
                     <p class="text-violet-400 mb-4">You are hosting this event</p>
-                    <a href="{{ route('user.events.hosting.edit', ['event' => $event->id])}}" 
+                    <a href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
                        class="btn btn-primary-inverted w-full text-center block">
                         Edit event details
                     </a>
@@ -84,18 +86,18 @@
                     <p class="text-violet-400 mb-4">You are attending this event</p>
                     <div class="flex gap-4">
                         <button class="btn btn-danger flex-1"
-                            wire:click="unattend({{ $event->id }})"
-                            wire:confirm="Are you sure?">
+                                wire:click="unattend({{ $event->id }})"
+                                wire:confirm="Are you sure?">
                             Unattend
                         </button>
                         <button class="btn btn-primary flex-1"
-                            wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
+                                wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
                             Download Ticket
                         </button>
                     </div>
                 @else
                     <button class="btn btn-primary w-full"
-                        wire:click="attend({{ $event->id }})">
+                            wire:click="attend({{ $event->id }})">
                         Attend Event
                     </button>
                     @guest
@@ -110,11 +112,9 @@
         {{-- Right Column: Image --}}
         <div class="relative">
             @if($event->image)
-                <img 
-                    src="{{ $event->image }}" 
-                    alt="{{ $event->name }}" 
-                    class="w-full h-[400px] object-cover rounded-lg shadow-lg sticky top-4"
-                >
+                <img src="{{ $event->image }}"
+                     alt="{{ $event->name }}"
+                     class="w-full h-[400px] object-cover rounded-lg shadow-lg sticky top-4">
             @endif
         </div>
     </div>
