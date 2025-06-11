@@ -10,12 +10,10 @@
                 <img src="{{ $event->image }}" class="w-20 min-w-20 h-20 object-cover rounded-lg">
             </div>
             <div>
-                @if ($this->view === 'all')
-                    <h2 class="text-xl font-bold"><a
-                            href="{{ route('events.single', ['event' => $event->id]) }}">{{ $event->name }}</a></h2>
-                @else
-                    <h2 class="text-xl font-bold">{{ $event->name }}</h2>
-                @endif
+
+                <h2 class="text-xl font-bold"><a
+                    href="{{ route('events.single', ['event' => $event->id]) }}">{{ $event->name }}</a></h2>
+
                 <p class="text-gray-400">Starts: <span class="text-green-500">{{ $event->start_time->format('l, F jS Y H:i') }}</span></p>
                 <p class="text-gray-400">Ends: <span class="text-red-500">{{ $event->end_time->format('l, F jS Y H:i') }}</span></p>
                 
