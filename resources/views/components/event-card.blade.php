@@ -18,19 +18,28 @@
                 @endif
                 <p class="text-green-500">Start: {{ $event->start_time->format('l, F jS Y H:i') }}</p>
                 <p class="text-red-500">End: {{ $event->end_time->format('l, F jS Y H:i') }}</p>
-                {{-- Live Countdown --}}
-                <div class="text-yellow-300 text-sm mb-2"
-                        x-data
-                        x-init="setInterval(() => $el.textContent = 'Countdown: ' + calculateTimeLeft('{{ $event->start_time }}'), 1000)">
+                
+                {{-- Status Indicators with Countdown --}}
+                <div class="mt-2">
+                    @if($event->end_time && now() > $event->end_time)
+                        <span class="text-red-500 font-semibold">Event has ended</span>
+                    @elseif(now() > $event->start_time)
+                        <span class="text-yellow-500 font-semibold">Event in progress</span>
+                    @else
+                        {{-- Live Countdown only shows for upcoming events --}}
+                        <div class="text-yellow-300 font-semibold"
+                            x-data
+                            x-init="setInterval(() => $el.textContent = 'Event starts in: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                        </div>
+                    @endif
+                    
+                    @if ($event->relationLoaded('attendees'))
+                        <p class="text-sm mt-2"><b>{{ $event->attendees->count() }}</b> people are attending</p>
+                    @endif
                 </div>
-                @if ($event->relationLoaded('attendees'))
-                    <p class="text-sm mt-2"><b>{{ $event->attendees->count() }}</b> people attending</p>
-                @endif
             </div>
         </div>
     </div>
-
-    <h1>TEST EVENT CARD</h1>
 
     {{-- Named slot for action buttons --}}
     <div>
