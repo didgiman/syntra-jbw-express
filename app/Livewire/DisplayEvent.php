@@ -38,6 +38,21 @@ class DisplayEvent extends Component
         $this->message = 'You are now attending this event.';
     }
 
+    public function unattend(Event $event)
+    {
+        $event->attendees()->where('user_id', Auth::id())->delete();
+        $this->message = 'You are no longer attending this event.';
+    }
+
+    public function downloadTicket($attendeeId)
+    {
+        
+        $url = route('tickets.download', $attendeeId);
+
+        // Trigger full browser download
+        $this->dispatch('download-ticket', url: $url);
+    }
+
     public function render()
     {
         return view('livewire.display-event');

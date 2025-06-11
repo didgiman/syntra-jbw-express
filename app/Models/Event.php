@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 #[ObservedBy([EventObserver::class])]
 class Event extends Model
@@ -103,6 +105,12 @@ class Event extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(Type::class);
+    }
+
+    public function currentUserAttendee(): HasOne
+    {
+        return $this->hasOne(Attendee::class)
+                    ->where('user_id', Auth::id());
     }
 
     // Accessor for available_spots
