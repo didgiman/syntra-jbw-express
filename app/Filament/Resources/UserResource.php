@@ -16,6 +16,8 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -72,4 +74,11 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    protected static ?string $navigationBadgeTooltip = 'The number of users';
 }

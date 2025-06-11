@@ -16,13 +16,16 @@ class TypeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
 
+    protected static ?int $navigationSort = 3;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('description')
                     ->required(),
-                Forms\Components\ColorPicker::make('color'),
+                Forms\Components\ColorPicker::make('color')
+                    ->required(),
             ]);
     }
 
