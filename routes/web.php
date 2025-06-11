@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserEventController;
 use App\Livewire\CreateEvent;
@@ -28,6 +29,9 @@ Route::get('/', function () {
 Route::get('/events', function() {
     return view('events');
 })->name('events');
+Route::get('/events/{event}', function(Event $event) {
+    return view('event-details', ['event' => $event]);
+})->name('events.single');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 

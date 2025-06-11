@@ -39,7 +39,7 @@ class ListUserEvents extends Component
         }
 
         $event->attendees()->create(['user_id' => Auth::id()]);
-        $this->message = 'You are attending this event.';
+        $this->message = 'You are now attending this event.';
     }
 
     public function unattend(Event $event)
