@@ -102,3 +102,8 @@
     </main>
 
 @include('partials.footer')
+
+{{-- Add a stack for scripts --}}
+    @stack('scripts')
+</body>
+</html>
