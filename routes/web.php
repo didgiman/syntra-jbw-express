@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserEventController;
-use App\Http\Controllers\EventController;
 use App\Livewire\CreateEvent;
 use App\Livewire\Dashboard;
 use App\Livewire\EditEvent;

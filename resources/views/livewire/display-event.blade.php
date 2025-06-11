@@ -1,3 +1,8 @@
+{{-- load the countdown script --}}
+@push('scripts')
+    <script src="{{ asset('js/countdown.js') }}"></script>
+@endpush
+
 <div>
     <h1 class="text-3xl font-bold mb-8 text-center">{{ $event->name }}</h1>
     @if ($message)
@@ -8,6 +13,11 @@
     <div class="space-y-6">
         <img src="{{ $event->image }}" class="w-full md:float-right md:w-1/2">
         <p><b>Starts:</b> {{ $event->start_time->format('l, F jS Y H:i') }}
+        {{-- Live Countdown --}}
+        <div class="text-yellow-300 text-sm mb-2"
+                x-data
+                x-init="setInterval(() => $el.textContent = 'Event is starting in: ' + calculateTimeLeft('{{ $event->start_time }}'), 1000)">
+        </div>
         <p><b>Ends:</b> {{ $event->end_time->format('l, F jS Y H:i') }}
         <p>{{ $event->description }}</p>
         <div>

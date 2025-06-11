@@ -1,6 +1,11 @@
 @extends('partials.header')
 @section('title', 'EventR .:. Events I\'m hosting')
 
+{{-- load the countdown script --}}
+@push('scripts')
+    <script src="{{ asset('js/countdown.js') }}"></script>
+@endpush
+
 @section('content')
     <div class="container mx-auto py-12 px-4">
 
