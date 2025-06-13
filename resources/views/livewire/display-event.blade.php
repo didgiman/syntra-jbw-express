@@ -105,6 +105,13 @@
                             You will need to log in or register before attending an event
                         </p>
                     @endguest
+
+
+                    @livewire('buy-tickets', [
+                        'eventId' => $event->id,
+                        'is_buying' => request()->has('is_buying') ? 1 : 0
+                    ])
+                    
                 @endif
             </div>
         </div>
