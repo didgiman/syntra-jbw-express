@@ -42,11 +42,6 @@
                         <button class="btn btn-danger btn-sm"
                             wire:click="delete({{ $event->id }})"
                             wire:confirm="Are you sure?">Delete</button>
-
-                        {{-- TO DO: this button should be removed --}}
-                        <button class="btn btn-primary btn-sm"
-                            wire:click="attend({{ $event->id }})"
-                        >Attend (TBR)</button>
                     </div>
                 @elseif ($view === 'attending')
                     <div class="flex flex-col md:flex-row gap-2 items-end">

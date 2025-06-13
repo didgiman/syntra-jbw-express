@@ -6,6 +6,9 @@
     </div>
 </form>
 </footer>
+
+<script src="{{ asset('js/countdown.js') }}"></script>
+
 @livewireScripts
 </body>
 </html>

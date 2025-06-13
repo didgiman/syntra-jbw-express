@@ -1,11 +1,6 @@
 @extends('partials.header')
 @section('title', 'EventR Home')
 
-{{-- Load External Scripts --}}
-@push('scripts')
-    <script src="{{ asset('js/countdown.js') }}"></script>
-@endpush
-
 @section('content')
     {{-- Main Container with Alpine.js State --}}
     <div x-data="{ 

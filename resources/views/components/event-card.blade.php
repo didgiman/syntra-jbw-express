@@ -31,6 +31,7 @@
                         <div class="text-yellow-300 font-semibold"
                             x-data
                             x-init="setInterval(() => $el.textContent = 'Time until event starts: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                            &nbsp;
                         </div>
                     @endif
                     
@@ -41,15 +42,12 @@
                                     <b>{{ $event->attendees->count() }}</b> attending - Unlimited spots available
                                 </span>
                             @else
-                                @php
-                                    $remainingSpots = $event->max_attendees - $event->attendees->count();
-                                @endphp
-                                <span class="text-sm {{ $remainingSpots > 0 ? 'text-blue-400' : 'text-red-500' }}">
+                                <span class="text-sm {{ $event->available_spots > 0 ? 'text-blue-400' : 'text-red-500' }}">
                                     <b>{{ $event->attendees->count() }}</b> attending - 
-                                    @if($remainingSpots <= 0)
+                                    @if($event->available_spots <= 0)
                                         SOLD OUT
                                     @else
-                                        {{ $remainingSpots }} spots remaining
+                                        {{ $event->available_spots }} spots remaining
                                     @endif
                                 </span>
                             @endif
