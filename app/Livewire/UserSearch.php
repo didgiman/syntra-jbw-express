@@ -13,7 +13,7 @@ class UserSearch extends Component
     public $results = [];
 
     #[Validate('required')]
-    public User $user;
+    public ?User $user = null;
 
     public $buttonText = 'Select';
     public $onSelect = 'user-selected';

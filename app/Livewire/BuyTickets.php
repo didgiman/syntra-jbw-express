@@ -47,9 +47,12 @@ class BuyTickets extends Component
 
     public function buy()
     {
+        $attendees = [];
+        $userId = Auth::id();
         for ($i = 0; $i < $this->numberOfTickets; $i++) {
-            $this->event->attendees()->create(['user_id' => Auth::id()]);
+            $attendees[] = ['user_id' => $userId];
         }
+        $this->event->attendees()->createMany($attendees);
 
         $this->message = "Tickets purchased";
         $this->ticketsPurchased = true;

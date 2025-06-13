@@ -10,11 +10,9 @@
                 <span>&euro;{{ $event->price }}</span>
             </div>
             <button class="btn btn-primary w-full" wire:click.prevent="startBuying">Buy Tickets</button>
-            @guest
-                <p class="text-sm text-gray-400 text-center mt-2">
-                    You will need to log in or register before buying tickets
-                </p>
-            @endguest
+            <p class="text-sm text-gray-400 text-center mt-2">
+                You will need to log in or register before buying tickets
+            </p>
         </div>
     @else
 
