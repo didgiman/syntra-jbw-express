@@ -78,11 +78,13 @@
                 @endif
             </div>
 
-            {{-- Description Section --}}
-            <div class="bg-gray-800 p-6 rounded-lg">
-                <h2 class="text-lg font-semibold mb-3">About this Event</h2>
-                <p class="text-gray-300">{{ $event->description }}</p>
-            </div>
+            {{-- Description Section (only shown if description exists) --}}
+            @if($event->description)
+                <div class="bg-gray-800 p-6 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-3">About this Event</h2>
+                    <p class="text-gray-300">{{ $event->description }}</p>
+                </div>
+            @endif
 
             {{-- Actions Section --}}
             <div class="bg-gray-800 p-6 rounded-lg">
