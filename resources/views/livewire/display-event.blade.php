@@ -109,8 +109,14 @@
             </div>
         </div>
 
-        {{-- Right Column: Image --}}
+        {{-- Right Column: Image with Event Type Badge --}}
         <div class="relative">
+            {{-- Event Type Badge --}}
+            <span class="text-xs text-white py-1 px-2 rounded absolute -top-2 shadow uppercase -left-2 md:-left-4 z-10"
+                  style="background-color: {{ $event->type->color }};">
+                {{ $event->type->description }}
+            </span>
+
             @if($event->image)
                 <img src="{{ $event->image }}"
                      alt="{{ $event->name }}"
