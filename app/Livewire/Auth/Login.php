@@ -50,7 +50,9 @@ class Login extends Component
             $eventId = session('redirect_to_event');
             session()->forget('redirect_to_event');
 
-            $this->redirect(route('events.single', $eventId));
+            $this->redirect(route('events.single', [
+                'event' => $eventId,
+            ]));
             return; // important to prevent further code from running
         }
 
