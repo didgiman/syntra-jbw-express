@@ -169,7 +169,7 @@
                 </span>
 
                 @if($event->image)
-                    <img src="{{ $event->image }}"
+                    <img src="{{ asset($event->image) }}"
                          alt="{{ $event->name }}"
                          class="w-full h-[400px] object-cover rounded-lg shadow-lg cursor-pointer"
                          @click="toggleModal()">
@@ -258,7 +258,7 @@
                 </button>
                 
                 {{-- Full Size Image --}}
-                <img src="{{ $event->image }}" 
+                <img src="{{ asset($event->image) }}" 
                      alt="{{ $event->name }}"
                      class="max-w-full max-h-[90vh] object-contain rounded-lg">
             </div>

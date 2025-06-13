@@ -7,7 +7,7 @@
         </span>
         <div class="flex gap-4">
             <div class="w-20 flex justify-center">
-                <img src="{{ $event->image }}" class="w-20 min-w-20 h-20 object-cover rounded-lg">
+                <img src="{{ asset($event->image) }}" class="w-20 min-w-20 h-20 object-cover rounded-lg">
             </div>
             <div>
                 @if($event->end_time < now())
