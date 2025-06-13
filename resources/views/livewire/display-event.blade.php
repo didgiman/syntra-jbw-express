@@ -133,58 +133,80 @@
             </div>
         </div>
 
-        {{-- Right Column: Image with Event Type Badge --}}
-        <div class="relative">
-            {{-- Event Type Badge --}}
-            <span class="text-xs text-white py-1 px-2 rounded absolute -top-2 shadow uppercase -left-2 md:-left-4 z-10"
-                  style="background-color: {{ $event->type->color }};">
-                {{ $event->type->description }}
-            </span>
+        {{-- Right Column: Image and Price --}}
+        <div>
+            {{-- Image Container --}}
+            <div class="relative mb-6">
+                {{-- Event Type Badge --}}
+                <span class="text-xs text-white py-1 px-2 rounded absolute -top-2 shadow uppercase -left-2 md:-left-4 z-10"
+                      style="background-color: {{ $event->type->color }};">
+                    {{ $event->type->description }}
+                </span>
 
-            @if($event->image)
-                {{-- Clickable Image --}}
-                <img src="{{ $event->image }}"
-                     alt="{{ $event->name }}"
-                     class="w-full h-[400px] object-cover rounded-lg shadow-lg sticky top-4 cursor-pointer"
-                     @click="showImageModal = true">
+                @if($event->image)
+                    <img src="{{ $event->image }}"
+                         alt="{{ $event->name }}"
+                         class="w-full h-[400px] object-cover rounded-lg shadow-lg cursor-pointer"
+                         @click="showImageModal = true">
+                @endif
+            </div>
 
-                {{-- Full Size Image Modal --}}
-                <div x-show="showImageModal" 
-                     style="display: none;" 
-                     class="fixed inset-0 overflow-hidden z-50"
-                     @keydown.escape.window="showImageModal = false"
-                     x-init="$watch('showImageModal', value => {
-                         if (value) {
-                             document.body.classList.add('overflow-hidden');    {{-- Prevent background scroll --}}
-                         } else {
-                             document.body.classList.remove('overflow-hidden'); {{-- Restore background scroll --}}
-                         }
-                     })"
-                >
-                    {{-- Modal Backdrop --}}
-                    <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" 
-                         @click="showImageModal = false">
-                    </div>
-
-                    {{-- Modal Container --}}
-                    <div class="fixed inset-0 flex items-center justify-center pointer-events-none">
-                        {{-- Modal Content --}}
-                        <div class="relative max-w-7xl p-4 pointer-events-auto">
-                            {{-- Close Button --}}
-                            <button @click="showImageModal = false" 
-                                    class="absolute top-0 right-0 -mr-4 -mt-4 text-gray-400 hover:text-white z-10 flex items-center gap-2">
-                                <span class="text-sm font-medium">Close</span>
-                                <span class="text-2xl">&times;</span>
-                            </button>
-                            
-                            {{-- Full Size Image --}}
-                            <img src="{{ $event->image }}" 
-                                 alt="{{ $event->name }}"
-                                 class="max-w-full max-h-[90vh] object-contain rounded-lg">
+            {{-- Price Section --}}
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-lg font-semibold mb-3">Ticket Price</h2>
+                
+                <div x-data="{ 
+                    currentCurrency: 'EUR',
+                    exchangeRates: {
+                        'EUR': 1,
+                        'USD': 1.08,
+                        'GBP': 0.86,
+                        'JPY': 161.5
+                    },
+                    symbols: {
+                        'EUR': '€',
+                        'USD': '$',
+                        'GBP': '£',
+                        'JPY': '¥'
+                    },
+                    get convertedPrice() {
+                        return this.basePrice * this.exchangeRates[this.currentCurrency];
+                    },
+                    basePrice: {{ $event->price ?? 0 }},
+                    formatPrice(price) {
+                        if (this.currentCurrency === 'JPY') {
+                            return Math.round(price);
+                        }
+                        return price.toFixed(2);
+                    }
+                }">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            @if(is_null($event->price) || $event->price == 0)
+                                <span class="text-green-500 font-bold text-xl">FREE</span>
+                            @else
+                                <span class="text-yellow-400 font-bold text-xl">
+                                    <span x-text="symbols[currentCurrency]"></span>
+                                    <span x-text="formatPrice(convertedPrice)"></span>
+                                </span>
+                            @endif
                         </div>
+                        
+                        @if(!is_null($event->price) && $event->price > 0)
+                            <div class="flex space-x-2">
+                                <template x-for="currency in ['EUR', 'USD', 'GBP', 'JPY']">
+                                    <button 
+                                        @click="currentCurrency = currency"
+                                        :class="{'bg-blue-600': currentCurrency === currency, 'bg-gray-700': currentCurrency !== currency}"
+                                        class="px-2 py-1 rounded text-sm font-semibold transition-colors duration-150"
+                                        x-text="currency"
+                                    ></button>
+                                </template>
+                            </div>
+                        @endif
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 </div>
