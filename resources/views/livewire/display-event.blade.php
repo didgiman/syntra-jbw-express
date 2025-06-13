@@ -1,8 +1,3 @@
-{{-- load the countdown script --}}
-@push('scripts')
-    <script src="{{ asset('js/countdown.js') }}"></script>
-@endpush
-
 <div class="max-w-4xl mx-auto" x-data="{ 
     showImageModal: false,
     toggleModal() {
@@ -53,8 +48,9 @@
                         <span class="text-yellow-500 font-semibold">Event in progress</span>
                     @else
                         <div class="text-yellow-300 font-semibold"
-                             x-data
-                             x-init="setInterval(() => $el.textContent = 'Time until event starts: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                            x-data
+                            x-init="setInterval(() => $el.textContent = 'Time until event starts: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                            &nbsp;
                         </div>
                     @endif
                 </div>
@@ -95,15 +91,12 @@
                             <b>{{ $event->attendees->count() }}</b> attending - Unlimited spots available
                         </p>
                     @else
-                        @php
-                            $remainingSpots = $event->max_attendees - $event->attendees->count();
-                        @endphp
-                        <p class="text-sm {{ $remainingSpots > 0 ? 'text-blue-400' : 'text-red-500 font-bold text-base' }}">
+                        <p class="text-sm {{ $event->available_spots > 0 ? 'text-blue-400' : 'text-red-500 font-bold text-base' }}">
                             <b>{{ $event->attendees->count() }}</b> attending - 
-                            @if($remainingSpots <= 0)
+                            @if($event->available_spots <= 0)
                                 SOLD OUT
                             @else
-                                {{ $remainingSpots }} spots remaining
+                                {{ $event->available_spots }} spots remaining
                             @endif
                         </p>
                     @endif
@@ -116,50 +109,40 @@
                        class="btn btn-primary-inverted w-full text-center block">
                         Edit event details
                     </a>
-                @elseif ($event->price == 0)
-                    {{-- Free event --}}
+                @endif
 
-                    @if ($event->currentUserAttendee)
-                        <p class="text-violet-400 mb-4">You are attending this event</p>
-                        <div class="flex gap-4">
+                @if ($event->currentUserAttendee)
+                    <p class="text-violet-400 mb-4">You are attending this event</p>
+                    <div class="flex gap-4 mb-4">
+                        @if ($event->price == 0)
                             <button class="btn btn-danger flex-1"
                                     wire:click="unattend({{ $event->id }})"
                                     wire:confirm="Are you sure?">
                                 Unattend
                             </button>
-                            <button class="btn btn-primary flex-1"
-                                    wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
-                                Download Ticket
-                            </button>
-                        </div>
-                    @elseif (is_null($event->max_attendees) || $event->available_spots > 0)
-                        <button class="btn btn-primary w-full"
-                                wire:click="attend({{ $event->id }})">
-                            Attend Event
+                        @endif
+                        <button class="btn btn-primary flex-1"
+                                wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
+                            Download Ticket
                         </button>
-                        @guest
-                            <p class="text-sm text-gray-400 text-center mt-2">
-                                You will need to log in or register before attending an event
-                            </p>
-                        @endguest
-                    @else
-                        <p class="text-red-500">This event is sold out</p>
-                    @endif
-                @elseif(!is_null($event->max_attendees) && $remainingSpots <= 0)
-                    <p class="text-red-500 font-bold text-center">This event is sold out</p>
-                @else
-                    {{-- Paid event --}}
-                    @if ($event->currentUserAttendee)
-                        <p class="text-violet-400 mb-4">You are attending this event</p>
-                    @endif
+                    </div>
+                @endif
 
-                    @if (is_null($event->max_attendees) || $event->available_spots > 0)
-                        @livewire('buy-tickets', [
-                            'eventId' => $event->id,
-                        ])
-                    @else
-                        <p class="text-red-500 font-bold text-xl">Event is sold out</p>
-                    @endif
+                @if ($event->price == 0 && is_null($event->max_attendees) || $event->available_spots > 0)
+                    <button class="btn btn-primary w-full"
+                            wire:click="attend({{ $event->id }})">
+                        Attend Event
+                    </button>
+                    @guest
+                        <p class="text-sm text-gray-400 text-center mt-2">
+                            You will need to log in or register before attending an event
+                        </p>
+                    @endguest
+                @elseif (is_null($event->max_attendees) || $event->available_spots > 0)
+                    {{-- Paid event --}}
+                    @livewire('buy-tickets', [
+                        'eventId' => $event->id,
+                    ])
                 @endif
             </div>
         </div>

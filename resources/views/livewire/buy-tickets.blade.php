@@ -1,7 +1,7 @@
-<div>
+<div class="buy-tickets">
     <h2 class="text-white text-xl font-bold mb-4">Buy tickets for this event</h2>
 
-    <p class="text-primary pb-2">{{ $message }}</p>
+    <p class="text-violet-400 pb-2">{{ $message }}</p>
 
     @guest
         <div>

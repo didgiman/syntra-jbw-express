@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title')</title>
-    <link rel="icon" href="{{asset('favicon.ico')}}">
+    <link rel="icon" href="{{asset('favicon-32x32.png')}}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -19,8 +19,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <div class="flex items-center">
-                        <a href="{{ route('home') }}" class="flex-shrink-0 text-2xl font-bold">
-                            EventR
+                        <a href="{{ route('home') }}" class="flex-shrink-0 flex gap-2">
+                            <img src="{{asset('logo.png')}}" class="w-10">
+                            <div class="text-2xl font-bold tracking-wider"><span class="text-violet-500">E</span>vent<span class="text-[#46b2fd]">R</span></div>
                         </a>
                         <div class="hidden md:block ml-10">
                             <div class="flex justify-between items-center w-full">
