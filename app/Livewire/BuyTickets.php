@@ -58,6 +58,8 @@ class BuyTickets extends Component
         $this->numberOfTickets = 1;
         // Re-calculate total price
         $this->updatedNumberOfTickets();
+
+        $this->dispatch('tickets.purchased');
     }
 
     public function render()

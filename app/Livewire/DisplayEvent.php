@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class DisplayEvent extends Component
 {
@@ -16,6 +17,13 @@ class DisplayEvent extends Component
     public function mount($eventId)
     {
         $this->event = Event::with(['attendees', 'type'])->findOrFail($eventId);
+    }
+
+    #[On('tickets.purchased')]
+    public function refreshEvent()
+    {
+        // Refresh event
+        $this->event = Event::with(['attendees', 'type'])->findOrFail($this->event->id);
     }
 
     public function attend(Event $event)
