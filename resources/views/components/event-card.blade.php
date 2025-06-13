@@ -75,7 +75,7 @@
                         @else
                             <div class="text-yellow-300 text-sm font-semibold"
                                 x-data
-                                x-init="setInterval(() => $el.textContent = calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                                x-init="setInterval(() => $el.textContent = 'Time until event starts: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
                             </div>
                         @endif
                     </div>
