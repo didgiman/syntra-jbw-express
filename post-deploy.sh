@@ -31,6 +31,7 @@ php artisan view:clear
 
 # Create storage symlink if it doesn't exist
 php artisan storage:link
+echo "Storage link created"
 
 # Run migrations (optional, uncomment if needed)
 php artisan migrate --force
