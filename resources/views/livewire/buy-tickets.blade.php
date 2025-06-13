@@ -1,60 +1,52 @@
-<div class="mt-8">
+<div>
+    <h2 class="text-white text-xl font-bold mb-4">Buy tickets for this event</h2>
 
     <p class="text-primary pb-2">{{ $message }}</p>
 
-    @if ($errors->any())
-        <div class="alert alert-danger mb-4">
-            <ul class="list-disc ml-5">
-                @foreach ($errors->all() as $error)
-                    <li class="text-red-600">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if ($userIsAttending)
-        <p>You are attending this event</p>
-    @elseif (!$buyingStarted)
+    @guest
         <div>
-            {{-- TO DO: hide the button if there are no more tickets left for the event --}}
+            <div class="pb-4 flex justify-between">
+                <span>Ticket price:</span>
+                <span>&euro;{{ $event->price }}</span>
+            </div>
             <button class="btn btn-primary w-full" wire:click.prevent="startBuying">Buy Tickets</button>
+            @guest
+                <p class="text-sm text-gray-400 text-center mt-2">
+                    You will need to log in or register before buying tickets
+                </p>
+            @endguest
         </div>
     @else
-        <h2 class="text-white text-xl font-bold mb-4">Buy tickets for this event</h2>
-        <p class="mb-2 text-sm">Select all users for which you want to buy a ticket</p>
-        <form wire:submit="buy">
-            <div class="mb-4">
-                {{-- TO DO: hide the user search field if there are no more tickets left for the event --}}
-                <livewire:user-search buttonText="Add" onSelect="attend:userSelected" />
-            </div>
 
-            <div class="form-input relative">
-
-                <p>Selected users: @if (count($attendees) == 0) <i>none</i>@endif </p>
-
-                <ul class="list-disc ml-5">
-                @foreach ($attendees as $index => $attendee)
-                    <li class="mb-2">
-                        <div class="flex justify-between items-center">
-                            <span>{{ $attendee->name }} ({{ $attendee->id }})</span>
-                            {{-- @if($attendee->id !== auth()->id()) --}}
-                                <i class="fa-solid fa-xmark text-red-600 hover:text-red-500 cursor-pointer" wire:click.prevent="removeAttendee({{ $index }})"></i>
-                            {{-- @endif --}}
-                        </div>
-                    </li>
-                @endforeach
-                </ul>
+        @if ($event->available_spots == 0)
+            <p class="text-red-500 text-lg font-bold">Event is sold out</p>
+        @elseif ($ticketsPurchased)
+            <button class="btn btn-primary w-full" wire:click.prevent="startBuying">Buy More Tickets</button>
+        @else
+            <div class="pb-4 flex justify-between">
+                <span>Ticket price:</span>
+                <span>&euro;{{ $event->price }}</span>
             </div>
-            <div class="mt-8">
-                @error('attendees')
-                    <div class="validationError mb-2">{{ $message }}</div>
-                @enderror
-                <button
-                    type="submit"
-                    class="btn btn-primary block w-full md:w-full"
-                    @if (count($attendees) === 0) disabled @endif
-                >Continue</button>
-            </div>
-        </form>
-    @endif
+            <form wire:submit="buy">
+                <div class="form-input flex items-center justify-between">
+                    <label class="w-full">Number of tickets</label>
+                    <select wire:model.live="numberOfTickets" class="w-1/5!">
+                        @for ($i = 1; $i <= min(10, $event->available_spots); $i++)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="flex justify-between text-xl font-bold border-t-1 pt-2 mt-2">
+                    <p>Total:</p>
+                    <p>&euro;{{ $totalPrice }}</p>
+                </div>
+                <div class="mt-4">
+                    <button
+                        type="submit"
+                        class="btn btn-primary block w-full md:w-full"
+                    >Buy Tickets</button>
+                </div>
+            </form>
+        @endif
+    @endguest
 </div>

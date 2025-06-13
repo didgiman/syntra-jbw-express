@@ -82,36 +82,49 @@
                        class="btn btn-primary-inverted w-full text-center block">
                         Edit event details
                     </a>
-                @elseif ($event->currentUserAttendee)
-                    <p class="text-violet-400 mb-4">You are attending this event</p>
-                    <div class="flex gap-4">
-                        <button class="btn btn-danger flex-1"
-                                wire:click="unattend({{ $event->id }})"
-                                wire:confirm="Are you sure?">
-                            Unattend
+                @elseif ($event->price == 0)
+                    {{-- Free event --}}
+
+                    @if ($event->currentUserAttendee)
+                        <p class="text-violet-400 mb-4">You are attending this event</p>
+                        <div class="flex gap-4">
+                            <button class="btn btn-danger flex-1"
+                                    wire:click="unattend({{ $event->id }})"
+                                    wire:confirm="Are you sure?">
+                                Unattend
+                            </button>
+                            <button class="btn btn-primary flex-1"
+                                    wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
+                                Download Ticket
+                            </button>
+                        </div>
+                    @elseif ($event->available_spots > 0)
+                        <button class="btn btn-primary w-full"
+                                wire:click="attend({{ $event->id }})">
+                            Attend Event
                         </button>
-                        <button class="btn btn-primary flex-1"
-                                wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
-                            Download Ticket
-                        </button>
-                    </div>
+                        @guest
+                            <p class="text-sm text-gray-400 text-center mt-2">
+                                You will need to log in or register before attending an event
+                            </p>
+                        @endguest
+                    @else
+                        <p class="text-red-500">Event is sold out</p>
+                    @endif
                 @else
-                    <button class="btn btn-primary w-full"
-                            wire:click="attend({{ $event->id }})">
-                        Attend Event
-                    </button>
-                    @guest
-                        <p class="text-sm text-gray-400 text-center mt-2">
-                            You will need to log in or register before attending an event
-                        </p>
-                    @endguest
+                    {{-- Paid event --}}
+                    @if ($event->currentUserAttendee)
+                        <p class="text-violet-400 mb-4">You are attending this event</p>
+                    @endif
 
-
-                    @livewire('buy-tickets', [
-                        'eventId' => $event->id,
-                        'is_buying' => request()->has('is_buying') ? 1 : 0
-                    ])
-                    
+                    @if ($event->available_spots == 0)
+                        <p class="text-red-500 font-bold text-xl">Event is sold out</p>
+                    @else
+                        {{-- Paid event --}}
+                        @livewire('buy-tickets', [
+                            'eventId' => $event->id,
+                        ])
+                    @endif
                 @endif
             </div>
         </div>

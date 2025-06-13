@@ -52,7 +52,6 @@ class Login extends Component
 
             $this->redirect(route('events.single', [
                 'event' => $eventId,
-                'is_buying' => 1,
             ]));
             return; // important to prevent further code from running
         }
