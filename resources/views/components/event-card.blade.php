@@ -11,10 +11,10 @@
             </div>
             <div>
                 @if($event->end_time < now())
-                    <h2 class="text-xl font-bold">{{ $event->name }}</h2>
+                    <h2 class="text-xl font-bold">{{ $event->name }} @if ($event->price == 0)<span class="freebadge">FREE</span>@endif</h2>
                 @else
                     <h2 class="text-xl font-bold"><a
-                    href="{{ route('events.single', ['event' => $event->id]) }}">{{ $event->name }}</a></h2>
+                    href="{{ route('events.single', ['event' => $event->id]) }}">{{ $event->name }} @if ($event->price == 0)<span class="freebadge">FREE</span>@endif</a></h2>
                 @endif
                 
                 <p class="text-gray-400">Starts: <span class="text-green-500">{{ $event->start_time->format('l, F jS Y H:i') }}</span></p>

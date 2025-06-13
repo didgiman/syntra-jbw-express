@@ -57,6 +57,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('user.events.hosting.edit');
 
     Route::get('/tickets/{attendee}/download', [TicketController::class, 'downloadTicket'])
+        ->name('ticket.download');
+
+    Route::get('/tickets/{event}/{user}/download', [TicketController::class, 'downloadTickets'])
         ->name('tickets.download');
 });
 

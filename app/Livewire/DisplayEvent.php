@@ -52,10 +52,10 @@ class DisplayEvent extends Component
         $this->message = 'You are no longer attending this event.';
     }
 
-    public function downloadTicket($attendeeId)
+    public function downloadTicket()
     {
         
-        $url = route('tickets.download', $attendeeId);
+        $url = route('tickets.download', [$this->event->id, Auth::id()]);
 
         // Trigger full browser download
         $this->dispatch('download-ticket', url: $url);

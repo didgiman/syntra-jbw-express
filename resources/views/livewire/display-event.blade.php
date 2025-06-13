@@ -102,47 +102,58 @@
                     @endif
                 </div>
 
+                @php
+                    $isHosting = $event->user_id === Auth::id();
+                    $isAttending = $event->currentUserAttendee;
+                    $isFreeEvent = $event->price == 0;
+                    $hasFreeSpots = is_null($event->max_attendees) || $event->available_spots > 0;
+                @endphp
+
                 {{-- Actions --}}
-                @if ($event->user_id === Auth::id())
+                @if ($isHosting)
                     <p class="text-violet-400 mb-4">You are hosting this event</p>
                     <a href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
                        class="btn btn-primary-inverted w-full text-center block">
                         Edit event details
                     </a>
-                @endif
-
-                @if ($event->currentUserAttendee)
-                    <p class="text-violet-400 mb-4">You are attending this event</p>
-                    <div class="flex gap-4 mb-4">
-                        @if ($event->price == 0)
-                            <button class="btn btn-danger flex-1"
-                                    wire:click="unattend({{ $event->id }})"
-                                    wire:confirm="Are you sure?">
-                                Unattend
+                @else
+                    @if ($isAttending)
+                        <p class="text-violet-400 mb-4">You are attending this event</p>
+                        <div class="flex gap-4 mb-4">
+                            @if ($isFreeEvent)
+                                <button class="btn btn-danger flex-1"
+                                        wire:click="unattend({{ $event->id }})"
+                                        wire:confirm="Are you sure?">
+                                    Unattend
+                                </button>
+                            @endif
+                            {{-- <button class="btn btn-primary flex-1"
+                                    wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
+                                Download Ticket
+                            </button> --}}
+                            <button class="btn btn-primary flex-1"
+                                    wire:click.prevent="downloadTicket()">
+                                Download Ticket(s)
                             </button>
-                        @endif
-                        <button class="btn btn-primary flex-1"
-                                wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
-                            Download Ticket
-                        </button>
-                    </div>
-                @endif
+                        </div>
+                    @endif
 
-                @if ($event->price == 0 && is_null($event->max_attendees) || $event->available_spots > 0)
-                    <button class="btn btn-primary w-full"
-                            wire:click="attend({{ $event->id }})">
-                        Attend Event
-                    </button>
-                    @guest
-                        <p class="text-sm text-gray-400 text-center mt-2">
-                            You will need to log in or register before attending an event
-                        </p>
-                    @endguest
-                @elseif (is_null($event->max_attendees) || $event->available_spots > 0)
-                    {{-- Paid event --}}
-                    @livewire('buy-tickets', [
-                        'eventId' => $event->id,
-                    ])
+                    @if ($isFreeEvent && $hasFreeSpots)
+                        <button class="btn btn-primary w-full"
+                                wire:click="attend({{ $event->id }})">
+                            Attend Event
+                        </button>
+                        @guest
+                            <p class="text-sm text-gray-400 text-center mt-2">
+                                You will need to log in or register before attending an event
+                            </p>
+                        @endguest
+                    @elseif ($hasFreeSpots)
+                        {{-- Paid event --}}
+                        @livewire('buy-tickets', [
+                            'eventId' => $event->id,
+                        ])
+                    @endif
                 @endif
             </div>
         </div>

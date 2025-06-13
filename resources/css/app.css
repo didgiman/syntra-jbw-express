@@ -98,6 +98,10 @@ select:focus[data-flux-control] {
     @apply text-violet-500;
 }
 
+.freebadge {
+    @apply bg-violet-500 text-white px-2 py-1 rounded text-xs inline-block -translate-y-2 shadow ml-1;
+}
+
 .btn {
     @apply bg-gray-800 text-white font-semibold hover:bg-gray-700 py-3 px-6 rounded-md border border-gray-400 text-center shadow cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed;
 }

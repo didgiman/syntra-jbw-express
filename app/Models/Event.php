@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 #[ObservedBy([EventObserver::class])]
 class Event extends Model
@@ -61,7 +62,8 @@ class Event extends Model
         return $query
             ->join('attendees', 'events.id', '=', 'attendees.event_id')
             ->where('attendees.user_id', $userId)
-            ->select('events.*', 'attendees.id as attendee_id');
+            ->select('events.*', DB::raw('MIN(attendees.id) as attendee_id')) // This will take only the first attendee id for a given user_id + event_id combination, to avoid duplicates
+            ->groupBy('events.id');
 
         // use like this:
         // $attending = Event::attendedBy($userId)

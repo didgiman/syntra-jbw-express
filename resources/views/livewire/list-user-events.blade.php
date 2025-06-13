@@ -45,13 +45,15 @@
                     </div>
                 @elseif ($view === 'attending')
                     <div class="flex flex-col md:flex-row gap-2 items-end">
-                        <button class="btn btn-danger btn-sm"
-                            wire:click="unattend({{ $event->id }})"
-                            wire:confirm="Are you sure?">Unattend</button>
+                        @if ($event->price == 0)
+                            <button class="btn btn-danger btn-sm"
+                                wire:click="unattend({{ $event->id }})"
+                                wire:confirm="Are you sure?">Unattend</button>
+                        @endif
 
                         <button class="btn btn-primary btn-sm"
-                            wire:click.prevent="downloadTicket({{ $event->attendee_id }})"
-                        >Download Ticket</button>
+                            wire:click.prevent="downloadTicket({{ $event->id }})"
+                        >Download Ticket(s)</button>
                     </div>
                 @endif
             @endslot
