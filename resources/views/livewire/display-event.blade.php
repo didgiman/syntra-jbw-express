@@ -76,6 +76,28 @@
 
             {{-- Actions Section --}}
             <div class="bg-gray-800 p-6 rounded-lg">
+                {{-- Availability Status --}}
+                <div class="mb-4">
+                    @if(is_null($event->max_attendees))
+                        <p class="text-blue-400">
+                            <b>{{ $event->attendees->count() }}</b> attending - Unlimited spots available
+                        </p>
+                    @else
+                        @php
+                            $remainingSpots = $event->max_attendees - $event->attendees->count();
+                        @endphp
+                        <p class="text-sm {{ $remainingSpots > 0 ? 'text-blue-400' : 'text-red-500 font-bold text-base' }}">
+                            <b>{{ $event->attendees->count() }}</b> attending - 
+                            @if($remainingSpots <= 0)
+                                SOLD OUT
+                            @else
+                                {{ $remainingSpots }} spots remaining
+                            @endif
+                        </p>
+                    @endif
+                </div>
+
+                {{-- Actions --}}
                 @if ($event->user_id === Auth::id())
                     <p class="text-violet-400 mb-4">You are hosting this event</p>
                     <a href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
@@ -95,6 +117,8 @@
                             Download Ticket
                         </button>
                     </div>
+                @elseif(!is_null($event->max_attendees) && $remainingSpots <= 0)
+                    <p class="text-red-500 font-bold text-center">This event is sold out</p>
                 @else
                     <button class="btn btn-primary w-full"
                             wire:click="attend({{ $event->id }})">
