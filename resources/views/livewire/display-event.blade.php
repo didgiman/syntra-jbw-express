@@ -3,7 +3,17 @@
     <script src="{{ asset('js/countdown.js') }}"></script>
 @endpush
 
-<div class="max-w-4xl mx-auto" x-data="{ showImageModal: false }">
+<div class="max-w-4xl mx-auto" x-data="{ 
+    showImageModal: false,
+    toggleModal() {
+        this.showImageModal = !this.showImageModal;
+        if (this.showImageModal) {
+            document.body.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+        }
+    }
+}">
     {{-- Header with Event Title and Message --}}
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-center">{{ $event->name }}</h1>
@@ -147,7 +157,7 @@
                     <img src="{{ $event->image }}"
                          alt="{{ $event->name }}"
                          class="w-full h-[400px] object-cover rounded-lg shadow-lg cursor-pointer"
-                         @click="showImageModal = true">
+                         @click="toggleModal()">
                 @endif
             </div>
 
@@ -206,6 +216,36 @@
                         @endif
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Full Size Image Modal --}}
+    <div x-show="showImageModal" 
+         style="display: none;"
+         class="fixed inset-0 overflow-hidden z-50"
+         @keydown.escape.window="toggleModal()">
+        
+        {{-- Modal Backdrop --}}
+        <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" 
+             @click="toggleModal()">
+        </div>
+
+        {{-- Modal Container --}}
+        <div class="fixed inset-0 flex items-center justify-center pointer-events-none">
+            {{-- Modal Content --}}
+            <div class="relative max-w-7xl p-4 pointer-events-auto">
+                {{-- Close Button --}}
+                <button @click="toggleModal()" 
+                        class="absolute top-0 right-0 -mr-4 -mt-4 text-gray-400 hover:text-white z-10 flex items-center gap-2">
+                    <span class="text-sm font-medium">Close</span>
+                    <span class="text-2xl">&times;</span>
+                </button>
+                
+                {{-- Full Size Image --}}
+                <img src="{{ $event->image }}" 
+                     alt="{{ $event->name }}"
+                     class="max-w-full max-h-[90vh] object-contain rounded-lg">
             </div>
         </div>
     </div>
