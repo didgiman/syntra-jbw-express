@@ -3,7 +3,17 @@
     <script src="{{ asset('js/countdown.js') }}"></script>
 @endpush
 
-<div class="max-w-4xl mx-auto">
+<div class="max-w-4xl mx-auto" x-data="{ 
+    showImageModal: false,
+    toggleModal() {
+        this.showImageModal = !this.showImageModal;
+        if (this.showImageModal) {
+            document.body.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+        }
+    }
+}">
     {{-- Header with Event Title and Message --}}
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-center">{{ $event->name }}</h1>
@@ -68,14 +78,38 @@
                 @endif
             </div>
 
-            {{-- Description Section --}}
-            <div class="bg-gray-800 p-6 rounded-lg">
-                <h2 class="text-lg font-semibold mb-3">About this Event</h2>
-                <p class="text-gray-300">{{ $event->description }}</p>
-            </div>
+            {{-- Description Section (only shown if description exists) --}}
+            @if($event->description)
+                <div class="bg-gray-800 p-6 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-3">About this Event</h2>
+                    <p class="text-gray-300">{{ $event->description }}</p>
+                </div>
+            @endif
 
             {{-- Actions Section --}}
             <div class="bg-gray-800 p-6 rounded-lg">
+                {{-- Availability Status --}}
+                <div class="mb-4">
+                    @if(is_null($event->max_attendees))
+                        <p class="text-blue-400">
+                            <b>{{ $event->attendees->count() }}</b> attending - Unlimited spots available
+                        </p>
+                    @else
+                        @php
+                            $remainingSpots = $event->max_attendees - $event->attendees->count();
+                        @endphp
+                        <p class="text-sm {{ $remainingSpots > 0 ? 'text-blue-400' : 'text-red-500 font-bold text-base' }}">
+                            <b>{{ $event->attendees->count() }}</b> attending - 
+                            @if($remainingSpots <= 0)
+                                SOLD OUT
+                            @else
+                                {{ $remainingSpots }} spots remaining
+                            @endif
+                        </p>
+                    @endif
+                </div>
+
+                {{-- Actions --}}
                 @if ($event->user_id === Auth::id())
                     <p class="text-violet-400 mb-4">You are hosting this event</p>
                     <a href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
@@ -95,6 +129,8 @@
                             Download Ticket
                         </button>
                     </div>
+                @elseif(!is_null($event->max_attendees) && $remainingSpots <= 0)
+                    <p class="text-red-500 font-bold text-center">This event is sold out</p>
                 @else
                     <button class="btn btn-primary w-full"
                             wire:click="attend({{ $event->id }})">
@@ -109,13 +145,110 @@
             </div>
         </div>
 
-        {{-- Right Column: Image --}}
-        <div class="relative">
-            @if($event->image)
-                <img src="{{ $event->image }}"
+        {{-- Right Column: Image and Price --}}
+        <div>
+            {{-- Image Container --}}
+            <div class="relative mb-6">
+                {{-- Event Type Badge --}}
+                <span class="text-xs text-white py-1 px-2 rounded absolute -top-2 shadow uppercase -left-2 md:-left-4 z-10"
+                      style="background-color: {{ $event->type->color }};">
+                    {{ $event->type->description }}
+                </span>
+
+                @if($event->image)
+                    <img src="{{ $event->image }}"
+                         alt="{{ $event->name }}"
+                         class="w-full h-[400px] object-cover rounded-lg shadow-lg cursor-pointer"
+                         @click="toggleModal()">
+                @endif
+            </div>
+
+            {{-- Price Section --}}
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-lg font-semibold mb-3">Ticket Price</h2>
+                
+                <div x-data="{ 
+                    currentCurrency: 'EUR',
+                    exchangeRates: {
+                        'EUR': 1,
+                        'USD': 1.08,
+                        'GBP': 0.86,
+                        'JPY': 161.5
+                    },
+                    symbols: {
+                        'EUR': '€',
+                        'USD': '$',
+                        'GBP': '£',
+                        'JPY': '¥'
+                    },
+                    get convertedPrice() {
+                        return this.basePrice * this.exchangeRates[this.currentCurrency];
+                    },
+                    basePrice: {{ $event->price ?? 0 }},
+                    formatPrice(price) {
+                        if (this.currentCurrency === 'JPY') {
+                            return Math.round(price);
+                        }
+                        return price.toFixed(2);
+                    }
+                }">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            @if(is_null($event->price) || $event->price == 0)
+                                <span class="text-green-500 font-bold text-xl">FREE</span>
+                            @else
+                                <span class="text-yellow-400 font-bold text-xl">
+                                    <span x-text="symbols[currentCurrency]"></span>
+                                    <span x-text="formatPrice(convertedPrice)"></span>
+                                </span>
+                            @endif
+                        </div>
+                        
+                        @if(!is_null($event->price) && $event->price > 0)
+                            <div class="flex space-x-2">
+                                <template x-for="currency in ['EUR', 'USD', 'GBP', 'JPY']">
+                                    <button 
+                                        @click="currentCurrency = currency"
+                                        :class="{'bg-blue-600': currentCurrency === currency, 'bg-gray-700': currentCurrency !== currency}"
+                                        class="px-2 py-1 rounded text-sm font-semibold transition-colors duration-150"
+                                        x-text="currency"
+                                    ></button>
+                                </template>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Full Size Image Modal --}}
+    <div x-show="showImageModal" 
+         style="display: none;"
+         class="fixed inset-0 overflow-hidden z-50"
+         @keydown.escape.window="toggleModal()">
+        
+        {{-- Modal Backdrop --}}
+        <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" 
+             @click="toggleModal()">
+        </div>
+
+        {{-- Modal Container --}}
+        <div class="fixed inset-0 flex items-center justify-center pointer-events-none">
+            {{-- Modal Content --}}
+            <div class="relative max-w-7xl p-4 pointer-events-auto">
+                {{-- Close Button --}}
+                <button @click="toggleModal()" 
+                        class="absolute top-0 right-0 -mr-4 -mt-4 text-gray-400 hover:text-white z-10 flex items-center gap-2">
+                    <span class="text-sm font-medium">Close</span>
+                    <span class="text-2xl">&times;</span>
+                </button>
+                
+                {{-- Full Size Image --}}
+                <img src="{{ $event->image }}" 
                      alt="{{ $event->name }}"
-                     class="w-full h-[400px] object-cover rounded-lg shadow-lg sticky top-4">
-            @endif
+                     class="max-w-full max-h-[90vh] object-contain rounded-lg">
+            </div>
         </div>
     </div>
 </div>
