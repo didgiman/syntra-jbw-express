@@ -1,35 +1,38 @@
-<div
-    wire:key="{{ $event->id }}"
-    class="relative border-b-2 border-gray-800 py-4 flex justify-between items-center {{ session('highlight-event') === $event->id ? 'bg-green-900 p-4 rounded-lg' : '' }}">
-    <div>
-        <span class="text-xs text-white py-1 px-2 rounded absolute top-0 shadow uppercase -left-2 md:-left-4"
-            style="background-color: {{ $event->type->color }};">
-            {{ $event->type->description }}
-        </span>
-        <div class="flex gap-4">
-            <div class="w-20 flex justify-center">
-                <img src="{{ asset($event->image) }}" class="w-20 min-w-20 h-20 object-cover rounded-lg">
-            </div>
-            <div>
-                @if($event->end_time < now())
-                    <h2 class="text-xl font-bold">{{ $event->name }} @if ($event->price == 0)<span class="freebadge">FREE</span>@endif</h2>
-                @else
-                    <h2 class="text-xl font-bold"><a
-                    href="{{ route('events.single', ['event' => $event->id]) }}">{{ $event->name }} @if ($event->price == 0)<span class="freebadge">FREE</span>@endif</a></h2>
-                @endif
-                
-                <p class="text-gray-400">Starts: <span class="text-green-500">{{ $event->start_time->format('l, F jS Y H:i') }}</span></p>
-                <p class="text-gray-400">Ends: <span class="text-red-500">{{ $event->end_time->format('l, F jS Y H:i') }}</span></p>
-                
-                {{-- Status Indicators with Countdown --}}
-                <div class="mt-2">
-                    @if($event->end_time && now() > $event->end_time)
-                        <span class="text-red-500 font-semibold">Event has ended</span>
-                    @elseif(now() > $event->start_time)
-                        <span class="text-yellow-500 font-semibold">Event in progress</span>
+<div wire:key="{{ $event->id }}" class="relative border-b-2 border-gray-800 p-6 rounded-lg overflow-hidden {{ session('highlight-event') === $event->id ? 'bg-green-900 p-6' : '' }}">
+    <div class="flex gap-6">
+        {{-- Image with Type Badge --}}
+        <div class="relative">
+            {{-- Type Badge --}}
+            <span class="text-xs text-white py-1 px-2 rounded absolute -top-2 -left-2 shadow uppercase z-10"
+                style="background-color: {{ $event->type->color }};">
+                {{ $event->type->description }}
+            </span>
+            <img src="{{ asset($event->image) }}" class="w-36 h-36 object-cover rounded-lg">
+        </div>
+        
+        {{-- Event Info --}}
+        <div class="flex-1">
+            <div class="flex justify-between items-start">
+                {{-- Title and Location --}}
+                <div class="w-1/2 pr-4">
+                    @if($event->end_time < now())
+                        <h2 class="text-xl font-bold flex items-center">
+                            <span class="mr-1">{{ $event->name }}</span>
+                            @if ($event->price == 0)
+                                <span class="text-xs text-white py-1 px-2 rounded shadow uppercase font-bold bg-green-600">
+                                    FREE
+                                </span>
+                            @endif
+                        </h2>
                     @else
-                        <h2 class="text-xl font-bold"><a
-                        href="{{ route('events.single', ['event' => $event->id]) }}">{{ $event->name }}</a></h2>
+                        <h2 class="text-xl font-bold flex items-center">
+                            <a href="{{ route('events.single', ['event' => $event->id]) }}" class="mr-1">{{ $event->name }}</a>
+                            @if ($event->price == 0)
+                                <span class="text-xs text-white py-1 px-2 rounded shadow uppercase font-bold bg-green-600">
+                                    FREE
+                                </span>
+                            @endif
+                        </h2>
                     @endif
                     
                     {{-- Location --}}
@@ -86,6 +89,7 @@
                             <div class="text-yellow-300 text-sm font-semibold"
                                 x-data
                                 x-init="setInterval(() => $el.textContent = 'Time until event starts: ' + calculateTimeLeft('{{ $event->start_time }}', '{{ $event->end_time }}'), 1000)">
+                                &nbsp;
                             </div>
                         @endif
                     </div>
