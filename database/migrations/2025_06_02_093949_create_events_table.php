@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('location');
             $table->integer('max_attendees')->nullable();
             $table->decimal('price', 10, 2)->default(0.00);
-            $table->string('image')->default('no-event-poster.webp');
+            $table->string('image')->default('/no-event-poster.webp');
             $table->timestamps();
         });
     }
