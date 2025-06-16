@@ -78,7 +78,8 @@
             @if($event->description)
                 <div class="bg-gray-800 p-6 rounded-lg">
                     <h2 class="text-lg font-semibold mb-3">About this Event</h2>
-                    <p class="text-gray-300">{{ $event->description }}</p>
+                    {{-- <p class="text-gray-300">{{ $event->description }}</p> --}}
+                    <div class="text-gray-300">{!! $event->description !!}</div>
                 </div>
             @endif
 
@@ -127,10 +128,6 @@
                                     Unattend
                                 </button>
                             @endif
-                            {{-- <button class="btn btn-primary flex-1"
-                                    wire:click.prevent="downloadTicket({{ $event->currentUserAttendee->id }})">
-                                Download Ticket
-                            </button> --}}
                             <button class="btn btn-primary flex-1"
                                     wire:click.prevent="downloadTicket()">
                                 Download Ticket(s)
@@ -138,7 +135,7 @@
                         </div>
                     @endif
 
-                    @if ($isFreeEvent && $hasFreeSpots)
+                    @if (!$isAttending && $isFreeEvent && $hasFreeSpots)
                         <button class="btn btn-primary w-full"
                                 wire:click="attend({{ $event->id }})">
                             Attend Event
@@ -148,7 +145,7 @@
                                 You will need to log in or register before attending an event
                             </p>
                         @endguest
-                    @elseif ($hasFreeSpots)
+                    @elseif (!$isFreeEvent && $hasFreeSpots)
                         {{-- Paid event --}}
                         @livewire('buy-tickets', [
                             'eventId' => $event->id,
@@ -254,7 +251,7 @@
                 <button @click="toggleModal()" 
                         class="absolute top-0 right-0 -mr-4 -mt-4 text-gray-400 hover:text-white z-10 flex items-center gap-2">
                     <span class="text-sm font-medium">Close</span>
-                    <span class="text-2xl">&times;</span>
+                    <span><i class="fa-solid fa-xmark"></i></span>
                 </button>
                 
                 {{-- Full Size Image --}}

@@ -28,10 +28,16 @@
         </div>
         <div class="form-input">
             <label class="block" for="event-description">Event description</label>
-            <textarea
+            {{-- <textarea
                 id="event-description"
                 wire:model="form.description"
-            ></textarea>
+            ></textarea> --}}
+            <div class="text-black">
+                <livewire:jodit-text-editor
+                    wire:model="form.description"
+                    :buttons="['undo', 'redo', '|', 'bold', 'italic', 'underline', 'strikeThrough', '|', 'left', 'center', 'right', '|' , 'ul', 'ol', '|', 'table', 'link']"
+                    />
+            </div>
             @error('form.description')
                 <div class="validationError">{{ $message }}</div>
             @enderror
