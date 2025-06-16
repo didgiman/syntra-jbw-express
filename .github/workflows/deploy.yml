@@ -26,8 +26,8 @@ jobs:
                      --exclude 'node_modules/' \
                      --exclude '.env' \
                      --exclude '.env.example' \
-                     ./ productionserverbe@ssh.productionserver.be:www/wim/eventr
+                     ./ productionserverbe@ssh.productionserver.be:subsites/eventr.be
           
       - name: Post-deployment commands
         run: |
-          ssh -o StrictHostKeyChecking=no productionserverbe@ssh.productionserver.be "cd www/wim/eventr && bash post-deploy.sh"
+          ssh -o StrictHostKeyChecking=no productionserverbe@ssh.productionserver.be "cd subsites/eventr.be && bash post-deploy.sh"
