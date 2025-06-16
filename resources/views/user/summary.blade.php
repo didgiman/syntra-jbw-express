@@ -1,5 +1,5 @@
 @extends('partials.header')
-@section('title', 'EventR .:. Events I\'m hosting')
+@section('title', 'EventR .:. My Events summary')
 
 @section('content')
 <div class="container mx-auto py-12 px-4 user-summary">

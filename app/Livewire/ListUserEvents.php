@@ -48,10 +48,9 @@ class ListUserEvents extends Component
         $this->message = 'You are no longer attending this event.';
     }
 
-    public function downloadTicket($attendeeId)
-    {
-        
-        $url = route('tickets.download', $attendeeId);
+    public function downloadTicket(Event $event)
+    {  
+        $url = route('tickets.download', [$event->id, Auth::id()]);
 
         // Trigger full browser download
         $this->dispatch('download-ticket', url: $url);

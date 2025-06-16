@@ -9,6 +9,18 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- Include Jodit CSS Styling -->
+    {{-- <link rel="stylesheet" href="//unpkg.com/jodit@4.1.16/es2021/jodit.min.css">
+
+    <!-- Include the Jodit JS Library -->
+    <script src="//unpkg.com/jodit@4.1.16/es2021/jodit.min.js"></script> --}}
+
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.js"></script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
@@ -66,8 +78,8 @@
                     <div class="bg-gray-700 shadow-lg mb-6 hidden md:block">
                         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                             <ul class="flex">
-                                <li><a href="{{ route('user.events.hosting') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'bg-gray-800' : '' }}">Hosting</a></li>
-                                <li><a href="{{ route('user.events.attending') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'bg-gray-800' : '' }}">Attending</a></li>
+                                <li><a href="{{ route('user.events.hosting') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'bg-gray-800' : '' }}"><i class="fa-solid fa-web-awesome mr-2"></i>Hosting</a></li>
+                                <li><a href="{{ route('user.events.attending') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'bg-gray-800' : '' }}"><i class="fa-solid fa-ticket mr-2"></i>Attending</a></li>
                             </ul>
                         </div>
                     </div>
@@ -82,7 +94,7 @@
                     @auth
                         <a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.summary') ? 'text-violet-400' : '' }}">My Events</a>
                         <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-web-awesome mr-2"></i>Events I'm Hosting</a>
-                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-ticket mr-2"></i> Events I'm Attending</a>
+                        <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-ticket mr-2"></i>Events I'm Attending</a>
                         <a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">About EventR</a>
                         <a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">Contact Us</a>
                         <form method="POST" action="{{ route('logout') }}" class="flex justify-center">

@@ -10,7 +10,7 @@
                 <div class="flex gap-4 items-start">
                     {{-- Event Image --}}
                     @if ($event->image)
-                        <img src="{{ $event->image }}" alt="{{ $event->name }} poster"
+                        <img src="{{ asset($event->image) }}" alt="{{ $event->name }} poster"
                             class="w-32 h-32 object-cover rounded-lg"
                             onerror="console.error('Failed to load image:', this.src)">
                     @endif

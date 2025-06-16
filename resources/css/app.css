@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../../vendor/livewire/flux/dist/flux.css";
+@import 'jodit/es2021/jodit';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -96,6 +97,10 @@ select:focus[data-flux-control] {
 
 .text-primary {
     @apply text-violet-500;
+}
+
+.freebadge {
+    @apply bg-violet-500 text-white px-2 py-1 rounded text-xs inline-block -translate-y-2 shadow ml-1;
 }
 
 .btn {
