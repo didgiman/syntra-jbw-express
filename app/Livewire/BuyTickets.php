@@ -3,11 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Event;
-use App\Models\User;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On; 
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class BuyTickets extends Component
 {
@@ -24,7 +23,7 @@ class BuyTickets extends Component
         $this->event = Event::findOrFail($eventId);
 
         // Calculate total price
-        $this->updatedNumberOfTickets();
+        $this->calculateTotalPrice();
     }
 
     public function startBuying()
@@ -42,27 +41,56 @@ class BuyTickets extends Component
 
     public function updatedNumberOfTickets()
     {
+        $this->calculateTotalPrice();
+    }
+
+    public function calculateTotalPrice()
+    {
         $this->totalPrice = number_format($this->event->price * $this->numberOfTickets, 2, '.', '');
     }
 
     public function buy()
     {
-        $attendees = [];
-        $userId = Auth::id();
-        for ($i = 0; $i < $this->numberOfTickets; $i++) {
-            $attendees[] = ['user_id' => $userId];
-        }
-        $this->event->attendees()->createMany($attendees);
 
-        $this->message = "Tickets purchased";
-        $this->ticketsPurchased = true;
+        DB::transaction(function() {
+            try {
+                // Reload the event with a "FOR UPDATE" lock to prevent race conditions
+                $event = Event::where('id', $this->event->id)->lockForUpdate()->first();
 
-        // Reset the number of tickets
-        $this->numberOfTickets = 1;
-        // Re-calculate total price
-        $this->updatedNumberOfTickets();
+                $currentCount = $event->attendees()->count();
+                $max_attendees = $event->max_attendees;
+                if (is_null($max_attendees)) {
+                    // Unlimited spots available
+                } else {
+                    $availableSpots = $max_attendees - $currentCount;
+                    if ($availableSpots < $this->numberOfTickets) {
+                        $this->addError('numberOfTickets', 'Not enough tickets available.');
+                        return;
+                    }
+                }
 
-        $this->dispatch('tickets.purchased');
+                // Purchase the tickets
+                $attendees = [];
+                $userId = Auth::id();
+                for ($i = 0; $i < $this->numberOfTickets; $i++) {
+                    $attendees[] = ['user_id' => $userId];
+                }
+                $event->attendees()->createMany($attendees);
+
+                $this->message = "Tickets purchased";
+                $this->ticketsPurchased = true;
+
+                // Reset state
+                $this->numberOfTickets = 1;
+                $this->calculateTotalPrice();
+
+                $this->dispatch('tickets.purchased');
+
+            } catch (Throwable $e) {
+                $this->message = "Unable to purchase tickets. Please try again. { $e.message}";
+            }
+        });
+
     }
 
     public function render()

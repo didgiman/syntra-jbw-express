@@ -123,23 +123,53 @@
                 :class="isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300'"
             >
                 <input type="file" wire:model="form.poster" x-ref="fileInput" class="hidden" accept=".jpg,.jpeg,.png,.gif" />
-                <p class="text-gray-500">Drag and drop a file here or click to select one</p>
-                
-                @error('form.poster')
-                    <div class="validationError">{{ $message }}</div>
-                @else
-                    @if ($form->poster)
-                        <div class="flex flex-col justify-center items-center mt-2">
-                            <div class="text-sm text-gray-500">New image:</div>
-                            <img class="w-1/3" src="{{ $form->poster->temporaryUrl() }}">
-                        </div>
-                    @elseif ($form->image)
-                        <div class="flex flex-col justify-center items-center mt-2">
-                            <div class="text-sm text-gray-500">Current image:</div>
-                            <img class="w-1/3" src="{{ $form->image }}">
-                        </div>
-                    @endif
-                @enderror
+
+                <!-- Upload indicator -->
+                <div wire:loading wire:target="form.poster" class="mb-4">
+                    <div class="flex items-center justify-center">
+                        <svg class="animate-spin h-5 w-5 text-violet-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-violet-600">Uploading...</span>
+                    </div>
+                </div>
+
+                <div wire:loading.remove wire:target="form.poster">
+                    <p class="text-gray-500">
+                        Drag and drop a file here or click to select one
+                    </p>
+                    
+                    @error('form.poster')
+                        <div class="validationError">{{ $message }}</div>
+                    @else
+                        @if ($form->poster)
+                            <div class="flex flex-col justify-center items-center mt-2">
+                                <div class="text-sm text-gray-500">New image:</div>
+                                <div x-data="{ imageLoading: true }" class="relative flex justify-center">
+                                    <!-- Image loading indicator -->
+                                    <div x-show="imageLoading" class="flex items-center justify-center p-4">
+                                        <svg class="animate-spin h-4 w-4 text-violet-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="text-violet-500 text-sm">Loading image...</span>
+                                    </div>
+                                    
+                                    <img class="w-1/3" 
+                                        src="{{ $form->poster->temporaryUrl() }}"
+                                        x-on:load="imageLoading = false"
+                                        x-show="!imageLoading">
+                                </div>
+                            </div>
+                        @elseif ($form->image)
+                            <div class="flex flex-col justify-center items-center mt-2">
+                                <div class="text-sm text-gray-500">Current image:</div>
+                                <img class="w-1/3" src="{{ $form->image }}">
+                            </div>
+                        @endif
+                    @enderror
+                </div>
             </div>
         </div>
         <div class="mb-3 md:flex md:flex-row-reverse md:gap-4 justify-between mt-8">

@@ -33,7 +33,7 @@ class PasswordConfirmationTest extends TestCase
 
         $response
             ->assertHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(route('user.summary', absolute: false));
     }
 
     public function test_password_is_not_confirmed_with_invalid_password(): void

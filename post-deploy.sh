@@ -1,8 +1,8 @@
 # Go to the application directory
-cd ~/www/wim/eventr
+cd ~/subsites/eventr.be
 
 # Basic deployment confirmation
-echo "Files deployed successfully to www/wim/eventr"
+echo "Files deployed successfully to subsites/eventr.be"
 
 # Check if .env file exists, if not notify to create one
 if [ ! -f .env ]; then
