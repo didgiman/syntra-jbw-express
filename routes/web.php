@@ -78,9 +78,9 @@ Route::get('tickets/{token}/scan', [TicketController::class, 'scan'])
 
 
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Route::view('dashboard', 'dashboard')
+//     ->middleware(['auth', 'verified'])
+//     ->name('dashboard');
 
 // Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
