@@ -49,7 +49,7 @@
                                 <ul class="flex space-x-4">
                                     <li><a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'bg-gray-700' : '' }}">All Events</a></li>
                                     <li><a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user') ? 'bg-gray-700' : '' }}">My Events</a></li>
-                                    <li><a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">About EventR</a></li>
+                                    <li><a href="{{ route('about') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">About EventR</a></li>
                                     <li><a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">Contact Us</a></li>
                                 </ul>
 

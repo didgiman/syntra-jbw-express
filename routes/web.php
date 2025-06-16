@@ -28,6 +28,11 @@ Route::get('/', function () {
 Route::get('/events', function() {
     return view('events');
 })->name('events');
+
+Route::get('/about', function() {
+    return view('about');
+})->name('about');
+
 Route::get('/events/{event}', function(Event $event) {
     return view('event-details', ['event' => $event]);
 })->name('events.single');
