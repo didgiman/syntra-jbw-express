@@ -1,7 +1,13 @@
 <div class="buy-tickets">
     <h2 class="text-white text-xl font-bold mb-4">Buy tickets for this event</h2>
 
-    <p class="text-violet-400 pb-2">{{ $message }}</p>
+    @if ($message)
+        <p class="text-violet-400 pb-2">{{ $message }}</p>
+    @endif
+
+    @error('numberOfTickets')
+        <p class="text-red-600 pb-2">{{ $message }}</p>
+    @enderror
 
     @guest
         <div>
