@@ -205,7 +205,7 @@
                     <div class="flex items-center justify-between">
                         <div>
                             @if(is_null($event->price) || $event->price == 0)
-                                <span class="text-green-500 font-bold text-xl">FREE</span>
+                                <span class="text-violet-600 font-bold text-xl">FREE</span>
                             @else
                                 <span class="text-yellow-400 font-bold text-xl">
                                     <span x-text="symbols[currentCurrency]"></span>

@@ -19,7 +19,7 @@
                         <h2 class="text-xl font-bold flex items-center">
                             <span class="mr-1">{{ $event->name }}</span>
                             @if ($event->price == 0)
-                                <span class="text-xs text-white py-1 px-2 rounded shadow uppercase font-bold bg-purple-600">
+                                <span class="text-xs text-white py-1 px-2 rounded shadow uppercase font-bold bg-violet-600">
                                     FREE
                                 </span>
                             @endif
@@ -28,7 +28,7 @@
                         <h2 class="text-xl font-bold flex items-center">
                             <a href="{{ route('events.single', ['event' => $event->id]) }}" class="mr-1">{{ $event->name }}</a>
                             @if ($event->price == 0)
-                                <span class="text-xs text-white py-1 px-2 rounded shadow uppercase font-bold bg-purple-600">
+                                <span class="text-xs text-white py-1 px-2 rounded shadow uppercase font-bold bg-violet-600">
                                     FREE
                                 </span>
                             @endif
