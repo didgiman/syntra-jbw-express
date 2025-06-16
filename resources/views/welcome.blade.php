@@ -111,7 +111,7 @@
                             @click="open = false"
                         >
                             <span class="text-sm font-medium">Close</span>
-                            <span class="text-2xl">&times;</span>
+                            <span><i class="fa-solid fa-xmark"></i></span>
                         </button>
                         {{-- Event Title --}}
                         <template x-if="selectedEvent">

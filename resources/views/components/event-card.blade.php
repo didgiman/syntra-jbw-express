@@ -1,4 +1,5 @@
 <div
+    wire:key="{{ $event->id }}"
     class="relative border-b-2 border-gray-800 py-4 flex justify-between items-center {{ session('highlight-event') === $event->id ? 'bg-green-900 p-4 rounded-lg' : '' }}">
     <div>
         <span class="text-xs text-white py-1 px-2 rounded absolute top-0 shadow uppercase -left-2 md:-left-4"
