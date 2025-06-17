@@ -2,8 +2,77 @@
 @section('title', 'EventR Home')
 
 @section('content')
-    {{-- Main Container with Alpine.js State --}}
     <div class="container mx-auto px-4 py-8">
+        {{-- Hero Section with Branding - Directly below navigation header --}}
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-gray-900 to-black rounded-xl shadow-xl overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center">
+                    {{-- Logo and Branding --}}
+                    <div class="md:w-1/3 p-8 flex justify-center">
+                        <img src="{{ asset('logo.png') }}" alt="EventR Logo" class="w-48 md:w-64 h-auto">
+                    </div>
+                    
+                    {{-- Welcome Text --}}
+                    <div class="md:w-2/3 p-8 md:pl-0">
+                        <h1 class="text-3xl md:text-4xl font-bold mb-4 flex items-center">
+                            <span class="text-violet-500">E</span><span class="text-white">vent</span><span class="text-blue-500">R</span>
+                        </h1>
+                        <p class="text-gray-300 text-lg mb-6">
+                            Your premier destination for discovering, creating, and managing events that matter. 
+                            From conferences to concerts, workshops to weddings - we've got you covered.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="{{ route('register') }}" class="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-md shadow-md transition-colors duration-200">
+                                Get Started
+                            </a>
+                            <a href="{{ route('events') }}" class="px-6 py-3 border border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30 font-medium rounded-md shadow-md transition-colors duration-200">
+                                Explore Events
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                {{-- Feature Highlights --}}
+                <div class="bg-black bg-opacity-50 p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="flex items-start space-x-3">
+                            <div class="text-violet-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-semibold">Easy Registration</h3>
+                                <p class="text-gray-400 text-sm">Sign up in seconds and start managing your events</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-semibold">Real-time Updates</h3>
+                                <p class="text-gray-400 text-sm">Get instant notifications about event changes</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="text-blue-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-semibold">Community Experience</h3>
+                                <p class="text-gray-400 text-sm">Connect with others who share your interests</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         {{-- Carousel Section for Upcoming Events --}}
         <section class="mb-8" x-data="{ 
             currentIndex: 0,
