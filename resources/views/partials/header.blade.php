@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title')</title>
-    <link rel="icon" href="{{asset('favicon-32x32.png')}}">
+    <link rel="icon" href="{{ asset('favicon-32x32.png') }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Include Jodit CSS Styling -->
     {{-- <link rel="stylesheet" href="//unpkg.com/jodit@4.1.16/es2021/jodit.min.css">
@@ -15,15 +18,13 @@
     <!-- Include the Jodit JS Library -->
     <script src="//unpkg.com/jodit@4.1.16/es2021/jodit.min.js"></script> --}}
 
-    <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
+
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
     <!-- Navigatie -->
     <nav class="bg-gray-800 shadow-lg mb-6">
@@ -48,12 +49,13 @@
                             <ul class="flex space-x-4">
                                 <li><a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'bg-gray-700' : '' }}">All Events</a></li>
                                 <li><a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user') ? 'bg-gray-700' : '' }}">My EventR</a></li>
-                                <li><a href="{{ route('about') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">About EventR</a></li>
-                                <li><a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">Contact Us</a></li>
+                                <li><a href="{{ route('about') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'about') ? 'bg-gray-700' : '' }}">About EventR</a></li>
+                                <li><a href="{{ route('contact') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'contact') ? 'bg-gray-700' : '' }}">Contact Us</a></li>
                             </ul>
 
                         </div>
                     </div>
+
                 </div>
                 @auth
                 <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
@@ -95,8 +97,9 @@
                     <a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.summary') ? 'text-violet-400' : '' }}">My Events</a>
                     <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-web-awesome mr-2"></i>Events I'm Hosting</a>
                     <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-ticket mr-2"></i>Events I'm Attending</a>
-                    <a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">About EventR</a>
-                    <a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">Contact Us</a>
+                    <a href="{{ route('user.settings') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.settings') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-gear mr-2"></i>My Settings</a>
+                    <a href="{{ route('about') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'about') ? 'bg-gray-700' : '' }}">About EventR</a>
+                    <a href="{{ route('contact') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'contact') ? 'bg-gray-700' : '' }}">Contact Us</a>
                     <form method="POST" action="{{ route('logout') }}" class="flex justify-center">
                         @csrf
                         <button type="submit" class="btn btn-logout">
@@ -115,9 +118,10 @@
         @yield('content')
     </main>
 
-@include('partials.footer')
+    @include('partials.footer')
 
-{{-- Add a stack for scripts --}}
+    {{-- Add a stack for scripts --}}
     @stack('scripts')
 </body>
+
 </html>
