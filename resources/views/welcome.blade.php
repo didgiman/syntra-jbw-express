@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
-        {{-- Hero Section with Branding - Directly below navigation header --}}
+        {{-- Hero Section with Branding --}}
         <section class="mb-12">
             <div class="bg-gradient-to-br from-gray-900 to-black rounded-xl shadow-xl overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center">
@@ -21,12 +21,38 @@
                             Your premier destination for discovering, creating, and managing events that matter. 
                             From conferences to concerts, workshops to weddings - we've got you covered.
                         </p>
-                        <div class="flex flex-wrap gap-4">
-                            <a href="{{ route('register') }}" class="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-md shadow-md transition-colors duration-200">
-                                Get Started
-                            </a>
+                        
+                        {{-- Primary Actions --}}
+                        <div class="flex flex-wrap gap-4 mb-4">
+                            @auth
+                                <a href="{{ route('user.summary') }}" class="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-md shadow-md transition-colors duration-200">
+                                    My Events
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-md shadow-md transition-colors duration-200">
+                                    Get Started
+                                </a>
+                            @endauth
+                            
                             <a href="{{ route('events') }}" class="px-6 py-3 border border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30 font-medium rounded-md shadow-md transition-colors duration-200">
                                 Explore Events
+                            </a>
+                        </div>
+                        
+                        {{-- Secondary Actions --}}
+                        <div class="flex flex-wrap gap-3">
+                            <a href="#upcoming-events" class="text-violet-400 hover:text-violet-300 flex items-center text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                                See upcoming events
+                            </a>
+                            <span class="text-gray-600">•</span>
+                            <a href="#platform-stats" class="text-blue-400 hover:text-blue-300 flex items-center text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                View platform statistics
                             </a>
                         </div>
                     </div>
@@ -74,7 +100,7 @@
         </section>
 
         {{-- Carousel Section for Upcoming Events --}}
-        <section class="mb-8" x-data="{ 
+        <section id="upcoming-events" class="mb-8" x-data="{
             currentIndex: 0,
             events: {{ json_encode($upcomingEvents->take(6)->values()) }},
             eventTypes: {{ json_encode($upcomingEvents->take(6)->map(function($event) { return $event->type; })) }},
@@ -345,7 +371,7 @@
         </div>
 
         {{-- Statistics Section --}}
-        <section class="mb-12">
+        <section id="platform-stats" class="mb-12">
             <h2 class="text-2xl font-semibold mb-6">EventR at a Glance</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -716,4 +742,12 @@
         return timeString;
     }
 </script>
+@endpush
+
+@push('styles')
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
 @endpush
