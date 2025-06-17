@@ -15,7 +15,7 @@
                     {{-- Welcome Text --}}
                     <div class="md:w-2/3 p-8 md:pl-0">
                         <h1 class="text-3xl md:text-4xl font-bold mb-4 flex items-center">
-                            <span class="text-violet-500">E</span><span class="text-white">vent</span><span class="text-blue-500">R</span>
+                            <span class="text-violet-500">E</span><span class="text-white">vent</span><span class="text-[#43baff]">R</span>
                         </h1>
                         <p class="text-gray-300 text-lg mb-6">
                             Your premier destination for discovering, creating, and managing events that matter. 
