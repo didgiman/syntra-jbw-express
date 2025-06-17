@@ -12,6 +12,45 @@
             autoplayEnabled: true,
             autoplaySpeed: 8000, // 8 seconds between slides
             autoplayTimer: null,
+            countdownTimer: null,
+            
+            calculateTimeLeft(futureDate) {
+                const future = new Date(futureDate).getTime();
+                const now = new Date().getTime();
+                const diff = future - now;
+                
+                if (diff <= 0) {
+                    return 'Event has started';
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                let timeString = '';
+                if (days > 0) timeString += days + ' days ';
+                if (hours > 0) timeString += hours + ' hours ';
+                if (minutes > 0) timeString += minutes + ' min ';
+                timeString += seconds + ' sec';
+                
+                return timeString;
+            },
+            
+            startCountdown() {
+                // Update countdown every second
+                this.countdownTimer = setInterval(() => {
+                    // Force Alpine to re-evaluate the countdown
+                    this.currentTime = Date.now();
+                }, 1000);
+            },
+            
+            stopCountdown() {
+                if (this.countdownTimer) {
+                    clearInterval(this.countdownTimer);
+                    this.countdownTimer = null;
+                }
+            },
             
             get totalEvents() { return this.events.length },
             
@@ -60,8 +99,8 @@
             isNext(index) {
                 return (this.currentIndex + 1) % this.totalEvents === index;
             }
-        }"
-        x-init="startAutoplay()"
+        }" 
+        x-init="startAutoplay(); startCountdown();"
         @mouseenter="stopAutoplay()"
         @mouseleave="if(autoplayEnabled) startAutoplay()"
         @visibilitychange.window="document.visibilityState === 'visible' ? (autoplayEnabled ? startAutoplay() : null) : stopAutoplay()"
@@ -144,8 +183,35 @@
                                     </div>
 
                                     {{-- Countdown --}}
-                                    <div class="text-yellow-300 text-sm"
-                                         x-init="setInterval(() => $el.textContent = 'Starts in: ' + calculateTimeLeft(event.start_time), 1000)">
+                                    <div class="text-yellow-300 text-sm" 
+                                         x-data="{
+                                            timeLeft: '',
+                                            updateCountdown() {
+                                                const future = new Date(event.start_time).getTime();
+                                                const now = new Date().getTime();
+                                                const diff = future - now;
+                                                
+                                                if (diff <= 0) {
+                                                    this.timeLeft = 'Event has started';
+                                                    return;
+                                                }
+                                                
+                                                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                                                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                                                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                                                
+                                                let timeString = '';
+                                                if (days > 0) timeString += days + ' days ';
+                                                if (hours > 0) timeString += hours + ' hrs ';
+                                                if (minutes > 0) timeString += minutes + ' min ';
+                                                timeString += seconds + ' sec';
+                                                
+                                                this.timeLeft = 'Starts in: ' + timeString;
+                                            }
+                                        }"
+                                        x-init="updateCountdown(); setInterval(() => updateCountdown(), 1000)"
+                                        x-text="timeLeft">
                                     </div>
 
                                     {{-- Price/Free Badge --}}
@@ -379,11 +445,36 @@
                                         </div>
 
                                         {{-- Status/Countdown --}}
-                                        <div class="mt-4 p-3 bg-gray-700 rounded">
-                                            <div class="text-yellow-300 font-semibold"
-                                                x-init="setInterval(() => $el.textContent = 'Time until event starts: ' + calculateTimeLeft(selectedEvent.start_time), 1000)">
-                                                &nbsp;
-                                            </div>
+                                        <div class="mt-4 p-3 bg-gray-700 rounded"
+                                            x-data="{
+                                                timeLeft: '',
+                                                updateCountdown() {
+                                                    const future = new Date(selectedEvent.start_time).getTime();
+                                                    const now = new Date().getTime();
+                                                    const diff = future - now;
+                                                    
+                                                    if (diff <= 0) {
+                                                        this.timeLeft = 'Event has started';
+                                                        return;
+                                                    }
+                                                    
+                                                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                                                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                                                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                                                    
+                                                    let timeString = '';
+                                                    if (days > 0) timeString += days + ' days ';
+                                                    if (hours > 0) timeString += hours + ' hrs ';
+                                                    if (minutes > 0) timeString += minutes + ' min ';
+                                                    timeString += seconds + ' sec';
+                                                    
+                                                    this.timeLeft = 'Time until event starts: ' + timeString;
+                                                }
+                                            }"
+                                            x-init="updateCountdown(); setInterval(() => updateCountdown(), 1000)"
+                                        >
+                                            <div class="text-yellow-300 font-semibold" x-text="timeLeft">&nbsp;</div>
                                         </div>
                                     </div>
 
