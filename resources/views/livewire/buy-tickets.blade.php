@@ -22,7 +22,11 @@
         </div>
     @else
 
-        @if (!is_null($event->max_attendees) && $event->available_spots == 0)
+        @php
+            $availableSpots = $event->available_spots;
+        @endphp
+
+        @if (!is_null($event->max_attendees) && $availableSpots == 0)
             <p class="text-red-500 text-lg font-bold">Event is sold out</p>
         @elseif ($ticketsPurchased)
             <button class="btn btn-primary w-full" wire:click.prevent="startBuying">Buy More Tickets</button>
@@ -35,7 +39,7 @@
                 <div class="form-input flex items-center justify-between">
                     <label class="w-full">Number of tickets</label>
                     <select wire:model.live="numberOfTickets" class="w-1/5!">
-                        @for ($i = 1; $i <= min(10, is_null($event->max_attendees) ? 10 : $event->available_spots); $i++)
+                        @for ($i = 1; $i <= min(10, is_null($event->max_attendees) ? 10 : $availableSpots); $i++)
                             <option value="{{ $i }}">{{ $i }}</option>
                         @endfor
                     </select>

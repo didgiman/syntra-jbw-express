@@ -28,6 +28,9 @@
     @endif
 
     @foreach ($events as $event)
+        @php
+            $userTicketsCount = $event->user_attending_count ?? 0;
+        @endphp
         <x-event-card :event="$event" :view="$view">
             @slot('buttons')
                 {{-- ACTION BUTTONS --}}    
@@ -53,7 +56,7 @@
 
                         <button class="btn btn-primary btn-sm"
                             wire:click.prevent="downloadTicket({{ $event->id }})"
-                        >Download Ticket(s)</button>
+                        >Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}</button>
                     </div>
                 @endif
             @endslot
