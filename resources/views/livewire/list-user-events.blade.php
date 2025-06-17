@@ -28,23 +28,26 @@
     @endif
 
     @foreach ($events as $event)
+        @php
+            $userTicketsCount = $event->user_attending_count ?? 0;
+        @endphp
         <x-event-card :event="$event" :view="$view">
             @slot('buttons')
                 {{-- ACTION BUTTONS --}}    
                 @if ($view === 'hosting')
-                    <div class="flex flex-col md:flex-row gap-2 items-end">
+                    <div class="flex flex-row gap-2 items-end">
                         <a
                             href="{{ route('user.events.hosting.edit', ['event' => $event->id]) }}"
                             wire:navigate
-                            class="btn btn-sm"
+                            class="btn btn-sm flex-1"
                         >Edit</a>
 
-                        <button class="btn btn-danger btn-sm"
+                        <button class="btn btn-danger btn-sm flex-1"
                             wire:click="delete({{ $event->id }})"
                             wire:confirm="Are you sure?">Delete</button>
                     </div>
                 @elseif ($view === 'attending')
-                    <div class="flex flex-col md:flex-row gap-2 items-end">
+                    <div class="flex flex-col md:flex-row gap-2 items-end justify-end">
                         @if ($event->price == 0)
                             <button class="btn btn-danger btn-sm"
                                 wire:click="unattend({{ $event->id }})"
@@ -53,7 +56,7 @@
 
                         <button class="btn btn-primary btn-sm"
                             wire:click.prevent="downloadTicket({{ $event->id }})"
-                        >Download Ticket(s)</button>
+                        >Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}</button>
                     </div>
                 @endif
             @endslot

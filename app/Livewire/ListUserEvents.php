@@ -64,7 +64,13 @@ class ListUserEvents extends Component
         $events = match ($this->view) {
             'hosting' => Event::createdBy($userId)->with(['type', 'attendees'])->orderBy('start_time')->paginate(10),
             'hosting.past' => Event::createdBy($userId)->past()->with(['type', 'attendees'])->latest('start_time')->paginate(10),
-            'attending' => Event::attendedBy($userId)->with('type')->orderBy('start_time')->paginate(10),
+            'attending' => Event::attendedBy($userId)
+                ->with(['type'])
+                ->withCount(['attendees as user_attending_count' => function ($query) use ($userId) {
+                    $query->where('attendees.user_id', $userId);
+                }])
+                ->orderBy('start_time')
+                ->paginate(10),
             'attending.past' => Event::attendedBy($userId)->past()->with('type')->latest('start_time')->paginate(10),
             default => collect(),
         };

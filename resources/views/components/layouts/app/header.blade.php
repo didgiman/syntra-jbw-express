@@ -1,124 +1,131 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
-    <head>
-        @include('partials.head')
-    </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:header container class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@yield('title')</title>
+    <link rel="icon" href="{{asset('favicon-32x32.png')}}">
 
-            <a href="{{ route('dashboard') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0" wire:navigate>
-                <x-app-logo />
-            </a>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-            <flux:navbar class="-mb-px max-lg:hidden">
-                <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                    {{ __('Dashboard') }}
-                </flux:navbar.item>
-            </flux:navbar>
+    <!-- Include Jodit CSS Styling -->
+    {{-- <link rel="stylesheet" href="//unpkg.com/jodit@4.1.16/es2021/jodit.min.css">
 
-            <flux:spacer />
+    <!-- Include the Jodit JS Library -->
+    <script src="//unpkg.com/jodit@4.1.16/es2021/jodit.min.js"></script> --}}
 
-            <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
-                <flux:tooltip :content="__('Search')" position="bottom">
-                    <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
-                </flux:tooltip>
-                <flux:tooltip :content="__('Repository')" position="bottom">
-                    <flux:navbar.item
-                        class="h-10 max-lg:hidden [&>div>svg]:size-5"
-                        icon="folder-git-2"
-                        href="https://github.com/laravel/livewire-starter-kit"
-                        target="_blank"
-                        :label="__('Repository')"
-                    />
-                </flux:tooltip>
-                <flux:tooltip :content="__('Documentation')" position="bottom">
-                    <flux:navbar.item
-                        class="h-10 max-lg:hidden [&>div>svg]:size-5"
-                        icon="book-open-text"
-                        href="https://laravel.com/docs/starter-kits#livewire"
-                        target="_blank"
-                        label="Documentation"
-                    />
-                </flux:tooltip>
-            </flux:navbar>
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.js"></script>
 
-            <!-- Desktop User Menu -->
-            <flux:dropdown position="top" align="end">
-                <flux:profile
-                    class="cursor-pointer"
-                    :initials="auth()->user()->initials()"
-                />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
 
-                <flux:menu>
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
-                                        {{ auth()->user()->initials() }}
-                                    </span>
-                                </span>
+<!-- Navigatie -->
+    <nav class="bg-gray-800 shadow-lg mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="{{ route('home') }}" class="flex-shrink-0 flex gap-2">
+                        <img src="{{asset('logo.png')}}" class="w-10">
+                        <div class="text-2xl font-bold tracking-wider"><span class="text-violet-500">E</span>vent<span class="text-[#46b2fd]">R</span></div>
+                    </a>
+                    <div class="hidden md:block ml-10">
+                        <div class="flex justify-between items-center w-full">
+                            {{-- <div class="flex space-x-4">
+                                <a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'bg-gray-700' : '' }}">All Events</a>
+                                @auth
+                                    <a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.summary') ? 'bg-gray-700' : '' }}">My Events</a>
+                                    <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'bg-gray-700' : '' }}">Events I'm Hosting</a>
+                                    <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'bg-gray-700' : '' }}">Events I'm Attending</a>
+                                @endauth
+                            </div> --}}
 
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                </div>
-                            </div>
+                            <ul class="flex space-x-4">
+                                <li><a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'bg-gray-700' : '' }}">All Events</a></li>
+                                <li><a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user') ? 'bg-gray-700' : '' }}">My EventR</a></li>
+                                <li><a href="{{ route('about') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">About EventR</a></li>
+                                <li><a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">Contact Us</a></li>
+                            </ul>
+
                         </div>
-                    </flux:menu.radio.group>
+                    </div>
+                </div>
+                @auth
+                <form method="POST" action="{{ route('logout') }}" class="hidden md:block">
+                    @csrf
+                    <button type="submit" class="btn btn-logout">
+                        Logout
+                    </button>
+                </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-login hidden md:block">Login</a>
+                @endauth
 
-                    <flux:menu.separator />
+                <button id="hamburger" class="text-white text-xl md:hidden flex items-center mr-6" aria-label="Navigatie menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
-                    </flux:menu.radio.group>
-
-                    <flux:menu.separator />
-
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
+        @auth
+            @if (Str::contains(Route::currentRouteName(), 'user'))
+                <div class="bg-gray-700 shadow-lg hidden md:block">
+                    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <ul class="flex">
+                            <li><a href="{{ route('user.events.hosting') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'bg-gray-800' : '' }}"><i class="fa-solid fa-web-awesome mr-2"></i>Hosting</a></li>
+                            <li><a href="{{ route('user.events.attending') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'bg-gray-800' : '' }}"><i class="fa-solid fa-ticket mr-2"></i>Attending</a></li>
+                            <li><a href="{{ route('user.settings') }}" class="block text-gray-300 hover:bg-gray-800 px-3 py-2 {{ Str::contains(Route::currentRouteName(), 'user.settings') ? 'bg-gray-800' : '' }}"><i class="fa-solid fa-gear mr-2"></i>Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+            @endif
+        @endauth
+            
+        {{-- Mobile navigation --}}
+        <div class="md:hidden text-white space-y-2 overflow-hidden opacity-0 max-h-0" id="mobile-menu">
+            <div class="flex flex-col space-y-4 pb-4">
+                <a href="{{ route('events') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('events') ? 'text-violet-400' : '' }}">All Events</a>
+                
+                @auth
+                    <a href="{{ route('user.summary') }}" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md {{ request()->routeIs('user.summary') ? 'text-violet-400' : '' }}">My Events</a>
+                    <a href="{{ route('user.events.hosting') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.hosting') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-web-awesome mr-2"></i>Events I'm Hosting</a>
+                    <a href="{{ route('user.events.attending') }}" class="text-gray-300 hover:bg-gray-700 px-3 pl-6 py-2 rounded-md {{ Str::contains(Route::currentRouteName(), 'user.events.attending') ? 'text-violet-400' : '' }}"><i class="fa-solid fa-ticket mr-2"></i>Events I'm Attending</a>
+                    <a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">About EventR</a>
+                    <a href="" class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md">Contact Us</a>
+                    <form method="POST" action="{{ route('logout') }}" class="flex justify-center">
                         @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
+                        <button type="submit" class="btn btn-logout">
+                            Logout
+                        </button>
                     </form>
-                </flux:menu>
-            </flux:dropdown>
-        </flux:header>
+                @else
+                    <div class="flex justify-center">
+                        <a href="{{ route('login') }}" class="btn btn-login">Login</a>
+                    </div>
+                @endauth
+            </div>
+        </div>
+    </nav>
 
-        <!-- Mobile Menu -->
-        <flux:sidebar stashable sticky class="lg:hidden border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
+<main class="flex-grow md:w-1/2 mx-auto bg-gray-700 p-8">
+    
+    {{-- @yield('content') --}}
 
-            <a href="{{ route('dashboard') }}" class="ms-1 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
-            </a>
+    {{ $slot }}
+</main>
 
-            <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')">
-                    <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                      {{ __('Dashboard') }}
-                    </flux:navlist.item>
-                </flux:navlist.group>
-            </flux:navlist>
-
-            <flux:spacer />
-
-            <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:navlist.item>
-
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
-                </flux:navlist.item>
-            </flux:navlist>
-        </flux:sidebar>
-
-        {{ $slot }}
-
-        @fluxScripts
-    </body>
+<footer class="bg-gray-800 mt-24">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-gray-400">
+            <p class="mt-4">&copy; 2025 JBW Express. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+@fluxScripts
+</body>
 </html>
