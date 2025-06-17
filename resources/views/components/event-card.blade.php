@@ -97,7 +97,7 @@
                     </div>
                     
                     {{-- Action Button --}}
-                    <div class="w-full flex-1">
+                    <div class="w-full flex-1 flex justify-end">
                         {{ $buttons ?? '' }}
                     </div>
                 </div>
