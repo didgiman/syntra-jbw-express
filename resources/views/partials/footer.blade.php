@@ -4,7 +4,6 @@
             <p class="mt-4">&copy; 2025 JBW Express. All rights reserved.</p>
         </div>
     </div>
-</form>
 </footer>
 
 <script src="{{ asset('js/countdown.js') }}"></script>
