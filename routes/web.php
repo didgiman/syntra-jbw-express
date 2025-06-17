@@ -9,8 +9,11 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Mail\AttendeeCreatedMail;
+use App\Mail\ContactMessageMail;
+use App\Mail\ContactMessageReceivedMail;
 use App\Mail\EventUpdatedMail;
 use App\Models\Attendee;
+use App\Models\ContactMessage;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +35,10 @@ Route::get('/events', function() {
 Route::get('/about', function() {
     return view('about');
 })->name('about');
+
+Route::get('/contact', function() {
+    return view('contact');
+})->name('contact');
 
 Route::get('/events/{event}', function(Event $event) {
     return view('event-details', ['event' => $event]);
@@ -105,6 +112,18 @@ Route::prefix('/testing')->group(function() {
             $attendee = Attendee::with(['user', 'event'])->find(21);
 
             return (new AttendeeCreatedMail($attendee))->render();
+        });
+
+        Route::get('contact-created-email', function() {
+            $contactMessage = ContactMessage::first();
+
+            return (new ContactMessageMail($contactMessage))->render();
+        });
+
+        Route::get('contact-received-email', function() {
+            $contactMessage = ContactMessage::first();
+
+            return (new ContactMessageReceivedMail($contactMessage))->render();
         });
     });
 });
