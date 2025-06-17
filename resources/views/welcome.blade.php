@@ -10,7 +10,7 @@
             events: {{ json_encode($upcomingEvents->take(6)->values()) }},
             eventTypes: {{ json_encode($upcomingEvents->take(6)->map(function($event) { return $event->type; })) }},
             autoplayEnabled: true,
-            autoplaySpeed: 5000, // 5 seconds between slides
+            autoplaySpeed: 8000, // 8 seconds between slides
             autoplayTimer: null,
             
             get totalEvents() { return this.events.length },
@@ -112,18 +112,9 @@
                             }"
                         >
                             <div 
-                                class="bg-black border rounded-lg shadow-lg p-4 cursor-pointer hover:bg-gray-900 text-white relative h-full"
-                                @click="if(isActive(index)) { 
-                                    open = true; 
-                                    selectedEvent = {
-                                        ...event,
-                                        type: eventTypes[index],
-                                        type_name: eventTypes[index] ? eventTypes[index].description.toUpperCase() : 'NO TYPE',
-                                        remaining_spots: event.max_attendees === null ? null : (event.max_attendees - event.attendees.length)
-                                    }
-                                } else {
-                                    currentIndex = index;
-                                }"
+                                class="bg-black border rounded-lg shadow-lg p-4 relative h-full transition-all duration-200 hover:shadow-purple-500/30 hover:shadow-lg"
+                                :class="isActive(index) ? 'cursor-pointer' : 'cursor-default'"
+                                @click="if(isActive(index)) { window.location.href = '/events/' + event.id }"
                             >
                                 {{-- Event Type Badge --}}
                                 <span 
@@ -184,11 +175,9 @@
                                         </template>
                                     </div>
                                     
-                                    {{-- View Details Button --}}
-                                    <div class="mt-4" x-show="isActive(index)">
-                                        <button class="w-full bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded shadow transition">
-                                            View Details
-                                        </button>
+                                    {{-- Subtle "Click for details" hint for active card --}}
+                                    <div class="mt-3 text-center text-violet-400/80 text-xs" x-show="isActive(index)">
+                                        Click for details
                                     </div>
                                 </div>
                             </div>
