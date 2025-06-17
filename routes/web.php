@@ -78,19 +78,19 @@ Route::get('tickets/{token}/scan', [TicketController::class, 'scan'])
 
 
 
-// Route::view('dashboard', 'dashboard')
-//     ->middleware(['auth', 'verified'])
-//     ->name('dashboard');
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
-// Route::middleware(['auth'])->group(function () {
-//     Route::redirect('settings', 'settings/profile');
+Route::middleware(['auth'])->group(function () {
+    Route::redirect('user/settings', '/user/settings/profile')->name('user.settings');
 
-//     Route::get('settings/profile', Profile::class)->name('settings.profile');
-//     Route::get('settings/password', Password::class)->name('settings.password');
-//     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
-// });
+    Route::get('user/settings/profile', Profile::class)->name('user.settings.profile');
+    Route::get('user/settings/password', Password::class)->name('user.settings.password');
+    Route::get('user/settings/appearance', Appearance::class)->name('user.settings.appearance');
+});
 
 Route::prefix('/testing')->group(function() {
     Route::prefix('/mails')->group(function() {
