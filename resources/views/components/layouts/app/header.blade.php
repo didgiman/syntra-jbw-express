@@ -112,7 +112,7 @@
         </div>
     </nav>
 
-<main class="flex-grow w-1/2 mx-auto bg-gray-700 p-8">
+<main class="flex-grow md:w-1/2 mx-auto bg-gray-700 p-8">
     
     {{-- @yield('content') --}}
 
