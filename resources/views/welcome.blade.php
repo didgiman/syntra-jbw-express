@@ -3,33 +3,69 @@
 
 @section('content')
     {{-- Main Container with Alpine.js State --}}
-    <div x-data="{ 
-        open: false,           {{-- Controls modal visibility --}}
-        selectedEvent: null    {{-- Stores current event data --}}
-    }" class="container mx-auto py-12 px-4">
-        
+    <div class="container mx-auto px-4 py-8">
         {{-- Carousel Section for Upcoming Events --}}
         <section class="mb-8" x-data="{ 
             currentIndex: 0,
             events: {{ json_encode($upcomingEvents->take(6)->values()) }},
             eventTypes: {{ json_encode($upcomingEvents->take(6)->map(function($event) { return $event->type; })) }},
+            autoplayEnabled: true,
+            autoplaySpeed: 5000, // 5 seconds between slides
+            autoplayTimer: null,
+            
             get totalEvents() { return this.events.length },
+            
+            startAutoplay() {
+                if (this.autoplayEnabled && this.totalEvents > 1) {
+                    this.autoplayTimer = setInterval(() => {
+                        if (document.visibilityState === 'visible') {
+                            this.next();
+                        }
+                    }, this.autoplaySpeed);
+                }
+            },
+            
+            stopAutoplay() {
+                if (this.autoplayTimer) {
+                    clearInterval(this.autoplayTimer);
+                    this.autoplayTimer = null;
+                }
+            },
+            
+            toggleAutoplay() {
+                this.autoplayEnabled = !this.autoplayEnabled;
+                if (this.autoplayEnabled) {
+                    this.startAutoplay();
+                } else {
+                    this.stopAutoplay();
+                }
+            },
+            
             next() { 
                 this.currentIndex = (this.currentIndex + 1) % this.totalEvents;
             },
+            
             prev() {
                 this.currentIndex = (this.currentIndex - 1 + this.totalEvents) % this.totalEvents;
             },
+            
             isActive(index) {
                 return this.currentIndex === index;
             },
+            
             isPrev(index) {
                 return (this.currentIndex - 1 + this.totalEvents) % this.totalEvents === index;
             },
+            
             isNext(index) {
                 return (this.currentIndex + 1) % this.totalEvents === index;
             }
-        }">
+        }"
+        x-init="startAutoplay()"
+        @mouseenter="stopAutoplay()"
+        @mouseleave="if(autoplayEnabled) startAutoplay()"
+        @visibilitychange.window="document.visibilityState === 'visible' ? (autoplayEnabled ? startAutoplay() : null) : stopAutoplay()"
+        >
             <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
             
             {{-- Carousel Container --}}
@@ -390,3 +426,28 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function calculateTimeLeft(futureDate) {
+        const future = new Date(futureDate).getTime();
+        const now = new Date().getTime();
+        const diff = future - now;
+        
+        if (diff <= 0) {
+            return "Event has started";
+        }
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        let timeString = "";
+        if (days > 0) timeString += days + " days ";
+        if (hours > 0) timeString += hours + " hours ";
+        timeString += minutes + " minutes";
+        
+        return timeString;
+    }
+</script>
+@endpush
