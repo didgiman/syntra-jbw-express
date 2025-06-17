@@ -12,17 +12,30 @@ use App\Mail\AttendeeCreatedMail;
 use App\Mail\EventUpdatedMail;
 use App\Models\Attendee;
 use App\Models\Event;
+use App\Models\Type;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    // grab the earliest upcoming events from the DB
-    $upcomingEvents = Event::with(['attendees', 'type'])  // Added 'type' here
+    // Grab the earliest upcoming events from the DB
+    $upcomingEvents = Event::with(['attendees', 'type'])
         ->orderBy('start_time')
         ->take(6)
         ->get();
-    return view('welcome', compact('upcomingEvents'));
+    
+    // Get statistics
+    $stats = [
+        'eventCount' => Event::count(),
+        'userCount' => User::count(),
+        'upcomingCount' => Event::where('start_time', '>', now())->count(),
+        'registrationCount' => Attendee::count(),
+        'freeEventCount' => Event::where('price', 0)->count(),
+        'typeCount' => Type::count(),
+    ];
+    
+    return view('welcome', compact('upcomingEvents', 'stats'));
 })->name('home');
 
 Route::get('/events', function() {
