@@ -9,6 +9,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Mail\AttendeeCreatedMail;
+use App\Mail\ContactMessageCreatedMail;
 use App\Mail\ContactMessageMail;
 use App\Mail\ContactMessageReceivedMail;
 use App\Mail\EventUpdatedMail;
@@ -117,7 +118,7 @@ Route::prefix('/testing')->group(function() {
         Route::get('contact-created-email', function() {
             $contactMessage = ContactMessage::first();
 
-            return (new ContactMessageMail($contactMessage))->render();
+            return (new ContactMessageCreatedMail($contactMessage))->render();
         });
 
         Route::get('contact-received-email', function() {
