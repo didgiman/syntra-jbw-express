@@ -2,12 +2,12 @@
 @section('title', 'Contact')
 
 @section('content')
-    <div class="container mx-auto py-12 px-4 flex">
+    <div class="container mx-auto py-12 px-4 flex flex-col md:flex-row">
         <div class="w-full md:w-2/3 pr-0 md:pr-8">
-            <h1 class="text-3xl font-bold mb-6">Contact us</h1>
+            <h1 class="text-3xl text-center font-bold mb-6">Contact us</h1>
             @livewire('contact-form')
         </div>
-        <div class="hidden md:block w-1/3 pt-12 pl-12">
+        <div class="md:block md:w-1/3 pt-12 pl-12">
 
             <h2 class="text-xl font-semibold mb-4">Address</h2>
             <p class="mb-4">
