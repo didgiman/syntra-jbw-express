@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Mail\ContactMessageMail;
+use App\Mail\ContactMessageCreatedMail;
 use App\Mail\ContactMessageReceivedMail;
 use App\Models\ContactMessage;
 use Illuminate\Support\Facades\Mail;
@@ -14,7 +14,7 @@ class ContactMessageObserver
      */
     public function created(ContactMessage $contactMessage): void
     {
-        Mail::queue(new ContactMessageMail($contactMessage));
+        Mail::queue(new ContactMessageCreatedMail($contactMessage));
         Mail::queue(new ContactMessageReceivedMail($contactMessage));
     }
 
