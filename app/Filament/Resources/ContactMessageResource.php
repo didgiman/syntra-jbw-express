@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContactMessageResource\Pages;
 use App\Models\ContactMessage;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,8 +23,18 @@ class ContactMessageResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
+                Forms\Components\TextInput::make('id')
+                    ->disabled(),
+                Forms\Components\TextInput::make('name')
+                    ->disabled(),
+                    Forms\Components\TextInput::make('email')
+                    ->disabled(),
+                Forms\Components\TextInput::make('subject')
+                    ->disabled(),
+                Forms\Components\Textarea::make('message')
+                    ->disabled(),
+            ])
+            ->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -45,7 +56,7 @@ class ContactMessageResource extends Resource
                 //
             ])
             ->actions([
-                //
+                Tables\Actions\ViewAction::make()
             ])
             ->bulkActions([
                 //
@@ -64,6 +75,7 @@ class ContactMessageResource extends Resource
         return [
             'index' => Pages\ListContactMessages::route('/'),
             'create' => Pages\CreateContactMessage::route('/create'),
+            'view' => Pages\ViewContactMessage::route('/{record}'),
             'edit' => Pages\EditContactMessage::route('/{record}/edit'),
         ];
     }
