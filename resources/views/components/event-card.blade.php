@@ -1,5 +1,5 @@
 <div wire:key="{{ $event->id }}" class="relative border-b-2 border-gray-800 p-6 rounded-lg overflow-hidden {{ session('highlight-event') === $event->id ? 'bg-green-900 p-6' : '' }}">
-    <div class="flex gap-6">
+    <div class="flex flex-col md:flex-row gap-6">
         {{-- Image with Type Badge --}}
         <div class="relative">
             {{-- Type Badge --}}
@@ -7,14 +7,16 @@
                 style="background-color: {{ $event->type->color }};">
                 {{ $event->type->description }}
             </span>
-            <img src="{{ asset($event->image) }}" class="w-36 h-36 object-cover rounded-lg">
+            <a href="{{ route('events.single', ['event' => $event->id]) }}" class="mr-1">
+                <img src="{{ asset($event->image) }}" class="w-full md:w-38 h-38 object-cover rounded-lg">
+            </a>
         </div>
         
         {{-- Event Info --}}
         <div class="flex-1">
             <div class="flex justify-between items-start">
                 {{-- Title and Location --}}
-                <div class="w-1/2 pr-4">
+                <div class="w-full md:w-1/2 pr-4">
                     @if($event->end_time < now())
                         <h2 class="text-xl font-bold flex items-center">
                             <span class="mr-1">{{ $event->name }}</span>
@@ -48,7 +50,7 @@
                 
                 {{-- Attendance Info --}}
                 @if ($event->relationLoaded('attendees'))
-                    <div class="text-right w-1/2 pl-4">
+                    <div class="text-right w-1/2 pl-4 hidden md:block">
                         @if(is_null($event->max_attendees))
                             <span class="text-blue-400 text-sm">
                                 <b>{{ $event->attendees->count() }}</b> attending
@@ -71,16 +73,16 @@
             </div>
             
             {{-- Times and Status --}}
-            <div class="mt-4 flex flex-col space-y-4">
+            <div class="mt-4 flex-col space-y-4 flex">
                 {{-- Times --}}
-                <div>
+                <div class="hidden md:block">
                     <p class="text-gray-400 text-sm">Starts: <span class="text-green-500 font-medium">{{ $event->start_time->format('D, M j, Y H:i') }}</span></p>
                     <p class="text-gray-400 text-sm">Ends: <span class="text-red-500 font-medium">{{ $event->end_time->format('D, M j, Y H:i') }}</span></p>
                 </div>
                 
                 {{-- Status/Countdown and Button --}}
-                <div class="flex justify-between items-center">
-                    <div>
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="hidden md:block flex-1">
                         @if($event->end_time && now() > $event->end_time)
                             <span class="text-red-500 text-sm font-semibold">Event has ended</span>
                         @elseif(now() > $event->start_time)
@@ -95,7 +97,7 @@
                     </div>
                     
                     {{-- Action Button --}}
-                    <div>
+                    <div class="w-full flex-1 flex justify-end">
                         {{ $buttons ?? '' }}
                     </div>
                 </div>

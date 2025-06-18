@@ -115,6 +115,19 @@ class Event extends Model
                     ->where('user_id', Auth::id());
     }
 
+    public function userTickets()
+    {
+        return $this->hasMany(Attendee::class)
+                    ->where('user_id', Auth::id());
+    }
+
+    // Use withCount for efficient counting when querying
+    // Example: Event::withCount('userTickets')->get()
+    public function countUserTickets()
+    {
+        return $this->userTickets()->count();
+    }
+
     // Accessor for available_spots
     public function getAvailableSpotsAttribute()
     {

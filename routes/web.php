@@ -9,20 +9,37 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Mail\AttendeeCreatedMail;
+use App\Mail\ContactMessageCreatedMail;
+use App\Mail\ContactMessageMail;
+use App\Mail\ContactMessageReceivedMail;
 use App\Mail\EventUpdatedMail;
 use App\Models\Attendee;
+use App\Models\ContactMessage;
 use App\Models\Event;
+use App\Models\Type;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    // grab the earliest upcoming events from the DB
-    $upcomingEvents = Event::with(['attendees', 'type'])  // Added 'type' here
+    // Grab the earliest upcoming events from the DB
+    $upcomingEvents = Event::with(['attendees', 'type'])
         ->orderBy('start_time')
         ->take(6)
         ->get();
-    return view('welcome', compact('upcomingEvents'));
+    
+    // Get statistics
+    $stats = [
+        'eventCount' => Event::count(),
+        'userCount' => User::count(),
+        'upcomingCount' => Event::where('start_time', '>', now())->count(),
+        'registrationCount' => Attendee::count(),
+        'freeEventCount' => Event::where('price', 0)->count(),
+        'typeCount' => Type::count(),
+    ];
+    
+    return view('welcome', compact('upcomingEvents', 'stats'));
 })->name('home');
 
 Route::get('/events', function() {
@@ -32,6 +49,10 @@ Route::get('/events', function() {
 Route::get('/about', function() {
     return view('about');
 })->name('about');
+
+Route::get('/contact', function() {
+    return view('contact');
+})->name('contact');
 
 Route::get('/events/{event}', function(Event $event) {
     return view('event-details', ['event' => $event]);
@@ -78,19 +99,19 @@ Route::get('tickets/{token}/scan', [TicketController::class, 'scan'])
 
 
 
-// Route::view('dashboard', 'dashboard')
-//     ->middleware(['auth', 'verified'])
-//     ->name('dashboard');
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
-// Route::middleware(['auth'])->group(function () {
-//     Route::redirect('settings', 'settings/profile');
+Route::middleware(['auth'])->group(function () {
+    Route::redirect('user/settings', '/user/settings/profile')->name('user.settings');
 
-//     Route::get('settings/profile', Profile::class)->name('settings.profile');
-//     Route::get('settings/password', Password::class)->name('settings.password');
-//     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
-// });
+    Route::get('user/settings/profile', Profile::class)->name('user.settings.profile');
+    Route::get('user/settings/password', Password::class)->name('user.settings.password');
+    Route::get('user/settings/appearance', Appearance::class)->name('user.settings.appearance');
+});
 
 Route::prefix('/testing')->group(function() {
     Route::prefix('/mails')->group(function() {
@@ -105,6 +126,18 @@ Route::prefix('/testing')->group(function() {
             $attendee = Attendee::with(['user', 'event'])->find(21);
 
             return (new AttendeeCreatedMail($attendee))->render();
+        });
+
+        Route::get('contact-created-email', function() {
+            $contactMessage = ContactMessage::first();
+
+            return (new ContactMessageCreatedMail($contactMessage))->render();
+        });
+
+        Route::get('contact-received-email', function() {
+            $contactMessage = ContactMessage::first();
+
+            return (new ContactMessageReceivedMail($contactMessage))->render();
         });
     });
 });

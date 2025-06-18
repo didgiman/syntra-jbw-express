@@ -108,6 +108,7 @@
                     $isAttending = $event->currentUserAttendee;
                     $isFreeEvent = $event->price == 0;
                     $hasFreeSpots = is_null($event->max_attendees) || $event->available_spots > 0;
+                    $userTicketsCount = $event->userTickets()->count();
                 @endphp
 
                 {{-- Actions --}}
@@ -130,7 +131,7 @@
                             @endif
                             <button class="btn btn-primary flex-1"
                                     wire:click.prevent="downloadTicket()">
-                                Download Ticket(s)
+                                Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}
                             </button>
                         </div>
                     @endif

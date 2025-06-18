@@ -9,6 +9,10 @@
         <p class="text-red-600 pb-2">{{ $message }}</p>
     @enderror
 
+    @php
+        $availableSpots = $event->available_spots;
+    @endphp
+
     @guest
         <div>
             <div class="pb-4 flex justify-between">
@@ -22,7 +26,7 @@
         </div>
     @else
 
-        @if (!is_null($event->max_attendees) && $event->available_spots == 0)
+        @if (!is_null($event->max_attendees) && $availableSpots == 0)
             <p class="text-red-500 text-lg font-bold">Event is sold out</p>
         @elseif ($ticketsPurchased)
             <button class="btn btn-primary w-full" wire:click.prevent="startBuying">Buy More Tickets</button>
@@ -35,7 +39,7 @@
                 <div class="form-input flex items-center justify-between">
                     <label class="w-full">Number of tickets</label>
                     <select wire:model.live="numberOfTickets" class="w-1/5!">
-                        @for ($i = 1; $i <= min(10, is_null($event->max_attendees) ? 10 : $event->available_spots); $i++)
+                        @for ($i = 1; $i <= min(10, is_null($event->max_attendees) ? 10 : $availableSpots); $i++)
                             <option value="{{ $i }}">{{ $i }}</option>
                         @endfor
                     </select>
@@ -44,12 +48,44 @@
                     <p>Total:</p>
                     <p>&euro;{{ $totalPrice }}</p>
                 </div>
-                <div class="mt-4">
+                <div class="mt-4 @if($showPaymentForm) hidden @endif">
                     <button
                         type="submit"
                         class="btn btn-primary block w-full md:w-full"
-                    >Buy Tickets</button>
+                    >Continue</button>
                 </div>
+                @if($showPaymentForm)
+                    <div class="form-input mt-6">
+                        <label>Creditcard number</label>
+                        <input type="text" wire:model="cc_card">
+                        @error('cc_card')
+                            <div class="validationError">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-input flex gap-2">
+                        <div>
+                            <label>Expiry date (mm/yy)</label>
+                            <input type="text" wire:model="cc_valid">
+                            @error('cc_valid')
+                                <div class="validationError">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div>
+                            <label>CVC</label>
+                            <input type="text" wire:model="cc_cvc">
+                            @error('cc_cvc')
+                                <div class="validationError">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button
+                            type="submit"
+                            class="btn btn-primary block w-full md:w-full"
+                        >Buy Tickets</button>
+                    </div>
+                @endif
             </form>
         @endif
     @endguest
