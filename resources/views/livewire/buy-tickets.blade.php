@@ -9,6 +9,10 @@
         <p class="text-red-600 pb-2">{{ $message }}</p>
     @enderror
 
+    @php
+        $availableSpots = $event->available_spots;
+    @endphp
+
     @guest
         <div>
             <div class="pb-4 flex justify-between">
@@ -21,10 +25,6 @@
             </p>
         </div>
     @else
-
-        @php
-            $availableSpots = $event->available_spots;
-        @endphp
 
         @if (!is_null($event->max_attendees) && $availableSpots == 0)
             <p class="text-red-500 text-lg font-bold">Event is sold out</p>
@@ -48,12 +48,44 @@
                     <p>Total:</p>
                     <p>&euro;{{ $totalPrice }}</p>
                 </div>
-                <div class="mt-4">
+                <div class="mt-4 @if($showPaymentForm) hidden @endif">
                     <button
                         type="submit"
                         class="btn btn-primary block w-full md:w-full"
-                    >Buy Tickets</button>
+                    >Continue</button>
                 </div>
+                @if($showPaymentForm)
+                    <div class="form-input mt-6">
+                        <label>Creditcard number</label>
+                        <input type="text" wire:model="cc_card">
+                        @error('cc_card')
+                            <div class="validationError">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-input flex gap-2">
+                        <div>
+                            <label>Expiry date (mm/yy)</label>
+                            <input type="text" wire:model="cc_valid">
+                            @error('cc_valid')
+                                <div class="validationError">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div>
+                            <label>CVC</label>
+                            <input type="text" wire:model="cc_cvc">
+                            @error('cc_cvc')
+                                <div class="validationError">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button
+                            type="submit"
+                            class="btn btn-primary block w-full md:w-full"
+                        >Buy Tickets</button>
+                    </div>
+                @endif
             </form>
         @endif
     @endguest
