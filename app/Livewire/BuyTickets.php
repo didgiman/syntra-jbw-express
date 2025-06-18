@@ -6,7 +6,6 @@ use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Intervention\Validation\Rules\CreditCard;
 use Throwable;
 
 class BuyTickets extends Component
@@ -45,7 +44,7 @@ class BuyTickets extends Component
     public function rules()
     {
         return [
-            'cc_card' => ['required', new CreditCard],
+            'cc_card' => ['required', 'numeric', 'digits:16'],
             'cc_valid' => ['required', 'string', 'regex:/^(0[1-9]|1[0-2])\/(2[5-9]|3[0-5])$/'],
             'cc_cvc' => ['required', 'numeric', 'digits:3']
         ];
