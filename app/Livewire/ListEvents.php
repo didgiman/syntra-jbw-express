@@ -15,6 +15,9 @@ class ListEvents extends Component
     
     #[Url]
     public $search = '';
+
+    public $filter_free;
+    public $filter_now;
     
     public function updating($property, $value)
     {
@@ -29,6 +32,14 @@ class ListEvents extends Component
         
         if (!empty($this->search)) {
             $query->where('name', 'like', '%' . $this->search . '%');
+        }
+
+        if ($this->filter_free) {
+            $query->where('price', 0);
+        }
+
+        if ($this->filter_now) {
+            $query->where('start_time', '<', now());
         }
         
         $events = $query->orderBy('start_time')
