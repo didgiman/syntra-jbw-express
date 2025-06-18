@@ -31,7 +31,7 @@ Route::get('/', function () {
     
     // Get statistics
     $stats = [
-        'eventCount' => Event::count(),
+        'eventCount' => Event::allEvents()->get()->count(),
         'userCount' => User::count(),
         'upcomingCount' => Event::where('start_time', '>', now())->count(),
         'registrationCount' => Attendee::count(),
