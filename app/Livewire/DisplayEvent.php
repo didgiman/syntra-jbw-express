@@ -19,6 +19,7 @@ class DisplayEvent extends Component
         $this->event = Event::with(['attendees', 'type'])->findOrFail($eventId);
     }
 
+    #[On('ticket-assigned')]
     #[On('tickets.purchased')]
     public function refreshEvent()
     {

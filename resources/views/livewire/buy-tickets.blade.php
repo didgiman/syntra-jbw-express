@@ -1,5 +1,5 @@
 <div class="buy-tickets">
-    <h2 class="text-white text-xl font-bold mb-4">Buy tickets for this event</h2>
+    <h2 class="text-white text-xl font-bold mb-4">Buy @if ($event->currentUserAttendee) more @endif tickets for this event</h2>
 
     @if ($message)
         <p class="text-violet-400 pb-2">{{ $message }}</p>
