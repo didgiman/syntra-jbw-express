@@ -1,6 +1,6 @@
 <div>
     {{-- Search Box --}}
-    <div class="mb-6 flex gap-2">
+    <div class="mb-6 flex gap-6 items-center">
         <div class="flex gap-2 flex-1">
             <input 
                 type="text" 
@@ -21,6 +21,14 @@
         <div class="flex flex-col items-start gap-1">
             <div><input type="checkbox" id="filter_free" wire:model.live="filter_free"><label for="filter_free" class="ml-2">Free events</label></div>
             <div><input type="checkbox" id="filter_now" wire:model.live="filter_now"><label for="filter_now" class="ml-2">Happening now</label></div>
+        </div>
+        <div>
+            <select wire:model.live="filter_type" class="px-4 py-3 bg-gray-800 text-white rounded border border-gray-700">
+                <option value="">- Event Type -</option>
+                @foreach ($eventTypes as $type)
+                    <option value="{{ $type->id }}">{{ $type->description }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
 

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Event;
+use App\Models\Type;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
@@ -18,6 +19,14 @@ class ListEvents extends Component
 
     public $filter_free;
     public $filter_now;
+    public $filter_type;
+
+    public $eventTypes;
+
+    public function mount()
+    {
+        $this->eventTypes = Type::orderby('description')->get();
+    }
     
     public function updating($property, $value)
     {
@@ -36,6 +45,10 @@ class ListEvents extends Component
 
         if ($this->filter_free) {
             $query->where('price', 0);
+        }
+
+        if ($this->filter_type) {
+            $query->where('type_id', $this->filter_type);
         }
 
         if ($this->filter_now) {
