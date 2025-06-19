@@ -22,16 +22,14 @@ class AssignTickets extends Component
     public function refreshEvent()
     {
         $this->event->refresh();
-        // $this->tickets = $this->event->userTickets()->get();
-
-        // dd($this->tickets);
     }
 
+    // Restore this code if you want to refresh the tickets to assign whenever a ticket has been assigned. This will mean that the assigned ticket is removed from the list and no longer visible.
     // #[On('ticket-assigned')]
     // public function refreshTickets()
     // {
     //     // This will trigger a re-render with fresh data
-    //     // $this->dispatch('$refresh');
+    //     $this->dispatch('$refresh');
     // }
 
     public function render()

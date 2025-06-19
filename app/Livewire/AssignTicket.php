@@ -43,9 +43,7 @@ class AssignTicket extends Component
 
         $this->isAssigned = true;
 
-        debugbar()->info($this->isAssigned);
-
-        // $this->dispatch('ticket-assigned', attendee: $this->attendee);
+        $this->dispatch('ticket-assigned', attendee: $this->attendee);
     }
 
     public function render()

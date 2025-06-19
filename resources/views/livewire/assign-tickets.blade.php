@@ -1,23 +1,10 @@
-{{-- <div>
-    @if(count($tickets) > 1)
-        <h2 class="text-xl font-bold mb-4">Assign {{ $nbrTickets }} tickets</h2>
-        @foreach ($tickets as $ticket)
-            <div class="mb-2" wire:key="{{ $ticket->id }}">
-                @if($loop->first)
-                    <p class="mb-2">Ticket <b>{{ $ticket->id }}</b>: <span class="text-violet-500">{{ $ticket->user->name }}</span>
-                @else
-                    <livewire:assign-ticket :attendee="$ticket" :key="$ticket->id" />
-                @endif
-            </div>
-        @endforeach
-    @endif
-</div> --}}
-
 <div>
     @if(count($tickets) > 1)
-        <h2 class="text-xl font-bold mb-4">Assign {{ $nbrTickets }} tickets</h2>
+        <h2 class="text-xl font-bold mb-4">Assign tickets</h2>
+        <p>You have purchased {{ $nbrTickets }} tickets for this event.</p>
+        <p class="mb-4">Assign {{ $nbrTickets-1 }} ticket(s) to other users.</p>
         @foreach ($tickets as $ticket)
-            <div class="mb-2" wire:key="wrapper-{{ $ticket->id }}">
+            <div class="mb-2 bg-gray-700 p-2 rounded" wire:key="wrapper-{{ $ticket->id }}">
                 <livewire:assign-ticket
                     :attendee="$ticket"
                     :key="$ticket->id"

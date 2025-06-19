@@ -1,10 +1,8 @@
 <div>
-    <p>Ticket <b>{{ $attendee->id }}</b> (assigned to {{ $attendee->user->name }})
+    <p>Ticket <b>{{ $attendee->id }}</b> @if ($isFirst) (Your ticket) @endif</p>
     @if (!$isFirst)
         @if (!$isAssigned)
-            <livewire:user-search onSelect="ticket-user-selected.{{ $attendee->id }}" /></p>
-        @else
-            : <span class="text-violet-500">assigned to {{ $attendee->user->name }} - {{ $attendee->id }} - {{ $attendee->user->id }}</span>
+            <livewire:user-search onSelect="ticket-user-selected.{{ $attendee->id }}" />
         @endif
         <div class="text-violet-500">{{ $message }}</div>
     @endif
