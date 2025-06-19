@@ -109,6 +109,7 @@
                     $isFreeEvent = $event->price == 0;
                     $hasFreeSpots = is_null($event->max_attendees) || $event->available_spots > 0;
                     $userTicketsCount = $event->userTickets()->count();
+                    $numTicketsAssignedToUser = $event->userTickets()->where('user_id', Auth::id())->count();
                 @endphp
 
                 {{-- Actions --}}
@@ -129,10 +130,14 @@
                                     Unattend
                                 </button>
                             @endif
-                            <button class="btn btn-primary flex-1"
-                                    wire:click.prevent="downloadTicket()">
-                                Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}
-                            </button>
+                            @if ($numTicketsAssignedToUser <= 1)
+                                <button class="btn btn-primary flex-1"
+                                        wire:click.prevent="downloadTicket()">
+                                    Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}
+                                </button>
+                            @else
+                                <div class="bg-red-500 text-white p-2 w-full text-center">You must assign your tickets</div>
+                            @endif
                         </div>
                     @endif
 

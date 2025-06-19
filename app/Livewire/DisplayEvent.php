@@ -43,7 +43,7 @@ class DisplayEvent extends Component
             return;
         }
 
-        $event->attendees()->create(['user_id' => Auth::id()]);
+        $event->attendees()->create(['user_id' => Auth::id(), 'purchased_by' => Auth::id()]);
         $this->message = 'You are now attending this event.';
     }
 

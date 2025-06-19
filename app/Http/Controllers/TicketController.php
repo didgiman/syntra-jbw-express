@@ -27,7 +27,7 @@ class TicketController extends Controller
         }
 
         // Get all attendees for the given event + user combination
-        $attendees = Attendee::where('event_id', $event->id)->where('user_id', $user->id)->get();
+        $attendees = $event->userTickets()->get();
 
         $ticketsData = [];
 

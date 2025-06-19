@@ -110,7 +110,7 @@ class BuyTickets extends Component
                 $attendees = [];
                 $userId = Auth::id();
                 for ($i = 0; $i < $this->numberOfTickets; $i++) {
-                    $attendees[] = ['user_id' => $userId];
+                    $attendees[] = ['user_id' => $userId, 'purchased_by' => $userId];
                 }
                 $event->attendees()->createMany($attendees);
 
