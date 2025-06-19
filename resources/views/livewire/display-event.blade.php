@@ -237,10 +237,9 @@
             </div>
 
             {{-- Assign tickets --}}
-            @if ($isAttending && $userTicketsCount > 1)
+            @if ($userTicketsCount > 1)
                 <div class="bg-gray-800 p-6 rounded-lg">
                     <livewire:assign-tickets :event="$event" />
-                    {{-- @livewire('assign-ticket') --}}
                 </div>
             @endif
         </div>

@@ -34,13 +34,7 @@ class AssignTicket extends Component
         $this->message = '';
     }
 
-    public function getListeners()
-    {
-        return [
-            "ticket-user-selected.{$this->attendee->id}" => 'assign',
-        ];
-    }
-
+    #[On('ticket-user-selected.{attendee.id}')]
     public function assign(User $user)
     {
         if (!$user) {
@@ -52,7 +46,6 @@ class AssignTicket extends Component
         $event = $this->attendee->event;
         $existingAttendee = Attendee::where('event_id', $event->id)
             ->where('user_id', $user->id)
-            ->where('id', '!=', $this->attendee->id) // Exclude current attendee
             ->first();
 
         if ($existingAttendee) {

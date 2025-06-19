@@ -57,7 +57,9 @@
                 @if($showPaymentForm)
                     <div class="form-input mt-6">
                         <label>Creditcard number</label>
-                        <input type="text" wire:model="cc_card">
+                        <input type="text" wire:model="cc_card" placeholder="xxxx-xxxx-xxxx-xxxx"
+                            oninput="this.value = this.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1-').slice(0, 19)"
+                        >
                         @error('cc_card')
                             <div class="validationError">{{ $message }}</div>
                         @enderror
@@ -65,14 +67,16 @@
                     <div class="form-input flex gap-2">
                         <div>
                             <label>Expiry date (mm/yy)</label>
-                            <input type="text" wire:model="cc_valid">
+                            <input type="text" wire:model="cc_valid" placeholder="mm/yy"
+                                oninput="this.value = this.value.replace(/[^\d\/]/g, '').replace(/(\d{2})(?=\d)/, '$1/').slice(0, 5)"
+                            >
                             @error('cc_valid')
                                 <div class="validationError">{{ $message }}</div>
                             @enderror
                         </div>
                         <div>
                             <label>CVC</label>
-                            <input type="text" wire:model="cc_cvc">
+                            <input type="text" wire:model="cc_cvc" placeholder="xxx" maxlength="3">
                             @error('cc_cvc')
                                 <div class="validationError">{{ $message }}</div>
                             @enderror
