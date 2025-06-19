@@ -107,7 +107,8 @@ class TestingSeeder extends Seeder
                 'user_id' => $i,
                 'event_id' => DB::table('events')->orderBy('id')->skip(DB::table('events')->count() - 2)->first()->id,
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
+                'purchased_by' => $i
             ];
         }
 
@@ -116,7 +117,8 @@ class TestingSeeder extends Seeder
                 'user_id' => $i,
                 'event_id' => DB::table('events')->latest('id')->first()->id,
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
+                'purchased_by' => $i
             ];
         }
 

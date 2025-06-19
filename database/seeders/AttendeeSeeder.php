@@ -23,6 +23,7 @@ class AttendeeSeeder extends Seeder
             foreach ($eventsToAttend as $event) {
                 Attendee::create([
                     'user_id' => $user->id,
+                    'purchased_by' => $user->id,
                     'event_id' => $event->id
                 ]);
             }
