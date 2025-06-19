@@ -17,8 +17,11 @@ class ListEvents extends Component
     #[Url]
     public $search = '';
 
+    #[Url]
     public $filter_free;
+    #[Url]
     public $filter_now;
+    #[Url]
     public $filter_type;
 
     public $eventTypes;
@@ -30,9 +33,7 @@ class ListEvents extends Component
     
     public function updating($property, $value)
     {
-        if ($property === 'search') {
-            $this->resetPage();
-        }
+        $this->resetPage();
     }
     
     public function render()
