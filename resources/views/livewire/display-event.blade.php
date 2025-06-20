@@ -109,6 +109,7 @@
                     $isFreeEvent = $event->price == 0;
                     $hasFreeSpots = is_null($event->max_attendees) || $event->available_spots > 0;
                     $userTicketsCount = $event->userTickets()->count();
+                    $numTicketsAssignedToUser = $event->userTickets()->where('user_id', Auth::id())->count();
                 @endphp
 
                 {{-- Actions --}}
@@ -129,10 +130,14 @@
                                     Unattend
                                 </button>
                             @endif
-                            <button class="btn btn-primary flex-1"
-                                    wire:click.prevent="downloadTicket()">
-                                Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}
-                            </button>
+                            @if ($numTicketsAssignedToUser <= 1)
+                                <button class="btn btn-primary flex-1"
+                                        wire:click.prevent="downloadTicket()">
+                                    Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}
+                                </button>
+                            @else
+                                <div class="bg-red-500 text-white p-2 w-full text-center">You must assign your tickets</div>
+                            @endif
                         </div>
                     @endif
 
@@ -175,7 +180,7 @@
             </div>
 
             {{-- Price Section --}}
-            <div class="bg-gray-800 p-6 rounded-lg">
+            <div class="bg-gray-800 p-6 rounded-lg mb-6">
                 <h2 class="text-lg font-semibold mb-3">Ticket Price</h2>
                 
                 <div x-data="{ 
@@ -230,6 +235,13 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Assign tickets --}}
+            @if ($userTicketsCount > 1)
+                <div class="bg-gray-800 p-6 rounded-lg">
+                    <livewire:assign-tickets :event="$event" />
+                </div>
+            @endif
         </div>
     </div>
 

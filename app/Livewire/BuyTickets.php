@@ -44,7 +44,7 @@ class BuyTickets extends Component
     public function rules()
     {
         return [
-            'cc_card' => ['required', 'numeric', 'digits:16'],
+            'cc_card' => ['required', 'regex:/^(\d{4}-){3}\d{4}$|^\d{16}$/'],
             'cc_valid' => ['required', 'string', 'regex:/^(0[1-9]|1[0-2])\/(2[5-9]|3[0-5])$/'],
             'cc_cvc' => ['required', 'numeric', 'digits:3']
         ];
@@ -110,7 +110,7 @@ class BuyTickets extends Component
                 $attendees = [];
                 $userId = Auth::id();
                 for ($i = 0; $i < $this->numberOfTickets; $i++) {
-                    $attendees[] = ['user_id' => $userId];
+                    $attendees[] = ['user_id' => $userId, 'purchased_by' => $userId];
                 }
                 $event->attendees()->createMany($attendees);
 
