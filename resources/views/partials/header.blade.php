@@ -12,14 +12,7 @@
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Include Jodit CSS Styling -->
-    {{-- <link rel="stylesheet" href="//unpkg.com/jodit@4.1.16/es2021/jodit.min.css">
-
-    <!-- Include the Jodit JS Library -->
-    <script src="//unpkg.com/jodit@4.1.16/es2021/jodit.min.js"></script> --}}
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/jodit@latest/es2021/jodit.fat.min.js"></script>
+    @stack('head')
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
