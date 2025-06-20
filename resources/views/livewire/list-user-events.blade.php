@@ -55,17 +55,17 @@
                                 wire:confirm="Are you sure?">Unattend</button>
                         @endif
 
-                        @if ($numTicketsAssignedToUser <= 1)
+                        {{-- @if ($numTicketsAssignedToUser <= 1) --}}
                             <button class="btn btn-primary btn-sm"
                                 wire:click.prevent="downloadTicket({{ $event->id }})"
                             >Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}</button>
-                        @else
+                        {{-- @else --}}
                             {{-- There are more than 1 ticket (attendee) assigned to the current user. User needs to assign tickets before downloading --}}
-                            <div class="text-right">
+                            {{-- <div class="text-right">
                                 <p class="text-red-500 font-bold">You must assign your tickets!</p>
                                 <a href="{{ route('events.single', ['event' => $event->id]) }}" class="btn btn-primary btn-sm inline-block">Assign</a>
-                            </div>
-                        @endif
+                            </div> --}}
+                        {{-- @endif --}}
                     </div>
                 @endif
             @endslot
