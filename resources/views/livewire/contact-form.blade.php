@@ -23,7 +23,7 @@
             <label class="block" for="subject">Subject</label>
             <input type="text" id="subject" wire:model.blur="subject" placeholder="Description of the issue">
             @error('subject')
-                <div class="validationError">{{ $subject }}</div>
+                <div class="validationError">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-input">
