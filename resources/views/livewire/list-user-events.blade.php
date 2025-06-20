@@ -29,7 +29,8 @@
 
     @foreach ($events as $event)
         @php
-            $userTicketsCount = $event->user_attending_count ?? 0;
+            $userTicketsCount = $event->userTickets()->count() ?? 0;
+            $numTicketsAssignedToUser = $event->userTickets()->where('user_id', Auth::id())->count();
         @endphp
         <x-event-card :event="$event" :view="$view">
             @slot('buttons')
@@ -54,9 +55,17 @@
                                 wire:confirm="Are you sure?">Unattend</button>
                         @endif
 
-                        <button class="btn btn-primary btn-sm"
-                            wire:click.prevent="downloadTicket({{ $event->id }})"
-                        >Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}</button>
+                        @if ($numTicketsAssignedToUser <= 1)
+                            <button class="btn btn-primary btn-sm"
+                                wire:click.prevent="downloadTicket({{ $event->id }})"
+                            >Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}</button>
+                        @else
+                            {{-- There are more than 1 ticket (attendee) assigned to the current user. User needs to assign tickets before downloading --}}
+                            <div class="text-right">
+                                <p class="text-red-500 font-bold">You must assign your tickets!</p>
+                                <a href="{{ route('events.single', ['event' => $event->id]) }}" class="btn btn-primary btn-sm inline-block">Assign</a>
+                            </div>
+                        @endif
                     </div>
                 @endif
             @endslot

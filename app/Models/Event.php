@@ -118,7 +118,10 @@ class Event extends Model
     public function userTickets()
     {
         return $this->hasMany(Attendee::class)
-                    ->where('user_id', Auth::id());
+            ->where(function($query) {
+                $query->where('user_id', Auth::id())
+                  ->orWhere('purchased_by', Auth::id());
+            });
     }
 
     // Use withCount for efficient counting when querying
