@@ -130,14 +130,14 @@
                                     Unattend
                                 </button>
                             @endif
-                            @if ($numTicketsAssignedToUser <= 1)
+                            {{-- @if ($numTicketsAssignedToUser <= 1) --}}
                                 <button class="btn btn-primary flex-1"
                                         wire:click.prevent="downloadTicket()">
                                     Download {{ $userTicketsCount }} Ticket{{ $userTicketsCount > 1 ? 's' : '' }}
                                 </button>
-                            @else
+                            {{-- @else
                                 <div class="bg-red-500 text-white p-2 w-full text-center">You must assign your tickets</div>
-                            @endif
+                            @endif --}}
                         </div>
                     @endif
 
