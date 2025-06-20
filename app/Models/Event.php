@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\EventStartingSoonMail;
 use App\Models\Scopes\UpcomingEventScope;
 use App\Observers\EventObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 #[ObservedBy([EventObserver::class])]
 class Event extends Model
@@ -150,5 +152,17 @@ class Event extends Model
 
         // If max_attendees is 0 or there are spots left, return the count
         return $this->max_attendees === 0 ? 0 : $remaining;
+    }
+
+    public function sendStartingNotification()
+    {
+        // Reduce attendees to unique list of users (1 user can have multiple attendees for the same event)
+        $attendeeIds = $this->attendees()->selectRaw('MIN(id) as id')->groupBy('user_id')->pluck('id');
+
+        $attendees = Attendee::whereIn('id', $attendeeIds)->get();
+
+        foreach ($attendees as $attendee) {
+            Mail::queue(new EventStartingSoonMail($this, $attendee));
+        }
     }
 }
