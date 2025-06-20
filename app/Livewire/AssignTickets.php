@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Event;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class AssignTickets extends Component
@@ -12,6 +13,7 @@ class AssignTickets extends Component
     public $tickets = [];
 
     public $nbrTickets = 0;
+    public $nbrTicketsAssignedToUser = 0;
 
     public function mount(Event $event)
     {
@@ -34,7 +36,9 @@ class AssignTickets extends Component
 
     public function render()
     {
+        
         $this->tickets = $this->event->userTickets()->get();
+        $this->nbrTicketsAssignedToUser = $this->event->userTickets()->where('user_id', Auth::id())->count();
 
         $this->nbrTickets = count($this->tickets);
 
