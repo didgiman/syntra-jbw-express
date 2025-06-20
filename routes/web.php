@@ -12,6 +12,7 @@ use App\Mail\AttendeeCreatedMail;
 use App\Mail\ContactMessageCreatedMail;
 use App\Mail\ContactMessageMail;
 use App\Mail\ContactMessageReceivedMail;
+use App\Mail\EventStartingSoonMail;
 use App\Mail\EventUpdatedMail;
 use App\Models\Attendee;
 use App\Models\ContactMessage;
@@ -138,6 +139,13 @@ Route::prefix('/testing')->group(function() {
             $contactMessage = ContactMessage::first();
 
             return (new ContactMessageReceivedMail($contactMessage))->render();
+        });
+
+        Route::get('event-starting-soon', function() {
+            $event = Event::first();
+            $attendee = Attendee::first();
+
+            return (new EventStartingSoonMail($event, $attendee))->render();
         });
     });
 });
