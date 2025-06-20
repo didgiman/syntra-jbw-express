@@ -19,6 +19,7 @@ class DisplayEvent extends Component
         $this->event = Event::with(['attendees', 'type'])->findOrFail($eventId);
     }
 
+    #[On('ticket-assigned')]
     #[On('tickets.purchased')]
     public function refreshEvent()
     {
@@ -42,7 +43,7 @@ class DisplayEvent extends Component
             return;
         }
 
-        $event->attendees()->create(['user_id' => Auth::id()]);
+        $event->attendees()->create(['user_id' => Auth::id(), 'purchased_by' => Auth::id()]);
         $this->message = 'You are now attending this event.';
     }
 

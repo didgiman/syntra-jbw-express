@@ -32,7 +32,7 @@
             </tr>
             @if ($event->image != '/no-event-poster.webp')
                 <tr>
-                    <td colspan="2" style="height: 500px; text-align: center; background-image: url('{{ $_SERVER['DOCUMENT_ROOT'] . $event->image }}'); background-size: cover; background-repeat: no-repeat;">
+                    <td colspan="2" style="height: 500px; text-align: center; background-image: url('{{ $_SERVER['DOCUMENT_ROOT'] . $event->image }}'); background-size: cover; background-repeat: no-repeat; background-position: center center;">
 
                     </td>
                 </tr>

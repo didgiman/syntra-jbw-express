@@ -23,7 +23,10 @@ class EventFactory extends Factory
             'end_time' => fake()->dateTimeBetween('+3 months', '+4 months'),
             'location' => fake()->city(),
             'max_attendees' => fake()->optional()->numberBetween(1, 4) ? fake()->numberBetween(1, 20) * 50 : null,
-            'price' => fake()->randomFloat(2, 0, 100)
+            'price' => fake()->randomElement(array_merge(
+                [0, 0, 0], // in 2/10 cases a 0
+                array_fill(0, 7, fake()->randomFloat(2, 5, 100)) // in 8/10 cases a number between 5-100, with 2 decimals
+            ))
         ];
     }
 }

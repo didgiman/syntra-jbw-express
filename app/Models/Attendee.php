@@ -24,4 +24,9 @@ class Attendee extends Model
     {
         return $this->belongsTo(Event::class);
     }
+
+    public function purchased_by()
+    {
+        return $this->belongsTo(User::class, 'purchased_by');
+    }
 }
