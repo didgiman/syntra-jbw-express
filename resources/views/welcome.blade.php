@@ -2,7 +2,10 @@
 @section('title', 'EventR Home')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8" x-data="{ 
+        open: false,
+        selectedEvent: null
+    }">
         {{-- Hero Section with Branding --}}
         <section class="mb-12">
             <div class="bg-gradient-to-br from-gray-900 to-black rounded-xl shadow-xl overflow-hidden">
@@ -100,14 +103,13 @@
         </section>
 
         {{-- Carousel Section for Upcoming Events --}}
-        <section id="upcoming-events" class="mb-8" x-data="{
+        <section id="upcoming-events" class="mb-8" x-data="{ 
             currentIndex: 0,
             events: {{ json_encode($upcomingEvents->take(6)->values()) }},
             eventTypes: {{ json_encode($upcomingEvents->take(6)->map(function($event) { return $event->type; })) }},
             autoplayEnabled: true,
             autoplaySpeed: 8000, // 8 seconds between slides
             autoplayTimer: null,
-            countdownTimer: null,
             
             calculateTimeLeft(futureDate) {
                 const future = new Date(futureDate).getTime();
@@ -193,9 +195,22 @@
             
             isNext(index) {
                 return (this.currentIndex + 1) % this.totalEvents === index;
+            },
+            
+            // Method to open modal
+            openEventDetails(event) {
+                // Get parent Alpine.js component and set its properties
+                const parentComponent = Alpine.closestRoot(this.$el);
+                parentComponent.selectedEvent = {
+                    ...event,
+                    type: this.eventTypes[this.currentIndex],
+                    type_name: this.eventTypes[this.currentIndex] ? this.eventTypes[this.currentIndex].description.toUpperCase() : 'NO TYPE',
+                    remaining_spots: event.max_attendees === null ? null : (event.max_attendees - event.attendees.length)
+                };
+                parentComponent.open = true;
             }
         }" 
-        x-init="startAutoplay(); startCountdown();"
+        x-init="startAutoplay();"
         @mouseenter="stopAutoplay()"
         @mouseleave="if(autoplayEnabled) startAutoplay()"
         @visibilitychange.window="document.visibilityState === 'visible' ? (autoplayEnabled ? startAutoplay() : null) : stopAutoplay()"
@@ -248,7 +263,7 @@
                             <div 
                                 class="bg-black border rounded-lg shadow-lg p-4 relative h-full transition-all duration-200 hover:shadow-purple-500/30 hover:shadow-lg"
                                 :class="isActive(index) ? 'cursor-pointer' : 'cursor-default'"
-                                @click="if(isActive(index)) { window.location.href = '/events/' + event.id }"
+                                @click="if(isActive(index)) { openEventDetails(event) }"
                             >
                                 {{-- Event Type Badge --}}
                                 <span 
