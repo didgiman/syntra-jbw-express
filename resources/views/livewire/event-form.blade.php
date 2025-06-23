@@ -35,7 +35,7 @@
             <div class="text-black">
                 <livewire:jodit-text-editor
                     wire:model="form.description"
-                    :buttons="['undo', 'redo', '|', 'bold', 'italic', 'underline', 'strikeThrough', '|', 'left', 'center', 'right', '|' , 'ul', 'ol', '|', 'table', 'link']"
+                    :buttons="['undo', 'redo', '|', 'bold', 'italic', 'underline', 'strikeThrough', '|', 'left', 'center', 'right', '|' , 'ul', 'ol', '|', 'table', 'link', '|', 'eraser']"
                     />
             </div>
             @error('form.description')
