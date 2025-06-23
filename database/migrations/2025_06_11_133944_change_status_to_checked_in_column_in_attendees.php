@@ -24,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('attendees', function (Blueprint $table) {
             $table->dropColumn('checked_in');
+            $table->string('status', 64)->default('new')->after('token');
         });
     }
 };
