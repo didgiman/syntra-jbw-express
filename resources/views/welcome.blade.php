@@ -100,7 +100,7 @@
         </section>
 
         {{-- Carousel Section for Upcoming Events --}}
-        <section id="upcoming-events" class="mb-8" x-data="{ 
+        <section id="upcoming-events" class="mb-8 hidden md:block" x-data="{ 
             currentIndex: 0,
             events: {{ json_encode($upcomingEvents->take(6)->values()) }},
             eventTypes: {{ json_encode($upcomingEvents->take(6)->map(function($event) { return $event->type; })) }},
