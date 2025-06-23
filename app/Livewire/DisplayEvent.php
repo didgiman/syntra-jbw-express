@@ -6,6 +6,8 @@ use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class DisplayEvent extends Component
 {
@@ -43,8 +45,19 @@ class DisplayEvent extends Component
             return;
         }
 
-        $event->attendees()->create(['user_id' => Auth::id(), 'purchased_by' => Auth::id()]);
-        $this->message = 'You are now attending this event.';
+        DB::transaction(function() {
+            try {
+                // Reload the event with a "FOR UPDATE" lock to prevent race conditions
+                $event = Event::where('id', $this->event->id)->lockForUpdate()->first();
+                
+                // Create a new attendee
+                $event->attendees()->create(['user_id' => Auth::id(), 'purchased_by' => Auth::id()]);
+                $this->message = 'You are now attending this event.';
+
+            } catch (Throwable $e) {
+                $this->message = "Unable to attend event. Please try again. { $e.message}";
+            }
+        });
     }
 
     public function unattend(Event $event)
