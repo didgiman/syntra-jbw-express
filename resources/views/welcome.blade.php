@@ -87,7 +87,7 @@
                             <div class="text-blue-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
+                                </svg>                               
                             </div>
                             <div>
                                 <h3 class="text-white font-semibold">Community Experience</h3>
@@ -182,7 +182,7 @@
                 return (this.currentIndex + 1) % this.totalEvents === index;
             }
         }" 
-        x-init="$nextTick(() => startAutoplay())"
+        x-init="setTimeout(() => startAutoplay(), 500)"
         @mouseenter="stopAutoplay()"
         @mouseleave="if(autoplayEnabled) startAutoplay()"
         @visibilitychange.window="document.visibilityState === 'visible' ? (autoplayEnabled ? startAutoplay() : null) : stopAutoplay()"
@@ -465,40 +465,10 @@
             </div>
         </section>
 
-        
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
 @endsection
 
 @push('scripts')
-<script>
-    function calculateTimeLeft(futureDate) {
-        const future = new Date(futureDate).getTime();
-        const now = new Date().getTime();
-        const diff = future - now;
-        
-        if (diff <= 0) {
-            return "Event has started";
-        }
-        
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        
-        let timeString = "";
-        if (days > 0) timeString += days + " days ";
-        if (hours > 0) timeString += hours + " hours ";
-        timeString += minutes + " minutes";
-        
-        return timeString;
-    }
-</script>
+
 @endpush
 
 @push('styles')
