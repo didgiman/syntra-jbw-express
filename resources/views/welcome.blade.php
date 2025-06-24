@@ -100,92 +100,104 @@
         </section>
 
         {{-- Carousel Section for Upcoming Events --}}
-        <section id="upcoming-events" class="mb-8 hidden md:block" x-data="{ 
-            currentIndex: 0,
-            events: {{ json_encode($upcomingEvents->take(6)->values()) }},
-            eventTypes: {{ json_encode($upcomingEvents->take(6)->map(function($event) { return $event->type; })) }},
-            autoplayEnabled: true,
-            autoplaySpeed: 8000, // 8 seconds between slides
-            autoplayTimer: null,
-            
-            calculateTimeLeft(futureDate) {
-                const future = new Date(futureDate).getTime();
-                const now = new Date().getTime();
-                const diff = future - now;
+        <section id="upcoming-events" class="mb-8 hidden md:block" 
+            x-data="{ 
+                currentIndex: 0,
+                events: {{ json_encode($upcomingEvents->take(6)->values()) }},
+                eventTypes: {{ json_encode($upcomingEvents->take(6)->map(function($event) { return $event->type; })) }},
+                autoplayEnabled: true,
+                autoplaySpeed: 8000,
+                autoplayTimer: null,
                 
-                if (diff <= 0) {
-                    return 'Event has started';
-                }
-                
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                
-                let timeString = '';
-                if (days > 0) timeString += days + ' days ';
-                if (hours > 0) timeString += hours + ' hours ';
-                if (minutes > 0) timeString += minutes + ' min ';
-                timeString += seconds + ' sec';
-                
-                return timeString;
-            },
-            
-            get totalEvents() { return this.events.length },
-            
-            startAutoplay() {
-                if (this.autoplayEnabled && this.totalEvents > 1) {
-                    // Clear any existing timer first
-                    this.stopAutoplay();
+                calculateTimeLeft(futureDate) {
+                    const future = new Date(futureDate).getTime();
+                    const now = new Date().getTime();
+                    const diff = future - now;
                     
-                    this.autoplayTimer = setInterval(() => {
-                        if (document.visibilityState === 'visible') {
-                            this.next();
+                    if (diff <= 0) {
+                        return 'Event has started';
+                    }
+                    
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    let timeString = '';
+                    if (days > 0) timeString += days + ' days ';
+                    if (hours > 0) timeString += hours + ' hours ';
+                    if (minutes > 0) timeString += minutes + ' min ';
+                    timeString += seconds + ' sec';
+                    
+                    return timeString;
+                },
+                
+                get totalEvents() { return this.events.length },
+                
+                startAutoplay() {
+                    if (this.autoplayEnabled && this.totalEvents > 1) {
+                        this.stopAutoplay();
+                        this.autoplayTimer = setInterval(() => {
+                            if (document.visibilityState === 'visible') {
+                                this.next();
+                            }
+                        }, this.autoplaySpeed);
+                    }
+                },
+                
+                stopAutoplay() {
+                    if (this.autoplayTimer) {
+                        clearInterval(this.autoplayTimer);
+                        this.autoplayTimer = null;
+                    }
+                },
+                
+                toggleAutoplay() {
+                    this.autoplayEnabled = !this.autoplayEnabled;
+                    if (this.autoplayEnabled) {
+                        this.startAutoplay();
+                    } else {
+                        this.stopAutoplay();
+                    }
+                },
+                
+                next() { 
+                    this.currentIndex = (this.currentIndex + 1) % this.totalEvents;
+                },
+                
+                prev() {
+                    this.currentIndex = (this.currentIndex - 1 + this.totalEvents) % this.totalEvents;
+                },
+                
+                isActive(index) {
+                    return this.currentIndex === index;
+                },
+                
+                isPrev(index) {
+                    return (this.currentIndex - 1 + this.totalEvents) % this.totalEvents === index;
+                },
+                
+                isNext(index) {
+                    return (this.currentIndex + 1) % this.totalEvents === index;
+                },
+                
+                init() {
+                    // Initialize with delay to ensure DOM is ready
+                    setTimeout(() => {
+                        if (this.autoplayEnabled && this.totalEvents > 1) {
+                            this.startAutoplay();
                         }
-                    }, this.autoplaySpeed);
+                    }, 1000);
+                    
+                    // Clean up on destroy
+                    this.$cleanup = () => {
+                        this.stopAutoplay();
+                    };
                 }
-            },
-            
-            stopAutoplay() {
-                if (this.autoplayTimer) {
-                    clearInterval(this.autoplayTimer);
-                    this.autoplayTimer = null;
-                }
-            },
-            
-            toggleAutoplay() {
-                this.autoplayEnabled = !this.autoplayEnabled;
-                if (this.autoplayEnabled) {
-                    this.startAutoplay();
-                } else {
-                    this.stopAutoplay();
-                }
-            },
-            
-            next() { 
-                this.currentIndex = (this.currentIndex + 1) % this.totalEvents;
-            },
-            
-            prev() {
-                this.currentIndex = (this.currentIndex - 1 + this.totalEvents) % this.totalEvents;
-            },
-            
-            isActive(index) {
-                return this.currentIndex === index;
-            },
-            
-            isPrev(index) {
-                return (this.currentIndex - 1 + this.totalEvents) % this.totalEvents === index;
-            },
-            
-            isNext(index) {
-                return (this.currentIndex + 1) % this.totalEvents === index;
-            }
-        }" 
-        x-init="setTimeout(() => startAutoplay(), 500)"
-        @mouseenter="stopAutoplay()"
-        @mouseleave="if(autoplayEnabled) startAutoplay()"
-        @visibilitychange.window="document.visibilityState === 'visible' ? (autoplayEnabled ? startAutoplay() : null) : stopAutoplay()"
+            }" 
+            x-init="init()"
+            @mouseenter="stopAutoplay()"
+            @mouseleave="if(autoplayEnabled) startAutoplay()"
         >
             <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
             
@@ -347,6 +359,38 @@
             </div>
         </section>
 
+        {{-- Mobile Alternative for Upcoming Events --}}
+        <section class="mb-8 md:hidden">
+            <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
+            
+            @if($upcomingEvents->count() > 0)
+                <div class="grid grid-cols-1 gap-4">
+                    @foreach($upcomingEvents->take(3) as $event)
+                        <a href="{{ route('events.single', ['event' => $event->id]) }}" class="block">
+                            <div class="bg-black border rounded-lg shadow-lg p-4 relative transition-all duration-200 hover:shadow-purple-500/30 hover:shadow-lg">
+                                {{-- Content similar to carousel cards --}}
+                                <div class="mb-4">
+                                    <img src="{{ $event->image }}" alt="{{ $event->name }} poster" class="w-full h-48 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/400x225?text=No+Image'">
+                                </div>
+                                <div class="space-y-2">
+                                    <h3 class="font-bold text-lg">{{ $event->name }}</h3>
+                                    <div class="text-red-300 text-sm font-bold">
+                                        Starts: {{ (new DateTime($event->start_time))->format('M j, Y g:i A') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ route('events') }}" class="text-violet-400 hover:text-violet-300">View all upcoming events →</a>
+                </div>
+            @else
+                <div class="text-gray-500 text-center py-4">No upcoming events.</div>
+            @endif
+        </section>
+
         {{-- View All Events Button --}}
         <div class="text-center my-8">
             <a href="{{ route('events') }}" class="inline-flex items-center justify-center px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-md shadow-md transition-colors duration-200 group">
@@ -441,7 +485,6 @@
                         <div class="text-white/70">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
                         </div>
                     </div>
                     <p class="mt-4 text-sm opacity-80">Events available at no cost</p>
